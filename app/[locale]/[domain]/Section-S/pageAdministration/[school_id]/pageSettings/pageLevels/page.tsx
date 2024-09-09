@@ -1,0 +1,120 @@
+import { Metadata } from 'next'
+import React from 'react'
+import Breadcrumb from '@/section-s/common/Breadcrumbs/Breadcrumb'
+import { GetLevelInter } from '@/Domain/Utils-S/appControl/appInter'
+import { GetLevelUrl } from '@/Domain/Utils-S/appControl/appConfig'
+import { getData } from '@/functions'
+import LayoutAdmin from '@/section-s/compAdministration/LayoutAdmin'
+import { redirect } from 'next/navigation'
+import NotificationError from '@/section-s/common/NotificationError'
+import ServerError from '@/section-s/common/ServerError'
+import MyButtonCustom from '@/section-s/common/MyButtonCustom'
+import { protocol } from '@/config'
+
+const page = async ({
+  params,
+  searchParams,
+}: {
+  params: { school_id: string, domain: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) => {
+
+  const apiData: any = await getData(protocol  + "api" + params.domain + GetLevelUrl, {...searchParams});
+
+  console.log(apiData, 23)
+  
+  return (
+    <LayoutAdmin>
+      <>
+        <Breadcrumb
+          pageName="Levels" 
+          pageName1="Dashboard" 
+          pageName2="Settings" 
+          link1={`/${params.domain}/Section-S/pageAdministration/${params.school_id}`}
+          link2={`/${params.domain}/Section-S/pageAdministration/${params.school_id}/pageSettings`}
+        />
+
+        {searchParams && <NotificationError errorMessage={searchParams} />}
+        {apiData == "ECONNREFUSED" && <ServerError />}
+        {apiData && apiData.unauthorized && redirect(`/pageAuthentication/pageSessionExpired`)}
+        {apiData != "ECONNREFUSED" && <List apiData={apiData} params={params} />}
+
+      </>
+    </LayoutAdmin>
+  )
+}
+
+export default page
+
+export const metadata: Metadata = {
+  title:
+    "Levels",
+  description: "This is Levels Page",
+};
+
+
+const List = ( {apiData, params}: any ) => {
+
+  console.log(apiData, 58)
+
+  return (
+    <div className="bg-white border border-stroke dark:bg-boxdark dark:border-strokedark rounded-sm shadow-default">
+      <div className="flex justify-between md:px-6 px-4 py-6 xl:px-7.5">
+        <h4 className="dark:text-white font-semibold text-black text-xl">
+          Level List ({apiData.count})
+        </h4>
+        <MyButtonCustom
+          title="Add Level"
+          href={`/${params.domain}/Section-S/pageAdministration/${params.school_id}/pageSettings/pageLevels/create`} 
+        />
+      </div>
+
+      <div></div>
+
+      <div className="bg-bluedark border-stroke border-t dark:border-strokedark font-medium grid grid-cols-2 md:grid-cols-4 md:px-6 px-6 py-2 text-lg text-white">
+        <div className="hidden items-center sm:flex">
+          <span className="font-medium">No</span>
+        </div>
+        <div className="flex items-center">
+          <span className="font-medium">Level</span>
+        </div>
+        <div className="flex items-center">
+          <span className="font-medium">Option</span>
+        </div>
+        <div className="flex items-center justify-end mr-6 text-center">
+          <span className="font-medium">Action</span>
+        </div>
+      </div>
+      {apiData.results && apiData.results.length > 0 && apiData.results.map((item: GetLevelInter, key: number) => (
+        <div
+          className="2xl:px-6.5 border-stroke border-t dark:border-strokedark grid grid-cols-2 md:grid-cols-4 md:px-6 px-4 py-2"
+          key={key}
+        >
+          <div className="hidden items-center sm:flex">
+            <span className="dark:text-white text-black text-sm">
+              {key + 1}
+            </span>
+          </div>
+          <div className="flex items-center">
+            <span className="dark:text-white text-black">
+              {item.level}
+            </span>
+          </div>
+          <div className="flex items-center">
+            <span className="dark:text-white text-black">
+              {item.option}
+            </span>
+          </div>
+          <div className="flex gap-2 items-center justify-end md:gap-6 md:text-md px-2 w-full">
+            <MyButtonCustom
+              type='edit'
+              title="View"
+              href={`/${params.domain}/Section-S/pageAdministration/${params.school_id}/pageSettings/pageLevels/details/${item.id}`}
+            />
+          </div>
+        </div>
+      ))}
+    
+    </div>
+  )
+}
