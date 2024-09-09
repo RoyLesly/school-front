@@ -1,10 +1,11 @@
 pipeline{
     agent any
-    tools {nodejs "my-nodejs"}
+    tools {nodejs "Nodejs"}
     stages{
         stage("Build"){
             steps{
-                nodejs("my-nodejs") {
+                nodejs("Nodejs") {
+                    echo "Installation started successfully"
                     sh 'npm install'
                     sh 'npm build'
                 }
@@ -12,8 +13,8 @@ pipeline{
         }
         stage("Start"){
             steps{
-                nodejs("my-nodejs") {
-                    sh 'npm start'
+                nodejs("Nodejs") {
+                    sh 'pm2 start npm --name "main-school" -- start -- port 4000'
                 }
                 echo "App started successfully"
             }
