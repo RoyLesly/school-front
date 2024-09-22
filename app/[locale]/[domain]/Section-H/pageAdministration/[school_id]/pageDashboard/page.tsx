@@ -20,24 +20,25 @@ const page = async ({
 }) => {
 
   const today = new Date()
-  const acadYears = await getData(protocol + "api" + params.domain + AcademicYearUrl, { nopage: true, fieldList: ["level"] })
+  const acadYears: any = await getData(protocol + "api" + params.domain + AcademicYearUrl, { school: params.school_id })
   const apiLevels = await getData(protocol + "api" + params.domain + GetLevelUrl, { nopage: true })
   const sortedAcadYears = await acadYears?.results && acadYears?.results.sort((a: string, b: string) => a[3] < b[3] ? 1 : a[3] > b[3] ? -1 : 0)
 
   const userCardData = sortedAcadYears && await getData(protocol + "api" + params.domain + GetDashUserCardUrl, {
     academic_year: searchParams && Object.keys(searchParams).includes("academic_year") ? searchParams.academic_year : sortedAcadYears[0],
     this_year: searchParams && Object.keys(searchParams).includes("this_year") ? searchParams.this_year : today.getFullYear(),
+    school: params.school_id
   })
   const profileSexChartData = sortedAcadYears && await getData(protocol + "api" + params.domain + GetDashProfileSexChartUrl, {
     academic_year: searchParams && Object.keys(searchParams).includes("academic_year") ? searchParams.academic_year : sortedAcadYears[0],
-    this_year: searchParams && Object.keys(searchParams).includes("this_year") ? searchParams.this_year : today.getFullYear()
+    this_year: searchParams && Object.keys(searchParams).includes("this_year") ? searchParams.this_year : today.getFullYear(),
+    school: params.school_id
   })
   const specialtyLevelCountChartData = sortedAcadYears && await getData(protocol + "api" + params.domain + GetDashSpecialtyLevelCountChartUrl, {
     academic_year: searchParams && Object.keys(searchParams).includes("academic_year") ? searchParams.academic_year : sortedAcadYears[0],
-    this_year: searchParams && Object.keys(searchParams).includes("this_year") ? searchParams.this_year : today.getFullYear()
+    this_year: searchParams && Object.keys(searchParams).includes("this_year") ? searchParams.this_year : today.getFullYear(),
+    school: params.school_id
   })
-  console.log(specialtyLevelCountChartData, 41)
-
 
   return (
     <LayoutAdmin>

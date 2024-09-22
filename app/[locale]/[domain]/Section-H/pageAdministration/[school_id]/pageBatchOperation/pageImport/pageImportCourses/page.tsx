@@ -17,7 +17,7 @@ const page = async ({
 }) => {
 
   const apiDomains: any = await getData(protocol + "api" + params.domain + GetDomainUrl, { nopage: true });
-  const apiYears: any = await getData(protocol + "api" + params.domain + AcademicYearUrl, { nopage: true });
+  const apiYears: any = await getData(protocol + "api" + params.domain + AcademicYearUrl, { nopage: true, school: params.school_id });
 
   return (
     <LayoutAdmin>

@@ -1,15 +1,15 @@
 import { GetResultInter } from '@/NoDomain/Utils-H/appControl/appInter'
 import React from 'react'
 
-const TransFooter = async ({ resultAll, schoolinfo }: any) => {
-    const calcGPA = async () => {
+const TransFooter = ({ resultAll, schoolinfo }: any) => {
+    const calcGPA = () => {
         if (resultAll.count) {
-            var fil = await resultAll.results.filter((item: GetResultInter) => item.average > 0)
+            var fil = resultAll.results.filter((item: GetResultInter) => item.average > 0)
             var t = fil.reduce((accum: number, cur: GetResultInter) => parseFloat(accum.toString()) + parseFloat(cur.average.toString()), 0)
             return (t / (fil.length * 25)).toFixed(2)
         }
     }
-    const GPA = await calcGPA()
+    const GPA = calcGPA()
 
     return (
         <div className='border-2 flex flex-row gap-2 h-[120px] pl-2 text-black'>
@@ -74,63 +74,48 @@ const TransFooter = async ({ resultAll, schoolinfo }: any) => {
 
             </div>
 
-            <div className='flex flex-col text-[11px] text-xs w-[163px]'>
-                <div className="font-medium grid grid-cols-3">
-                    <div className='col-span-1 flex flex-col items-center justify-center text-[11px]'>
-                        <div className='flex h-[13px] text-[4px]'><span>.</span></div>
-                        <div className='flex h-[12px]'><span className='text-[14px]'>*</span></div>
-                        <div className='flex h-[13px]'><span>I </span></div>
-                        <div className='flex h-[13px]'><span>CV</span></div>
-                        <div className='flex h-[13px]'><span>GP</span></div>
-                        <div className='flex h-[13px]'><span>GPA</span></div>
-                        <div className='flex h-[13px]'><span>WP</span></div>
-                        <div className='flex h-[12px]'><span>GD</span></div>
+            <div className='flex flex-col w-[163px]'>
+                {/* <div className='flex flex-col w-[320px]'> */}
+                <div className="flex font-medium h-full items-center justify-between w-full">
+                    <div className='font-bold items-start justify-center text-[14px]'>
+                        Cumulative GPA - {resultAll.gp.toFixed(2)}
                     </div>
-                    <div className='col-span-2 flex flex-col items-center justify-center text-[10px]'>
-                        <div className='flex h-[13px] text-[4px]'><span>.</span></div>
-                        <div className='h-[12px]'>Obtain after Resit</div>
-                        <div className='h-[13px]'>Incomplete</div>
-                        <div className='h-[13px]'>Credit Value</div>
-                        <div className='h-[13px]'>Grade Point</div>
-                        <div className='h-[13px]'>Grade Point Average</div>
-                        <div className='h-[13px]'>Weighted Point</div>
-                        <div className='h-[13px]'>Grade</div>
+                </div>
+
+                <div className="flex font-medium h-[16px] items-center justify-between w-full">
+                    <div className='items-start justify-center text-[12px]'>
+                        Total Attempted - {resultAll.total_credit_attempted}
+                    </div>
+                </div>
+                <div className="flex font-medium h-[16px] items-center justify-between w-full">
+                    <div className='items-start justify-center text-[12px]'>
+                        Total Earned - {resultAll.total_credit_earned}
+                    </div>
+                </div>
+
+                <div className="font-medium grid grid-cols-12 h-[16px]">
+                    <div className='capitalize col-span-12 flex flex-row gap-2 items-start justify-start text-[12px]'>
+                        Done in {schoolinfo.town}
+                    </div>
+                </div>
+
+                <div className="font-medium grid grid-cols-12 h-[16px] mb-1">
+                    <div className='capitalize col-span-12 flex flex-row gap-2 items-start justify-start text-[12px]'>
+                        On <span className='italic'>{new Date().toUTCString().slice(0, 16)}</span>
                     </div>
                 </div>
             </div>
 
-            <div className='flex flex-col w-[320px]'>
-                <div className="font-medium grid grid-cols-3 h-[16px]">
-                    <div className='col-span-2 flex flex-col items-start justify-center text-[12px]'>
-                        Total Credit Attempted
-                    </div>
-                    <div className='col-span-1 flex flex-col items-center justify-center text-[12px]'>
-                        {resultAll.total_credit_attempted}
-                    </div>
+            {/* <div className='flex flex-col hidden text-[11px] text-xs w-[163px]'> */}
+            <div className='flex flex-col h-full items-end justify-end pb-2 pr-2 text-[11px] text-xs w-[320px]'>
+                <div className="font-medium">
+                    The DIRECTOR
                 </div>
-                <div className="font-medium grid grid-cols-3 h-[16px]">
-                    <div className='col-span-2 flex flex-col items-start justify-center text-[12px]'>
-                        Total Credit Earned
-                    </div>
-                    <div className='col-span-1 flex flex-col items-center justify-center text-[12px]'>
-                        {resultAll.total_credit_earned}
-                    </div>
+                <div className="font-medium h-12">
+                    
                 </div>
-                <div className="font-medium grid grid-cols-3 h-[20px]">
-                    <div className='col-span-2 flex flex-col items-start justify-center text-[14px]'>
-                        Cumulative GPA
-                    </div>
-                    <div className='col-span-1 flex flex-col font-bold items-center justify-center text-[14px]'>
-                        {resultAll.gp.toFixed(2)}
-                    </div>
-                </div>
-                <div className="font-medium grid grid-cols-3 h-20">
-                    <div className='col-span-2 flex flex-col items-start justify-center text-[12px]'>
-                        Done in {schoolinfo.town}
-                    </div>
-                    <div className='col-span-1 flex flex-col items-center justify-center text-[12px]'>
-
-                    </div>
+                <div className="font-medium">
+                {schoolinfo.director}
                 </div>
             </div>
         </div>

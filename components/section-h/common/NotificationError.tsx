@@ -86,7 +86,6 @@ const NotificationError:FC<Props> = ({ errorMessage }) => {
     if (errorMessage.error) {
         const alert = () => {
             Swal.fire({
-            //   title: `${errorMessage.error.toString()}`,
             title: `Error Occured`,
             timer: 3000,
               timerProgressBar: true,

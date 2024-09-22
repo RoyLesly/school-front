@@ -285,20 +285,20 @@ const SidebarAccounting = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <Link
-                              href={`/Section-H/pageAccounting/${user?.school}/pageAnalyses/analysesField`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAccounting/${user?.school}/pageAnalyses/pageField` && "text-white"
-                                }`}
-                            >
-                              By Field
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
                               href={`/Section-H/pageAccounting/${user?.school}/pageAnalyses/analysesSpecialty`}
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAccounting/${user?.school}/pageAnalyses/pageSpecialty` && "text-white"
                                 }`}
                             >
                               By Class
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              href={`/Section-H/pageAccounting/${user?.school}/pageAnalyses/analysesStudent`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAccounting/${user?.school}/pageAnalyses/pageStudent` && "text-white"
+                                }`}
+                            >
+                              By Student
                             </Link>
                           </li>
 

@@ -73,7 +73,7 @@ const ListAccDomainPage = ({ params, data, years, thisYear }: { params: any, dat
       />
 
       {/* TOP */}
-      <div className="flex flex-col gap-4 items-center justify-between md:flex-row md:gap-2">
+      <div className="flex flex-col gap-4 items-center justify-between mb-2 md:flex-row md:gap-2">
         <div className="flex gap-2 items-center w-full">
           <MyPageTitle title={"Domain Analyses"} params={params} />
           <div className="font-semi-bold hidden italic md:flex tracking-widest">{thisYear}</div>

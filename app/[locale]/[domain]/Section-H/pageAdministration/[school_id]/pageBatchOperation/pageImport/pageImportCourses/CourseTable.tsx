@@ -107,15 +107,14 @@ const CourseTable = ({ params, selectedYearCourses, setToImportCourses, toImport
                 )
             }))
                 .then(res => {
-                    console.log(10500, res)
                     if (res && res.length > 0) {
                         const t = res.map(item => item.status)
-                        if (t[0] == "fulfilled") { router.push(`/Section-H/pageAdministration/${params.school_id}/pageBatchOperation/pageImport?updated=SUCCESSFULLY !!!`); }
-                        else { router.push(`/Section-H/pageAdministration/${params.school_id}/pageBatchOperation/pageImport/pageImportCourses?error=${t[0]}`); }
+                        if (t[0] == "fulfilled") { router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageBatchOperation/pageImport?updated=SUCCESSFULLY !!!`); }
+                        else { router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageBatchOperation/pageImport/pageImportCourses?error=${t[0]}`); }
                     }
                 })
                 .catch(err => {
-                    console.log(98, err)
+                    // console.log(98, err)
                 })
             return
         } else {

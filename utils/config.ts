@@ -19,12 +19,16 @@ export const ConfigData: any = {
         contact_number: "693358642", 
         landing_page: ["E-CONNEQ", "TESTING SCHOOLS"],
         logo_main512: "/images/logo/LogoEconneq.png", logo_main256: "/images/logo/LogoEconneq.png",
+        bg: { 
+            transcript: "/images/transcript/bg-trans-e-conneq.png",
+            slip: "/images/transcript/bg-slip-e-conneq.png",
+         },
         higher: { 
             landing_message: ["Welcome To", "E-CONNEQ HIGHER TESTING INSTITUTE"], help_number: "693358642",
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "TEST", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoEconneq.png", logo256: "/images/logo/LogoEconneq.png",
             campus_geolocations: {
@@ -49,12 +53,16 @@ export const ConfigData: any = {
         contact_number: "693358642", 
         landing_page: ["E-CONNEQ", "TESTING SCHOOLS"],
         logo_main512: "/images/logo/LogoEconneq.png", logo_main256: "/images/logo/LogoEconneq.png",
+        bg: { 
+            transcript: "/images/transcript/bg-trans-e-conneq.png",
+            slip: "/images/transcript/bg-slip-e-conneq.png",
+         },
         higher: { 
             landing_message: ["Welcome To", "E-CONNEQ HIGHER TESTING INSTITUTE"], help_number: "693358642",
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "TEST", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoEconneq.png", logo256: "/images/logo/LogoEconneq.png",
             campus_geolocations: {
@@ -79,11 +87,15 @@ export const ConfigData: any = {
         contact_number: "693358642", 
         landing_page: ["Welcome To", "E-CONNEQ SCHOOLS"],
         logo_main512: "/images/logo/LogoEconneq.png", logo_main256: "/images/logo/LogoEconneq.png",
+        bg: { 
+            transcript: "/images/transcript/bg-trans-e-conneq.png",
+            slip: "/images/transcript/bg-slip-e-conneq.png",
+         },
         higher: { 
             landing_message: ["Welcome To", "E-CONNEQ HIGHER TESTING INSTITUTE"], help_number: "693358642",
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "TEST", method: "1", registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoEconneq.png", logo256: "/images/logo/LogoEconneq.png",
             campus_geolocations: {
@@ -108,12 +120,16 @@ export const ConfigData: any = {
         contact_number: "693358642", 
         landing_page: ["Welcome To", "ST JOAN SCHOOLS"],
         logo_main512: "/images/logo/LogoJoan.png", logo_main256: "/images/logo/LogoJoan.png",
+        bg: { 
+            transcript: "/images/transcript/bg-trans-joan.png",
+            slip: "/images/transcript/bg-slip-joan.png",
+         },
         higher: { 
             landing_message: ["Welcome To", "ST JOAN HIGHER INSTITUTE"], help_number: "693358642",
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "SAJOHIMMS", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoJoan.png", logo256: "/images/logo/LogoJoan.png",
             campus_geolocations: {
@@ -138,12 +154,16 @@ export const ConfigData: any = {
         contact_number: "693358642", 
         landing_page: ["Welcome To", "THE BRAINS SCHOOLS"],
         logo_main512: "/images/logo/LogoBrains.png", logo_main256: "/images/logo/LogoBrains.png",
+        bg: { 
+            transcript: "/images/transcript/bg-trans-brains.png",
+            slip: "/images/transcript/bg-slip-brains.png",
+         },
         higher: { 
             landing_message: ["Welcome To", "THE BRAINS UNIVERSITY"], help_number: "693358642",
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "TBU", method: "2", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoBrains.png", logo256: "/images/logo/LogoBrains.png",
             campus_geolocations: {
@@ -155,7 +175,7 @@ export const ConfigData: any = {
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "TBU", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoBrains.png", logo256: "/images/logo/LogoBrains.png",
             campus_geolocations: {
@@ -168,12 +188,16 @@ export const ConfigData: any = {
         contact_number: "693358642", 
         landing_page: ["Welcome To", "KINGS SCHOOLS"],
         logo_main512: "/images/logo/LogoKings.png", logo_main256: "/images/logo/LogoKings.png",
+        bg: { 
+            transcript: "/images/transcript/bg-trans-kings.png",
+            slip: "/images/transcript/bg-slip-kings.png",
+         },
         higher: { 
             landing_message: ["KINGS HIGHER", "INSTITUTE"], help_number: "693358642",
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "KHI", method: "2", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoKings.png", logo256: "/images/logo/LogoKings.png",
             campus_geolocations: {
@@ -185,7 +209,7 @@ export const ConfigData: any = {
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "KHI", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoVishi.png", logo256: "/images/logo/LogoVishi.png",
             campus_geolocations: {
@@ -198,12 +222,16 @@ export const ConfigData: any = {
         contact_number: "693358642", 
         landing_page: ["Welcome To", "VISHI SCHOOLS"],
         logo_main512: "/images/logo/LogoVishi.png", logo_main256: "/images/logo/LogoVishi.png",
+        bg: { 
+            transcript: "/images/transcript/bg-trans-vishi.png",
+            slip: "/images/transcript/bg-slip-vishi.png",
+         },
         higher: { 
             landing_message: ["VISHI HIGHER", "INSTITUTE"], help_number: "693358642",
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "VHI", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoVishi.png", logo256: "/images/logo/LogoVishi.png",
             campus_geolocations: {
@@ -215,7 +243,7 @@ export const ConfigData: any = {
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "VHI", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoVishi.png", logo256: "/images/logo/LogoVishi.png",
             campus_geolocations: {
@@ -228,12 +256,16 @@ export const ConfigData: any = {
         contact_number: "693358642", 
         landing_page: ["Welcome To", "CLINGS SCHOOLS"],
         logo_main512: "/images/logo/LogoClings.png", logo_main256: "/images/logo/LogoClings.png",
+        bg: { 
+            transcript: "/images/transcript/bg-trans-clings.png",
+            slip: "/images/transcript/bg-slip-clings.png",
+         },
         higher: { 
             landing_message: ["CLINGS", "TECH ACADEMY"], help_number: "693358642",
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "CTA", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoClings.png", logo256: "/images/logo/LogoClings.png",
             campus_geolocations: {
@@ -245,7 +277,7 @@ export const ConfigData: any = {
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "CTA", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoClings.png", logo256: "/images/logo/LogoClings.png",
             campus_geolocations: {
@@ -258,12 +290,16 @@ export const ConfigData: any = {
         contact_number: "693358642", 
         landing_page: ["Welcome To", "ST John SCHOOLS"],
         logo_main512: "/images/logo/LogoStJohn.png", logo_main256: "/images/logo/LogoStJohn.png",
+        bg: { 
+            transcript: "/images/transcript/bg-trans-stjohn.png",
+            slip: "/images/transcript/bg-slip-stjohn.png",
+         },
         higher: { 
             landing_message: ["ST John", "HIGHER INSTITUTE"], help_number: "693358642",
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "STJOHN", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoStJohn.png", logo256: "/images/logo/LogoStJohn.png",
             campus_geolocations: {
@@ -276,12 +312,16 @@ export const ConfigData: any = {
         contact_number: "693358642", 
         landing_page: ["Welcome To", "Cohimms Systems"],
         logo_main512: "/images/logo/LogoCohimms.png", logo_main256: "/images/logo/LogoCohimms.png",
+        bg: { 
+            transcript: "/images/transcript/bg-trans-cohims.png",
+            slip: "/images/transcript/bg-slip-cohimms.png",
+         },
         higher: { 
             landing_message: ["Welcome To", "COVENANT HIGHER INSTITUTE"], help_number: "693358642",
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "COHIMMS", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoCohimms.png", logo256: "/images/logo/LogoCohimms.png",
             campus_geolocations: {
@@ -293,8 +333,8 @@ export const ConfigData: any = {
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
             prefix: "COHIMMS", method: "1", 
             registration_seperate_tuition: true,
-            schoolfees_control: [ 25, 50, 70, 95 ],
-            color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
+            schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
+             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoCohimms.png", logo256: "/images/logo/LogoCohimms.png",
             campus_geolocations: {
                 A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]

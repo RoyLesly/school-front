@@ -5,7 +5,7 @@ import { useFormState } from 'react-dom';
 import { ActionConfirmResetPassword } from '@/serverActions/AuthActions';
 import Swal from 'sweetalert2';
 import { ResetPasswordConfirmUrl } from '@/Domain/Utils-H/userControl/userConfig';
-import { protocol } from '@/config';
+import { ConfigData, protocol } from '@/config';
 
 const page = async ({
   params,
@@ -114,8 +114,8 @@ const CheckUserForm = ({ params }: any) => {
             </form>
 
             <div className="flex items-center justify-between">
-              <a href="/pageAuthentication/Login" className="dark:text-primary-500 font-medium hover:underline text-primary-600 text-sm">Help</a>
-              <a href="/pageAuthentication/Login" className="dark:text-primary-500 font-medium hover:underline text-primary-600 text-sm">Login</a>
+            <a href={`https://wa.me/+237${ConfigData[`${params.domain}`].contact_number}/?text=Enter%20Matricle:%20OR%20Username:%20Complain: `} className="bg-slate-200 dark:text-primary-500 font-medium hover:underline px-4 py-1 rounded text-slate-700 text-sm">Help</a>
+            <a href={`/${params.domain}/pageAuthentication/Login`} className="dark:text-primary-500 font-medium hover:underline text-primary-600 text-sm">Login</a>
             </div>
           </div>
         </div>

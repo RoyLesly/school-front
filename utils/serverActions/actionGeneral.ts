@@ -1,8 +1,11 @@
+
 import { axiosRequest } from "@/functions";
 import { revalidatePath } from "next/cache";
 import { getSession } from "./sessionAction";
 import { jwtDecode } from "jwt-decode";
 import useAxios from "@/useAxios";
+import { collectMoney } from "@/payment";
+import { GetSchoolFeesInter } from "@/Domain/Utils-H/feesControl/feesInter";
 
 
 
@@ -114,6 +117,7 @@ export const ActionEdit = async (data: unknown, id: string | number, schema: any
 
 }
 
+
 export const ActionDelete = async (url:string, id: number | string) => {
     const session = await getSession()
     var config = {}
@@ -141,5 +145,21 @@ export const ActionDelete = async (url:string, id: number | string) => {
    
 
     return { detail: "SERVER ERROR"}
+}
+
+
+export const makeMobilePayment = async (formData: any, apiSchoolFee: GetSchoolFeesInter | any) => {
+    const newData = {
+        schoolfees_id: apiSchoolFee?.id,
+        telephone: formData.get("telephone"),
+        operator: formData.get("operator"),
+        payment_method: formData.get("operator"),
+        amount: apiSchoolFee?.platform_charges,
+        reason: "PLATFORM CHARGES",
+        status: "completed",
+    }
+    var pay: { operation: boolean, transaction: boolean } | any = await collectMoney({ amount: newData.amount, service: newData.operator, payer: newData.telephone });
+    console.log(pay, 114)
+    return pay
 }
 

@@ -11,7 +11,7 @@ import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
 import { useEffect, useState } from "react";
 import { SchemaCreateEditField } from "@/Domain/schemas/schemas";
 import { GetDomainInter } from "@/Domain/Utils-H/appControl/appInter";
-import { getData } from "@/functions";
+import { getData, handleResponseError } from "@/functions";
 import SelectField from "../SelectField";
 
 type Inputs = z.infer<typeof SchemaCreateEditField>;
@@ -66,7 +66,8 @@ const FieldForm = ({
     if (type === "create") {
       const call = async () => {
         const response = await ActionCreate(newVals, SchemaCreateEditField, protocol + "api" + params.domain + FieldUrl)
-        if (response && response.id) {
+        const t = await handleResponseError(response, ["field_name", "domain_id"]);
+        if (t == "" && response && response.id) {
           router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageSettings/pageFields?created="SUCCESSFULLY (${response.id}) !!!`);
           setOpen(false)
         }

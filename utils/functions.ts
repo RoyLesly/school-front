@@ -3,6 +3,7 @@ import Axios, { AxiosResponse } from "axios";
 import axios from "axios";
 import { getSession } from "./serverActions/sessionAction";
 import { DataProps } from './serverActions/interfaces';
+import Swal from 'sweetalert2';
 
 
 interface FetchProps {
@@ -86,6 +87,8 @@ export const getData = async (url: string, searchParams: any, page?: string | nu
                 Searchkeys.forEach(key => {
                     newUrl = `${newUrl}${key}=${searchParams[key]}&`
                 });
+
+                console.log(newUrl)
     
                 try {
                     const response = await axios.get(
@@ -98,18 +101,13 @@ export const getData = async (url: string, searchParams: any, page?: string | nu
                     return { error: "error" }
                 } catch (error: any) {
                     var errObj = Object.keys(error)
-                    console.log(101, "error", errObj)
                     if (errObj && errObj.length > 0){
-                        console.log(103)
-                        console.log(103)
-                        console.log(error.code)
                         if (errObj?.includes("code") && error.code == "ERR_BAD_RESPONSE"){ console.log("error.code", 104, error.code); return { error: "ERR_BAD_RESPONSE" }}
                         if (errObj?.includes("code") && error.code == "ECONNRESET"){ console.log("error.code", 104, error.code); return { error: "ECONNRESET" }}
                         if (errObj?.includes("name") && error.name =="Error"){ console.log("error.name", 105, error.name, ); return { error: "Error" }}
                         if (errObj?.includes("message") && error.message.includes("Client network")){ console.log("error.message", 106, error.message, ); return { error: error.message }}
                         if (errObj?.includes("cause") && error.cause.code){ console.log("error.cause", 107, error.cause.code); return { error: "ECONNRESET" }}
                         if (errObj?.includes("response") && error.response.data){ 
-                            console.log("error.cause", 109, error.cause.code); 
                             if (error.response?.data?.code == "token_not_valid"){ return { unauthorized: error.response.data.code } }
                             return { error: error.response.data }
                         }
@@ -236,10 +234,34 @@ export const generateGrade = async (mark: any) => {
     }
 }
 
-export const addCAandExam = async (ca: number, exam: number) => {
-    if (ca && exam && ca > -1 && exam > -1) return ca + exam;
-    if (ca && !exam && ca > -1) return ca;
-    if (!ca && exam && exam > -1) return exam;
+export const calcTotalandGrade = (ca: any, ex: any, re: any) => {
+    var withResit = false
+    var passed = false
+    var mark = 0
+    var gd = "-"
+    if (!re || isNaN(re) || re < 0){
+        mark = (ca ? isNaN(ca) ? 0 : parseInt(ca) : 0) + (ex ? isNaN(ex) ? 0 : parseInt(ex) : 0)
+    } else {
+        mark = (ca ? isNaN(ca) ? 0 : parseInt(ca) : 0) + (re ? isNaN(re) ? 0 : parseInt(re) : 0)
+        withResit = true
+    }
+    if (mark){
+        if (mark > 0.1) { gd = "F" }
+        if (mark > 39.99) { gd = "D" }
+        if (mark > 44.99) { gd = "D+" }
+        if (mark > 49.99) { gd = "C"; passed = true }
+        if (mark > 54.99) { gd = "C+"; passed = true }
+        if (mark > 59.99) { gd = "B"; passed = true }     
+        if (mark > 69.99) { gd = "B+"; passed = true } 
+        if (mark > 79.99) { gd = "A"; passed = true }  
+
+    }
+    return { mark: mark, grade: gd, withResit: withResit, passed: passed }
+}
+
+export const addingTwoNumbers = async (ca: any, ex: any) => {
+    var sum = (ca ? isNaN(ca) ? 0 : parseInt(ca) : 0) + (ex ? isNaN(ex) ? 0 : parseInt(ex) : 0)
+    return sum
 }
 
 // Function to Extract Number
@@ -308,6 +330,29 @@ export const getDistanceBetweenTwoPoints = (latA:number, lonA:number, latB:numbe
     let a = 0.5 - cosi((latA-latB) * p) / 2 + cosi(latB * p) *cosi((latA) * p) * (1 - cosi(((lonA- lonB) * p))) / 2;
     let dis = (12742 * Math.asin(Math.sqrt(a))); // 2 * R; R = 6371 km
     return Math.round(dis * 1000);
+}
+
+
+export const handleResponseError = (error: any, values: string[]) => {
+    var e: string = ""
+    var erKeys = Object.keys(error);
+    values.forEach(val => {
+        if (erKeys && !erKeys.includes("id") && erKeys.includes(val)){ e = e + " " + val + ","}  
+    });
+    if (e != ""){
+        const alert = () => {
+            Swal.fire({
+            title: e,
+            timer: 2000,
+              timerProgressBar: true,
+              showConfirmButton: false,
+              position: "top-end",
+              icon: "warning",
+            })
+        }
+        alert()   
+    }   
+    return e
 }
 
 

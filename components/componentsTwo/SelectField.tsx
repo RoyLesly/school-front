@@ -35,8 +35,6 @@ const SelectField = ({
         className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-4 md:px-10 py-1 md:py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input ${true ? "text-black dark:text-white" : ""}`}
         {...inputProps}
         defaultValue={defaultValue}
-        // onSelect={(e) => onSelectFunction(e)}
-        // onChange={(e) => console.log(e.target.value)}
         onChange={(e) => { functions && functions[1](e.target.value); functions && functions[0](functions[2]) }}
       >
         {defaultValue ? defaultName ? <option value={defaultValue}>{defaultName}</option> : <option value={defaultValue}>{defaultValue}</option> : <option value="">-------------------</option>}

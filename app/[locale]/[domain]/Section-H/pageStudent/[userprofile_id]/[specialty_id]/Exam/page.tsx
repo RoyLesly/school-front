@@ -1,4 +1,4 @@
-import { getData } from '@/functions';
+import { calcTotalandGrade, getData } from '@/functions';
 import ServerError from '@/section-h/common/ServerError';
 import { GetResultUrl } from '@/Domain/Utils-H/appControl/appConfig';
 import { GetResultInter } from '@/Domain/Utils-H/appControl/appInter';
@@ -7,8 +7,11 @@ import { GetUserProfileUrl } from '@/Domain/Utils-H/userControl/userConfig';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import React, { Suspense } from 'react'
-import { FaDownload, FaMinus } from 'react-icons/fa6';
+import { FaDownload } from 'react-icons/fa6';
 import { ConfigData, protocol } from '@/config';
+import Table from '@/componentsTwo/Table';
+import { TableRowClassName } from '@/constants';
+import MessageModal from '@/componentsTwo/MessageModal';
 
 
 export const metadata: Metadata = {
@@ -20,7 +23,7 @@ const page = async ({
     params,
     searchParams,
 }: {
-    params: { userprofile_id: string,  domain: string, specialty_id: string };
+    params: { userprofile_id: string, domain: string, specialty_id: string };
     searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
@@ -30,10 +33,15 @@ const page = async ({
         ]
     });
     const apiProfile: any = await getData(protocol + "api" + params.domain + GetUserProfileUrl, { id: params.userprofile_id, fieldList: ["user__username"] });
-    const apiDataSem1: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "I", publish_exam: true, fieldList: ["id", "ca", "exam", "course__main_course__course_name"] });
-    const apiDataSem2: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "II", publish_exam: true, fieldList: ["id", "ca", "exam", "course__main_course__course_name"] });
+    const apiDataSem1: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "I", publish_exam: true, nopage: true, fieldList: [
+        "id", "ca", "exam", "resit", "average", "course__main_course__course_name", "student__user__full_name", "student__specialty__academic_year", "student__specialty__level__level", "student__specialty__main_specialty__specialty_name",
+        "course__id", "student__specialty__school__school_name", "student__specialty__school__address", "student__specialty__school__region"
+    ]});
+    const apiDataSem2: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "II", publish_exam: true, nopage: true, fieldList: [
+        "id", "ca", "exam", "resit", "average", "course__main_course__course_name", "student__user__full_name", "student__specialty__academic_year", "student__specialty__level__level", "student__specialty__main_specialty__specialty_name",
+        "course__id", "student__specialty__school__school_name", "student__specialty__school__address", "student__specialty__school__region"
+    ]});
 
-    console.log(apiDataSem1, 28)
     return (
         <div>
             {apiSchoolFees ?
@@ -54,59 +62,23 @@ const page = async ({
 
                                 <div className='font-medium justify-center py-2 text-center tracking-wide'>Semester I</div>
 
-                                <div className="bg-bluedark dark:border-strokedark grid grid-cols-12 lg:grid-cols-12 md:px-2 md:text-lg py-1 text-sm text-white tracking-wider">
-                                    <div className="col-span-6 flex items-center">
-                                        <span className="">Course</span>
-                                    </div>
-                                    <div className="col-span-5 flex items-end justify-between">
-                                        <span className="">CA</span>
-                                        <span className="">Exam</span>
-                                        <span className="">Total</span>
-                                    </div>
-                                    <div className="col-span-1 flex items-center justify-between ml-2">
-                                        <span className="hidden md:flex w-20">Grade</span>
-                                        <span className="md:hidden md:item-center w-6">Gd</span>
-                                    </div>
-                                </div>
-
                                 <Suspense fallback={<div>Loading ...</div>}>
-                                    {apiDataSem1?.count ?
+                                    {apiDataSem2?.length ?
                                         <>
                                             {(apiSchoolFees[0].userprofile__specialty__tuition - apiSchoolFees[0].balance) > (apiSchoolFees[0].userprofile__specialty__tuition * (ConfigData[`${params.domain}`]['higher'].schoolfees_control[1] / 100)) ?
-                                                apiDataSem1.results.map((item: GetResultInter, key: number) => (
-                                                    <div
-                                                        className="border-stroke border-t dark:border-strokedark dark:text-white grid grid-cols-12 md:grid-cols-12 odd:bg-slate-50 odd:dark:bg-slate-800 px-2 text-back text-black"
-                                                        key={key}
-                                                    >
-                                                        <div className="col-span-6 flex items-end">
-                                                            <span className="md:text-lg text-sm">
-                                                                {item.course__main_course__course_name}
-                                                            </span>
-                                                        </div>
-                                                        <div className="col-span-5 flex items-end justify-between">
-                                                            <span className="">{item.ca}</span>
-                                                            <span className="">{item.exam}</span>
-                                                            <span className="">{parseInt(item.ca?.toString()) + parseInt(item.exam?.toString())}</span>
-                                                            {item.resit && <span className="items-start"><span className='font-bold text-lg text-red'>*</span></span>}
-                                                        </div>
-                                                        <div className="col-span-1 flex items-end justify-end">
-                                                            <span className="">
-                                                                {/* {item.ca == null ? <FaMinus size={20} /> : item.ca > ConfigData.ca_mark ? <GrStatusGood color='green' size={20} /> : <GrClose color='red' size={20} />} */}
-                                                            </span>
-                                                        </div>
-
-                                                    </div>
-
-
-
-                                                ))
+                                                <Table key={2}
+                                                    columns={columns}
+                                                    renderRow={renderRow}
+                                                    data={apiDataSem1}
+                                                    headerClassName='bg-blue-800 font-medium text-slate-50 italic'
+                                                />
                                                 :
                                                 <div className='flex font-medium items-center justify-center px-10 py-24 text-center text-wrap tracking-wider'>Not Meeting Minimum Required School Fees to View Results</div>
                                             }
 
-                                            <button className="bg-bluedark flex font-medium items-center justify-center md:gap-2 md:text-lg mt-4 px-4 py-1 rounded text-white">
-                                                Download <FaDownload />
-                                            </button>
+                                            {/* <div className='flex items-center justify-center mt-4'>
+                                            <MessageModal table="result_slip" type="custom" customClassName='rounded-full border-teal-700 border p-2' params={params} data={apiDataSem1} icon={<FaDownload size={20} />} extra_data={["Semester I"]} />
+                                            </div> */}
 
                                         </>
                                         :
@@ -125,59 +97,23 @@ const page = async ({
 
                                 <div className='font-medium justify-center py-2 text-center tracking-wide'>Semester II</div>
 
-                                <div className="bg-bluedark dark:border-strokedark grid grid-cols-12 lg:grid-cols-12 md:px-2 md:text-lg py-1 text-sm text-white tracking-wider">
-                                    <div className="col-span-6 flex items-center">
-                                        <span className="">Course</span>
-                                    </div>
-                                    <div className="col-span-5 flex items-end justify-between">
-                                        <span className="">CA</span>
-                                        <span className="">Exam</span>
-                                        <span className="">Total</span>
-                                    </div>
-                                    <div className="col-span-1 flex items-center justify-between ml-2">
-                                        <span className="hidden md:flex w-20">Grade</span>
-                                        <span className="md:hidden md:item-center w-6">Gd</span>
-                                    </div>
-                                </div>
-
                                 <Suspense fallback={<div>Loading ...</div>}>
-                                    {apiDataSem2?.count ?
+                                    {apiDataSem2?.length ?
                                         <>
                                             {(apiSchoolFees[0].userprofile__specialty__tuition - apiSchoolFees[0].balance) > (apiSchoolFees[0].userprofile__specialty__tuition * (ConfigData[`${params.domain}`]['higher'].schoolfees_control[3] / 100)) ?
-                                                apiDataSem2.results.map((item: GetResultInter, key: number) => (
-                                                    <div
-                                                        className="border-stroke border-t dark:border-strokedark dark:text-white grid grid-cols-12 md:grid-cols-12 odd:bg-slate-50 odd:dark:bg-slate-800 px-2 text-back text-black"
-                                                        key={key}
-                                                    >
-                                                        <div className="col-span-6 flex items-end">
-                                                            <span className="md:text-lg text-sm">
-                                                                {item.course__main_course__course_name}
-                                                            </span>
-                                                        </div>
-                                                        <div className="col-span-5 flex items-end justify-between">
-                                                            <span className="">{item.ca}</span>
-                                                            <span className="">{item.exam}</span>
-                                                            <span className="">{parseInt(item.ca?.toString()) + parseInt(item.exam?.toString())}</span>
-                                                            {item.resit && <span className="items-start"><span className='font-bold text-lg text-red'>*</span></span>}
-                                                        </div>
-                                                        <div className="col-span-1 flex items-end justify-end">
-                                                            <span className="">
-                                                                {/* {item.ca == null ? <FaMinus size={20} /> : item.ca > ConfigData.ca_mark ? <GrStatusGood color='green' size={20} /> : <GrClose color='red' size={20} />} */}
-                                                            </span>
-                                                        </div>
-
-                                                    </div>
-
-
-
-                                                ))
+                                                <Table key={2}
+                                                    columns={columns}
+                                                    renderRow={renderRow}
+                                                    data={apiDataSem2}
+                                                    headerClassName='bg-blue-800 font-medium text-slate-50 italic'
+                                                />
                                                 :
                                                 <div className='flex font-medium items-center justify-center px-10 py-24 text-center text-wrap tracking-wider'>Not Meeting Minimum Required School Fees to View Results</div>
                                             }
 
-                                            <button className="bg-bluedark flex font-medium items-center justify-center md:gap-2 md:text-lg mt-4 px-4 py-1 rounded text-white">
-                                                Download <FaDownload />
-                                            </button>
+                                            {/* <div className='flex items-center justify-center mt-4'>
+                                            <MessageModal table="result_slip" type="custom" customClassName='rounded-full border-teal-700 border p-2' params={params} data={apiDataSem2} icon={<FaDownload size={20} />} extra_data={["Semester II"]} />
+                                            </div> */}
 
                                         </>
                                         :
@@ -213,4 +149,43 @@ const page = async ({
 export default page
 
 
+const columns = [
+    {
+        header: "Course",
+        accessor: "id",
+        className: "table-cell w-7/12 border-r border-white",
+    },
+    {
+        header: "CA",
+        accessor: "ca",
+        className: "table-cell w-1/12 text-[13px] border-r border-white",
+    },
+    {
+        header: "Exam",
+        accessor: "exam",
+        className: "table-cell w-1/12 text-[13px] border-r border-white",
+    },
+    {
+        header: "Total",
+        accessor: "total",
+        className: "table-cell w-2/12 text-center text-[13px] border-r border-white",
+    },
+    {
+        header: "Gd",
+        accessor: "action",
+        className: "table-cell w-1/12",
+    },
+];
 
+const renderRow = (item: GetResultInter, index: number) => (
+    <tr
+        key={item.id}
+        className={`${"font-semibold bg-blue-700" + TableRowClassName.sm}`}
+    >
+        <td className={`${item.course__main_course__course_name.length > 20 ? "text-[13px]" : ""} items-center table-cell text-center`}>{item.course__main_course__course_name.slice(0, 30)}</td>
+        <td className="items-center justify-center table-cell text-[12px] text-center">{item.ca}</td>
+        <td className="items-center justify-center table-cell text-[12px] text-center">{item.exam}</td>
+        <td className="items-center justify-center table-cell text-[14px] text-center">{calcTotalandGrade(item.ca, item.exam, item.resit).mark}{calcTotalandGrade(item.ca, item.exam, item.resit).withResit ? <span className='text-lg text-red'>*</span> : ""}</td>
+        <td className={`${calcTotalandGrade(item.ca, item.exam, item.resit).passed ? "text-green-600" : "text-red"} items-center justify-center table-cell text-center`}>{calcTotalandGrade(item.ca, item.exam, item.resit).grade}</td>
+    </tr>
+);

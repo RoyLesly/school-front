@@ -1,7 +1,7 @@
 import { protocol } from '@/config'
+import { GetSchoolInfoUrl } from '@/Domain/Utils-H/appControl/appConfig'
 import { GetSchoolInfoInter } from '@/Domain/Utils-H/appControl/appInter'
 import { getData } from '@/functions'
-import { GetSchoolInfoUrl } from '@/NoDomain/Utils-H/appControl/appConfig'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -16,7 +16,7 @@ const CampusInfo = () => {
         if (count == 0 && school){
             const getCampusInfo = async () => {
                 if (domain){
-                    var d = await getData(protocol + "api" + domain + "." + GetSchoolInfoUrl, {id: school, nopage: true, fieldList: [ "id", "school_name", "campus__region", "campus__name" ]})
+                    var d = await getData(protocol + "api" + domain + GetSchoolInfoUrl, {id: school, nopage: true, fieldList: [ "id", "school_name", "campus__region", "campus__name" ]})
                 } else {
                     var d = await getData(protocol + GetSchoolInfoUrl, {id: school, nopage: true, fieldList: [ "id", "school_name", "campus__region", "campus__name" ]})
                 }

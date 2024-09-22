@@ -8,6 +8,7 @@ import MyPageTitle from "@/section-h/common/MyPageTitle";
 import { FaPlus } from "react-icons/fa6";
 import { MdModeEdit } from "react-icons/md";
 import { RiDeleteBin2Line } from "react-icons/ri";
+import TableSearch from "../TableSearch";
 
 
 const columns = [
@@ -42,9 +43,9 @@ const ListMainCoursePage = ({ params, data }: { params: any, data: GetMainCourse
           <button className="bg-blue-300 flex h-7 items-center justify-center rounded-full w-7">
             <FormModal table="main_course" type="update" params={params} id={item.id} data={item} icon={<MdModeEdit />} />
           </button>
-          {role === "admin" && (
-            <FormModal table="main_course" type="delete" id={item.id} params={params} data={item} icon={<RiDeleteBin2Line />} />
-          )}
+          <button className="field-blue-300 flex h-7 items-center justify-center rounded-full w-7">
+            <FormModal table="main_course" type="delete" params={params} data={item} icon={<FaPlus />} />
+          </button>
         </div>
       </td>
     </tr>
@@ -57,18 +58,20 @@ const ListMainCoursePage = ({ params, data }: { params: any, data: GetMainCourse
       <TabsCourse params={params} page={1} />
 
       {/* TOP */}
-      <div className="flex flex-col gap-4 items-center justify-between md:flex-row md:gap-2">
+      <div className="flex flex-col gap-4 items-center justify-between mb-2 md:flex-row md:gap-2">
         <div className="flex gap-2 items-center w-full">
-        <MyPageTitle title={"Course Titles"} />
+          <MyPageTitle title={"Course Titles"} />
+          <TableSearch placeholder="Search By Course Name" searchString="course_name" />
           <div className="flex flex-row gap-2 justify-end md:gap-4 md:w-30 w-full">
-            {role === "admin" && (
+            <button className="flex h-7 items-center justify-center rounded-full w-10">
               <FormModal table="main_course" type="create" params={params} icon={<FaPlus />} />
-            )}
+            </button>
           </div>
         </div>
       </div>
 
       <Table columns={columns} renderRow={renderRow} data={data} />
+
     </div>
   );
 };

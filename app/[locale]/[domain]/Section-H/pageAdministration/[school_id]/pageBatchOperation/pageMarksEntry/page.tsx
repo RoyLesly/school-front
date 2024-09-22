@@ -53,8 +53,10 @@ export const metadata: Metadata = {
 
 const SelectLecturer = async ({ data, params, apiAdmins }: any) => {
 
-  const years = await getData(protocol + "api" + params.domain + AcademicYearUrl, {})
+  const years = await getData(protocol + "api" + params.domain + AcademicYearUrl, { school: params.school_id})
   const sortYears = await years.results.sort((a: string, b: string) => a > b ? 1 : b > a ? -1 : 0)
+
+  console.log(sortYears, 59)
 
   return (
     <div className='flex flex-col h-full'>

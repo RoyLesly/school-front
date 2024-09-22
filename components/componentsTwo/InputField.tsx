@@ -5,6 +5,7 @@ type InputFieldProps = {
   type?: string;
   register: any;
   name: string;
+  className?: string;
   readOnly?: boolean;
   defaultValue?: string;
   error?: FieldError;
@@ -20,15 +21,16 @@ const InputField = ({
   error,
   inputProps,
   readOnly,
+  className,
 }: InputFieldProps) => {
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className={`${className ? className : "flex "} flex-col gap-2 w-full`}>
       <label className="text-gray-500">{label}</label>
       <input
         type={type}
         readOnly={readOnly}
         {...register(name)}
-        className="active:border-primary bg-transparent border-[1.5px] border-stroke dark:bg-form-input dark:border-form-strokedark dark:focus:border-primary dark:text-white disabled:bg-whiter disabled:cursor-default focus:border-primary md:px-6 md:py-3 outline-none px-2 py-2 rounded-lg text-black transition w-full"
+        className={` active:border-primary bg-white border-[1.5px] border-stroke dark:bg-form-input dark:border-form-strokedark dark:focus:border-primary dark:text-white disabled:bg-whiter disabled:cursor-default focus:border-primary md:px-6 md:py-3 outline-none px-2 py-2 rounded-lg text-black transition w-full`}
         {...inputProps}
         defaultValue={defaultValue}
       />

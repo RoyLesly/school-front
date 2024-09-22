@@ -10,21 +10,18 @@ import { SchemaCreateEditDomain } from "@/Domain/schemas/schemas";
 import { DomainUrl } from "@/Domain/Utils-H/appControl/appConfig";
 import { useState } from "react";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
+import { handleResponseError } from "@/functions";
 
 
 type Inputs = z.infer<typeof SchemaCreateEditDomain>;
 
-const DomainForm = ({
-  type,
-  data,
-  setOpen,
-  params,
-}: {
-  type: "create" | "update" | "delete";
+interface PropsType {
+  type: "create" | "update" | "delete" ;
+  params?: any;
   data?: any;
   setOpen?: any;
-  params?: any;
-}) => {
+}
+const DomainForm = (props: PropsType) => {
   const { register, handleSubmit, formState: { errors }, } = useForm<Inputs>({
     resolver: zodResolver(SchemaCreateEditDomain),
   });
@@ -38,34 +35,35 @@ const DomainForm = ({
       domain_name: formVals.domain_name.toUpperCase(),
     }
 
-    if (type === "create") {
+    if (props.type === "create") {
       const call = async () => {
-        const response = await ActionCreate(newVals, SchemaCreateEditDomain, protocol + "api" + params.domain + DomainUrl)
-        if (response && response.id) {
-          router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageSettings/pageDomains?created="SUCCESSFULLY (${response.id}) !!!`);
-          setOpen(false)
+        const response = await ActionCreate(newVals, SchemaCreateEditDomain, protocol + "api" + props.params.domain + DomainUrl)
+        const t = await handleResponseError(response, ["domain_name"]);
+        if (t == "" && response && response.id) {
+          router.push(`/${props.params.domain}/Section-H/pageAdministration/${props.params.school_id}/pageSettings/pageDomains?created="SUCCESSFULLY (${response.id}) !!!`);
+          props.setOpen(false)
         }
         setClicked(false)
       }
       call()
     }
-    if (type === "update") {
+    if (props.type === "update") {
       const call = async () => {
-        const response = await ActionEdit(newVals, data.id, SchemaCreateEditDomain, protocol + "api" + params.domain + DomainUrl)
+        const response = await ActionEdit(newVals, props.data.id, SchemaCreateEditDomain, protocol + "api" + props.params.domain + DomainUrl)
         if (response && response.id) {
-          router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageSettings/pageDomains?updated="SUCCESSFULLY (${response.id}) !!!`);
-          setOpen(false)
+          router.push(`/${props.params.domain}/Section-H/pageAdministration/${props.params.school_id}/pageSettings/pageDomains?updated="SUCCESSFULLY (${response.id}) !!!`);
+          props.setOpen(false)
         }
         setClicked(false)
       }
       call()
     }
-    if (type === "delete") {
+    if (props.type === "delete") {
       const call = async () => {
-        const response = await ActionDelete(protocol + "api" + params.domain + DomainUrl, data.id)
+        const response = await ActionDelete(protocol + "api" + props.params.domain + DomainUrl, props.data.id)
         if (response && response.success) {
-          router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageSettings/pageDomains?deleted="DELETED (${data.id}) !!!`);
-          setOpen(false)
+          router.push(`/${props.params.domain}/Section-H/pageAdministration/${props.params.school_id}/pageSettings/pageDomains?deleted="DELETED (${props.data.id}) !!!`);
+          props.setOpen(false)
         }
         setClicked(false)
       }
@@ -76,20 +74,20 @@ const DomainForm = ({
   return (
 
     <form className="flex flex-col gap-4" onSubmit={onSubmit}>
-      {type === "create" && <h1 className="font-semibold text-xl">Create Domain</h1>}
-      {type === "update" && <h1 className="font-semibold text-xl">Update Value</h1>}
+      {props.type === "create" && <h1 className="font-semibold text-xl">Create Domain</h1>}
+      {props.type === "update" && <h1 className="font-semibold text-xl">Update Value</h1>}
 
       <div className="flex flex-wrap gap-4 justify-between">
         <InputField
           label="Domain Name"
           name="domain_name"
-          defaultValue={data?.domain_name}
+          defaultValue={props.data?.domain_name}
           register={register}
           error={errors?.domain_name}
         />
       </div>
 
-      <MyButtonModal type={type} clicked={clicked} />
+      <MyButtonModal type={props.type} clicked={clicked} />
 
     </form>
   );

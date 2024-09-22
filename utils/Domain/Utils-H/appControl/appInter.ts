@@ -301,6 +301,12 @@ export type GetResultInter = {
   student__id: number;
   student__user__first_name: string;
   student__user__full_name: string;
+  student__specialty__main_specialty__specialty_name: string;
+  student__specialty__academic_year: string;
+  student__specialty__level__level: string;
+  student__specialty__school__school_name: string;
+  student__specialty__school__region: string;
+  student__specialty__school__address: string;
   course__id: number;
   course__main_course__course_name: string;
   course__course_code: string;

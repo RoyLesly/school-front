@@ -26,15 +26,13 @@ const page = async ({
     "id", "level__level", "main_specialty__specialty_name", "main_specialty__field__id", "academic_year", "main_specialty__field__domain__id"
   ] })
 
-  console.log(apiStudents, 27)
-
   return (
     <LayoutAdmin>
       <>
         <Breadcrumb
           pageName={`Promote - ${apiSpecialty && apiSpecialty.length > 0 && (apiSpecialty[0].main_specialty__specialty_name + " - " + apiSpecialty[0].academic_year + " - " + apiSpecialty[0].level__level)}`}
           pageName1="Back"
-          link1={`/pageAdministration/${params.school_id}/pageResult/pagePromote`}
+          link1={`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageResult/pagePromote`}
         />
 
         {apiStudents && apiStudents["unauthorized"] && redirect(`/pageAuthentication/pageSessionExpired`)}

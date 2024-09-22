@@ -10,6 +10,7 @@ import { ProgramUrl } from "@/Domain/Utils-H/userControl/userConfig";
 import { useState } from "react";
 import { SchemaCreateEditProgram } from "@/Domain/schemas/schemas";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
+import { handleResponseError } from "@/functions";
 
 type Inputs = z.infer<typeof SchemaCreateEditProgram>;
 
@@ -42,7 +43,8 @@ const ProgramForm = ({
     if (type === "create") {
       const call = async () => {
         const response = await ActionCreate(newVals, SchemaCreateEditProgram, protocol + "api" + params.domain + ProgramUrl)
-        if (response && response.id) {
+        const t = await handleResponseError(response, ["name"]);
+        if (t == "" && response && response.id) {
           router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageSettings/pagePrograms?created="SUCCESSFULLY (${response.id}) !!!`);
           setOpen(false)
         }

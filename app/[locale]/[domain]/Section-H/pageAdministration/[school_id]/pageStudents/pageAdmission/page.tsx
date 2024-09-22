@@ -11,7 +11,7 @@ import React from 'react'
 import SelectSpecialty from './SelectSpecialty';
 import { ConfigData, protocol } from '@/config';
 import { ActionCreate } from '@/serverActions/actionGeneral';
-import { SchemaCreateCustomUser, UserProfileStudentEditSchema } from '@/schemas-user';
+import { SchemaCreateEditCustomUser, UserProfileStudentEditSchema } from '@/schemas-user';
 import { UserProfileUrl } from '@/Domain/Utils-H/userControl/userConfig';
 
 const page = async ({
@@ -89,7 +89,11 @@ const Create = async ({ params }: any) => {
       school: [parseInt(params.school_id),],
     }
 
-    const response = await ActionCreate(data, SchemaCreateCustomUser, protocol + "api" + params.domain + CustomUserUrl)
+    console.log(data)
+    console.log(dept_id)
+    return
+
+    const response = await ActionCreate(data, SchemaCreateEditCustomUser, protocol + "api" + params.domain + CustomUserUrl)
 
     console.log(response, 93)
     if (response.id) {
@@ -101,9 +105,6 @@ const Create = async ({ params }: any) => {
       }
 
       const response2 = await ActionCreate(userProfileData, UserProfileStudentEditSchema, protocol + "api" + params.domain + UserProfileUrl)
-      console.log(response2, 108)
-      console.log(response2, 108)
-      console.log(response2, 108)
       if (response2.id) {
         redirect(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageStudents?created=Success Student Admission`, RedirectType.replace)
       }

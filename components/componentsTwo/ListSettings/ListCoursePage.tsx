@@ -1,6 +1,5 @@
 import TabsCourse from "@/[locale]/[domain]/Section-H/pageAdministration/[school_id]/pageSettings/pageCourses/TabsCourse";
 import FormModal from "@/componentsTwo/FormModal";
-import { role } from "@/componentsTwo/lib/data";
 import Table from "@/componentsTwo/Table";
 import { TableRowClassName } from "@/constants";
 import { GetCourseInter } from "@/Domain/Utils-H/appControl/appInter";
@@ -8,6 +7,10 @@ import MyPageTitle from "@/section-h/common/MyPageTitle";
 import { FaPlus } from "react-icons/fa6";
 import { MdModeEdit } from "react-icons/md";
 import { RiDeleteBin2Line } from "react-icons/ri";
+import TableSearch from "../TableSearch";
+import { getData } from "@/functions";
+import { protocol } from "@/config";
+import { AcademicYearUrl, GetDomainUrl, GetLevelUrl, GetMainCourseUrl } from "@/Domain/Utils-H/appControl/appConfig";
 
 
 const columns = [
@@ -27,13 +30,13 @@ const columns = [
     className: "hidden md:table-cell w-2/12 md:w-2/12",
   },
   {
-    header: "Year",
-    accessor: "specialty__academic_year",
+    header: "Level",
+    accessor: "specialty__level__level",
     className: "hidden md:table-cell w-1/12 md:w-1/12",
   },
   {
-    header: "Level",
-    accessor: "specialty__level__level",
+    header: "Year",
+    accessor: "specialty__academic_year",
     className: "hidden md:table-cell w-1/12 md:w-1/12",
   },
   {
@@ -53,7 +56,14 @@ const columns = [
   },
 ];
 
-const ListCoursePage = ({ params, data }: { params: any, data: GetCourseInter[] | any }) => {
+const ListCoursePage = async ({ params, data }: { params: any, data: GetCourseInter[] | any }) => {
+
+  const apiYears: any[] = await getData(protocol + "api" + params.domain + AcademicYearUrl, { nopage: true })
+  const apiDomains: any[] = await getData(protocol + "api" + params.domain + GetDomainUrl, { nopage: true })
+  const apiMainCourses: any[] = await getData(protocol + "api" + params.domain + GetMainCourseUrl, { nopage: true })
+  const apiLevel: any[] = await getData(protocol + "api" + params.domain + GetLevelUrl, { nopage: true })
+
+  const thisYear = new Date().getFullYear();
 
   const renderRow = (item: GetCourseInter, index: number) => (
     <tr
@@ -70,11 +80,11 @@ const ListCoursePage = ({ params, data }: { params: any, data: GetCourseInter[] 
       <td>
         <div className="flex gap-2 items-center">
           <button className="bg-blue-300 flex h-7 items-center justify-center rounded-full w-7">
-            <FormModal table="course" type="update" params={params} id={item.id} data={item} icon={<MdModeEdit />} />
+            <FormModal table="course" type="update" params={params} id={item.id} data={item} icon={<MdModeEdit />} extra_data={[apiDomains, apiMainCourses, apiLevel]} />
           </button>
-          {role === "admin" && (
-            <FormModal table="course" type="delete" id={item.id} params={params} data={item} icon={<RiDeleteBin2Line />} />
-          )}
+          <button className="bg-blue-300 flex h-7 items-center justify-center rounded-full w-7">
+            <FormModal table="course" type="delete" params={params} data={item} icon={<RiDeleteBin2Line />} />
+          </button>
         </div>
       </td>
     </tr>
@@ -87,18 +97,41 @@ const ListCoursePage = ({ params, data }: { params: any, data: GetCourseInter[] 
       <TabsCourse params={params} page={0} />
 
       {/* TOP */}
-      <div className="flex flex-col gap-4 items-center justify-between md:flex-row md:gap-2">
+      <div className="flex flex-col gap-4 items-center justify-between mb-2 md:flex-row md:gap-2 md:mb-4">
         <div className="flex gap-2 items-center w-full">
-        <MyPageTitle title={"Courses"} />
-        <div className="flex flex-row gap-2 justify-end md:gap-4 md:w-30 w-full">
-            {role === "admin" && (
-              <FormModal table="course" type="create" params={params} icon={<FaPlus />} />
-            )}
+          <MyPageTitle title={"Courses"} />
+          <TableSearch placeholder="By Course Name" searchString="main_course__course_name" />
+          <TableSearch placeholder="By Class" searchString="specialty__main_specialty__specialty_name" />
+          <TableSearch placeholder="By Level" searchString="specialty__level__level" />
+          <div className="flex flex-row gap-2 justify-end md:gap-4 md:w-30 w-full">
+            <button className="bg-blue-300 flex h-7 items-center justify-center rounded-full w-10">
+              <FormModal table="course" type="create" params={params} icon={<FaPlus />} extra_data={[apiDomains, apiMainCourses, apiLevel]} />
+            </button>
           </div>
         </div>
       </div>
 
-      <Table columns={columns} renderRow={renderRow} data={data} />
+      {apiYears.length ? apiYears.map((year: string) =>
+        <div key={year} className="flex flex-col gap-2">
+          <h1 className="text-center tracking-widest">{year}</h1>
+          <Table key={year}
+            columns={columns}
+            renderRow={renderRow}
+            data={data.filter((cou: GetCourseInter) => cou.specialty__academic_year == year).sort((a: GetCourseInter, b: GetCourseInter) => a.specialty__level__level > b.specialty__level__level ? 1 : a.specialty__level__level < b.specialty__level__level ? -1 : 0)}
+          />
+        </div>
+      )
+        :
+        [`${thisYear}/${thisYear + 1}`, `${thisYear - 1}/${thisYear}`, `${thisYear - 2}/${thisYear - 1}`,].map((year: string) =>
+          <div key={year} className="flex flex-col gap-2">
+            <h1 className="text-center tracking-widest">{year}</h1>
+            <Table key={year}
+              columns={columns}
+              renderRow={renderRow}
+              data={data.filter((cou: GetCourseInter) => cou.specialty__academic_year == year).sort((a: GetCourseInter, b: GetCourseInter) => a.specialty__level__level > b.specialty__level__level ? 1 : a.specialty__level__level < b.specialty__level__level ? -1 : 0)}
+            />
+          </div>
+        )}
     </div>
   );
 };

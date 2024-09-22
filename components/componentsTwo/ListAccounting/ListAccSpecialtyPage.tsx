@@ -76,14 +76,14 @@ const ListAccSpecialtyPage = ({ params, data, years, thisYear, levels, domains }
       <MyTabs
         page={0} 
         data={[
-          { page: 0,  title: "", link: `/${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/pageDomain`},
-          { page: 1,  title: "", link: `/${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/pageField`},
-          { page: 2,  title: "", link: `/${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/pageSpecialty`},
+          // { page: 0,  title: "", link: `/${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/pageDomain`},
+          // { page: 1,  title: "", link: `/${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/pageField`},
+          // { page: 2,  title: "", link: `/${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/pageSpecialty`},
         ]}
       />
 
       {/* TOP */}
-      <div className="flex flex-col gap-4 items-center justify-between md:flex-row md:gap-2">
+      <div className="flex flex-col gap-4 items-center justify-between mb-2 md:flex-row md:gap-2">
         <div className="flex gap-2 items-center w-full">
           <MyPageTitle title={"Class Analyses"} params={params} />
           <div className="font-semi-bold hidden italic md:flex tracking-widest">{thisYear}</div>

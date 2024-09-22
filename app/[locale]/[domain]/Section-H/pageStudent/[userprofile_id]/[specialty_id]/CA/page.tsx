@@ -77,7 +77,7 @@ const page = async ({
                                                 </div>
                                                 <div className="col-span-1 flex items-end justify-end">
                                                     <span className="">
-                                                        {item.ca == null ? <FaMinus size={20} /> : item.ca > ConfigData[params.domain].ca_mark ? <GrStatusGood color='green' size={20} /> : <GrClose color='red' size={20} />}
+                                                        {item.ca == null ? <FaMinus size={20} /> : item.ca > ConfigData[params.domain]["higher"].ca_mark ? <GrStatusGood color='green' size={20} /> : <GrClose color='red' size={20} />}
                                                     </span>
                                                 </div>
                                             </div>
@@ -127,7 +127,7 @@ const page = async ({
                                                 </div>
                                                 <div className="col-span-1 flex items-end justify-end">
                                                     <span className="">
-                                                        {item.ca == null ? <FaMinus size={20} /> : item.ca > ConfigData[params.domain].ca_mark ? <GrStatusGood color='green' size={20} /> : <GrClose color='red' size={20} />}
+                                                        {item.ca == null ? <FaMinus size={20} /> : item.ca > ConfigData[params.domain]["higher"].ca_mark ? <GrStatusGood color='green' size={20} /> : <GrClose color='red' size={20} />}
                                                     </span>
                                                 </div>
                                             </div>

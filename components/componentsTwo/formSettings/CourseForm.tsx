@@ -10,23 +10,28 @@ import { AcademicYearUrl, CourseUrl, GetDomainUrl, GetLevelUrl, GetMainCourseUrl
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
 import { useEffect, useState } from "react";
 import { GetDomainInter, GetLevelInter, GetMainCourseInter, GetSpecialtyInter } from "@/Domain/Utils-H/appControl/appInter";
-import { getData } from "@/functions";
+import { getData, handleResponseError } from "@/functions";
 import SelectField from "../SelectField";
 import { SchemaCreateEditCourse } from "@/Domain/schemas/schemas";
 import MyPageTitle from "@/section-h/common/MyPageTitle";
 import { GetCustomUserInter } from "@/Domain/Utils-H/userControl/userInter";
 import { GetCustomUserUrl } from "@/Domain/Utils-H/userControl/userConfig";
+import Link from "next/link";
+import MyButtonLink from "@/section-h/common/MyButtons/MyButtonLink";
+import Loader from "@/section-h/common/Loader";
 
 type Inputs = z.infer<typeof SchemaCreateEditCourse>;
 
 const CourseForm = ({
   type,
   data,
+  extra_data,
   setOpen,
   params,
 }: {
   type: "create" | "update" | "delete";
   data?: any;
+  extra_data?: any;
   setOpen?: any;
   params?: any;
 }) => {
@@ -34,39 +39,45 @@ const CourseForm = ({
     resolver: zodResolver(SchemaCreateEditCourse),
   });
 
+  const thisYear = new Date().getFullYear()
   const router = useRouter();
   const [clicked, setClicked] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0)
-  const [domainData, setDomainData] = useState<GetDomainInter[] | any>()
-  const [levelData, setLevelData] = useState<GetLevelInter[] | any>()
-  const [yearData, setYearData] = useState<string[] | any>()
   const [specialtyData, setSpecialtyData] = useState<GetSpecialtyInter[] | any>()
-  const [mainCourseData, setMainCourseData] = useState<GetMainCourseInter[] | any>()
   const [lecturerData, setLecturerData] = useState<GetCustomUserInter[] | any>()
   const [selectedDomainID, setSelectedDomainID] = useState<number>(0)
   const [selectedLevelID, setSelectedLevelID] = useState<number>(0)
   const [selectedYear, setSelectedYear] = useState<string>("")
   const [selectedSpecialty, setSelectedSpecialty] = useState<GetSpecialtyInter>()
 
+
+
   useEffect(() => {
-    if (count == 0) {
+    if (count == 0 && data && data.specialty__id) {
       const call = async () => {
-        const response = await getData(protocol + "api" + params.domain + GetMainCourseUrl, { nopage: true, fieldList: ["id", "course_name"] })
-        const responseDomains = await getData(protocol + "api" + params.domain + GetDomainUrl, { nopage: true, fieldList: ["id", "domain_name"] })
-        const responseLevels = await getData(protocol + "api" + params.domain + GetLevelUrl, { nopage: true, fieldList: ["id", "level"] })
-        const responseYears = await getData(protocol + "api" + params.domain + AcademicYearUrl, {})
-        const responseLecturer = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "teacher", active: true, school_id: params.school_id, fieldList: ["id", "full_name"] })
-        const responseAdmin = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "admin", active: true, school_id: params.school_id, fieldList: ["id", "full_name"] })
-        if (responseDomains && responseDomains.length) { setDomainData(responseDomains) }
-        if (responseLevels && responseLevels.length) { setLevelData(responseLevels) }
-        if (responseYears && responseYears.count) { setYearData(responseYears.results) }
-        if (responseLecturer && responseLecturer.length) { setLecturerData([...responseLecturer, ...responseAdmin]) }
+        const responseLecturer = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "teacher", active: true, is_staff: false, school_id: params.school_id, fieldList: ["id", "full_name"] })
+        const responseAdmin = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "admin", active: true, is_staff: false, school_id: params.school_id, fieldList: ["id", "full_name"] })
+        const response = await getData(protocol + "api" + params.domain + GetSpecialtyUrl, {
+          "specialty__main_specialty__field__domain__id": data.specialty__main_specialty__field__domain__id, 
+          "academic_year": data.specialty__academic_year, nopage: true,
+          fieldList: ["id", "main_specialty__specialty_name", "level__level", "academic_year"]
+        })
         if (response && response.length) {
-          if (type != "create" && data) {
-            setMainCourseData(response.filter((item: GetMainCourseInter) => item.course_name != data.main_course__main_course_name))
-          } else {
-            setMainCourseData(response)
-          }
+          setSpecialtyData(response)
+        }
+        if (responseLecturer && responseAdmin) {
+          setLecturerData([...responseAdmin, ...responseLecturer])
+        }
+        setCount(1);
+      }
+      call()
+    }
+    if (count == 0 && !data) {
+      const call = async () => {
+        const responseLecturer = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "teacher", active: true, is_staff: false, school_id: params.school_id, fieldList: ["id", "full_name"] })
+        const responseAdmin = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "admin", active: true, is_staff: false, school_id: params.school_id, fieldList: ["id", "full_name"] })
+        if (responseLecturer && responseAdmin) {
+          setLecturerData([...responseAdmin, ...responseLecturer])
         }
         setCount(1);
       }
@@ -86,7 +97,6 @@ const CourseForm = ({
       call()
     }
   }, [count, params, data, type, selectedDomainID, selectedLevelID, selectedYear])
-
   const onSubmit = handleSubmit((formVals) => {
     setClicked(true);
 
@@ -107,14 +117,12 @@ const CourseForm = ({
 
     }
 
-    console.log(newVals);
-    // return
 
     if (type === "create") {
       const call = async () => {
         const response = await ActionCreate(newVals, SchemaCreateEditCourse, protocol + "api" + params.domain + CourseUrl)
-        console.log(response)
-        if (response && response.id) {
+        const t = await handleResponseError(response, ["school_id", "course_type", "hours", "hours_left", "main_course_id", "specialty_id", "course_code", "semester", "assigned_to_id", "paid", "completed"]);
+        if (t == "" && response && response.id) {
           router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageSettings/pageCourses?created="SUCCESSFULLY (${response.id}) !!!`);
           setOpen(false)
         }
@@ -147,141 +155,284 @@ const CourseForm = ({
 
   });
 
+  console.log(data)
+
   return (
-    <form className="flex flex-col gap-1 md:gap-4" onSubmit={onSubmit}>
-      {type === "create" && <h1 className="font-semibold text-xl">Assign Course</h1>}
-      {type === "update" && <h1 className="font-semibold text-xl">Update Course</h1>}
-      {type === "delete" && <h1 className="font-semibold text-xl">Delete Course</h1>}
+    <>
+      {lecturerData ?
+        lecturerData.length ?
+          <>
+          {type === "create" ? <form className="flex flex-col gap-1 md:gap-4" onSubmit={onSubmit}>
+            {type === "create" && <h1 className="font-semibold text-xl">Assign Course</h1>}
 
-      <div className="flex flex-wrap gap-4 justify-between">
-        <SelectField
-          label="Domain"
-          name="domain_id"
-          register={register}
-          error={errors?.domain_id}
-          data={domainData}
-          defaultValue={data?.main_specialty__field__domain__id}
-          defaultName={data?.assigned_to__full_name}
-          display={{ "name": "domain_name", value: "id" }}
-          functions={[setCount, setSelectedDomainID, 3]}
-        />
-      </div>
+            <div className="flex flex-wrap gap-4 justify-between">
+              <SelectField
+                label="Domain"
+                name="domain_id"
+                register={register}
+                error={errors?.domain_id}
+                data={extra_data[0]}
+                defaultValue={data?.main_specialty__field__domain__id}
+                defaultName={data?.assigned_to__full_name}
+                display={{ "name": "domain_name", value: "id" }}
+                functions={[setCount, setSelectedDomainID, 3]}
+              />
+            </div>
 
-      <div className="flex flex-row gap-2 justify-between md:gap-4 w-full">
-        {selectedDomainID ? <div className="flex flex-wrap gap-4 justify-between w-full">
-          <SelectField
-            label="Year"
-            name="academic_year"
-            register={register}
-            error={errors?.academic_year}
-            data={yearData}
-            functions={[setCount, setSelectedYear, 3]}
-          />
-        </div> : <></>}
+            <div className="flex flex-row gap-2 justify-between md:gap-4 w-full">
+              {selectedDomainID ? <div className="flex flex-wrap gap-4 justify-between w-full">
+                <SelectField
+                  label="Year"
+                  name="academic_year"
+                  register={register}
+                  error={errors?.academic_year}
+                  data={[`${thisYear - 1}/${thisYear}`, `${thisYear}/${thisYear + 1}`]}
+                  functions={[setCount, setSelectedYear, 3]}
+                />
+              </div> : <></>}
 
-        {selectedYear ? <div className="flex flex-wrap gap-4 justify-between w-full">
-          <SelectField
-            label="Level"
-            name="level_id"
-            register={register}
-            error={errors?.level}
-            data={levelData}
-            display={{ "name": "level", value: "id" }}
-            functions={[setCount, setSelectedLevelID, 3]}
-          />
-        </div> : <></>}
-      </div>
+              {selectedYear ? <div className="flex flex-wrap gap-4 justify-between w-full">
+                <SelectField
+                  label="Level"
+                  name="level_id"
+                  register={register}
+                  error={errors?.level}
+                  data={extra_data[2]}
+                  display={{ "name": "level", value: "id" }}
+                  functions={[setCount, setSelectedLevelID, 3]}
+                />
+              </div>
+                :
+                <></>}
+            </div>
 
-      {specialtyData ? <div className="flex flex-wrap gap-4 justify-between w-full">
-        <SelectField
-          label="Class"
-          name="specialty_id"
-          register={register}
-          error={errors?.specialty_id}
-          data={specialtyData}
-          display={{ "name": "main_specialty__specialty_name", value: "id" }}
-          functions={[setCount, setSelectedSpecialty, 3]}
-        />
-      </div> : <></>}
-
-
-      {specialtyData ? <div className="flex flex-col gap-2 w-full">
-      {/* {true ? <div className="flex flex-col gap-2 w-full"> */}
-
-        <SearchMainCourse
-          apiMainCourse={mainCourseData}
-          data={data}
-          error={errors?.main_course_id}
-          name={"main_course_id"}
-          register={register}
-        />
+            {specialtyData ? <div className="flex flex-wrap gap-4 justify-between w-full">
+              <SelectField
+                label="Class"
+                name="specialty_id"
+                register={register}
+                error={errors?.specialty_id}
+                data={specialtyData}
+                display={{ "name": "main_specialty__specialty_name", value: "id" }}
+                functions={[setCount, setSelectedSpecialty, 3]}
+              />
+            </div> : <></>}
 
 
-        {/* <MyPageTitle title="Course Properties" /> */}
+            {specialtyData ? <div className="flex flex-col gap-2 w-full">
 
-        <div className="flex flex-row gap-2">
-          <InputField
-            label="Code"
-            name="course_code"
-            defaultValue={data?.course_code}
-            register={register}
-            error={errors?.course_code}
-          />
-          <InputField
-            label="Credit"
-            name="course_credit"
-            defaultValue={data?.course_credit}
-            register={register}
-            error={errors?.course_credit}
-            type="number"
-          />
-          <SelectField
-            label="Semester"
-            name="semester"
-            register={register}
-            error={errors?.semester}
-            data={["I", "II"]}
-          />
+              <SearchMainCourse
+                apiMainCourse={extra_data[1]}
+                data={data}
+                error={errors?.main_course_id}
+                name={"main_course_id"}
+                register={register}
+              />
+
+
+              <div className="flex flex-row gap-2">
+                <InputField
+                  label="Code"
+                  name="course_code"
+                  defaultValue={data?.course_code}
+                  register={register}
+                  error={errors?.course_code}
+                />
+                <InputField
+                  label="Credit"
+                  name="course_credit"
+                  defaultValue={data?.course_credit}
+                  register={register}
+                  error={errors?.course_credit}
+                  type="number"
+                />
+                <SelectField
+                  label="Semester"
+                  name="semester"
+                  register={register}
+                  error={errors?.semester}
+                  data={["I", "II"]}
+                />
+              </div>
+
+              <div className="flex gap-2 md:flex-row">
+                <InputField
+                  label="Hours"
+                  name="hours"
+                  defaultValue={data?.hours}
+                  register={register}
+                  error={errors?.hours}
+                  type="number"
+                />
+                <SelectField
+                  label="Course Type"
+                  name="course_type"
+                  register={register}
+                  error={errors?.course_type}
+                  defaultValue={data?.course_type}
+                  defaultName={data?.course_type}
+                  data={["Transversal", "Fundamental", "Professional"]}
+                />
+              </div>
+              <div className="flex flex-col gap-2 md:flex-row">
+                <SearchLecturer
+                  apiLecturer={lecturerData}
+                  data={data}
+                  register={register}
+                  defaultValue={data?.assigned_to__id}
+                  defaultName={data?.assigned_to__full_name}
+                  name={"assigned_to_id"}
+                />
+              </div>
+
+              <div className="flex items-center justify-center md:mt-6 mt-4 w-full">
+                <MyButtonModal type={type} clicked={clicked} />
+              </div>
+
+            </div> : <></>}
+
+
+          </form>
+          
+
+
+
+
+
+          :
+
+
+
+
+          // UPDATE AND DELETE SECTION
+          <form className="flex flex-col gap-1 md:gap-4" onSubmit={onSubmit}>
+            {type === "update" && <h1 className="font-semibold text-xl">Update Course</h1>}
+            {type === "delete" && <h1 className="font-semibold text-xl">Delete Course</h1>}
+
+            <div className="flex flex-wrap gap-4 justify-between">
+              <SelectField
+                label="Domain"
+                name="domain_id"
+                register={register}
+                error={errors?.domain_id}
+                data={extra_data[0]}
+                defaultValue={data?.specialty__main_specialty__field__domain__id}
+                defaultName={data?.specialty__main_specialty__field__domain__domain_name}
+                display={{ "name": "domain_name", value: "id" }}
+                functions={[setCount, setSelectedDomainID, 3]}
+              />
+            </div>
+
+            {specialtyData ? <div className="flex flex-wrap gap-4 justify-between w-full">
+              <SelectField
+                label="Class"
+                name="specialty_id"
+                register={register}
+                error={errors?.specialty_id}
+                defaultValue={data?.specialty__id}
+                defaultName={data?.specialty__main_specialty__specialty_name}
+                data={specialtyData}
+                display={{ "name": "main_specialty__specialty_name", value: "id" }}
+                functions={[setCount, setSelectedSpecialty, 3]}
+              />
+            </div> : <></>}
+
+
+            {specialtyData ? <div className="flex flex-col gap-2 w-full">
+
+              <SelectField
+                label="Course Title"
+                name={"main_course_id"}
+                register={register}
+                error={errors?.main_course_id}
+                defaultValue={data?.main_course__id}
+                defaultName={data?.main_course__course_name}
+                data={extra_data[1]}
+                display={{ "name": "course_name", value: "id" }}
+              />
+
+
+              <div className="flex flex-row gap-2">
+                <InputField
+                  label="Code"
+                  name="course_code"
+                  defaultValue={data?.course_code}
+                  register={register}
+                  error={errors?.course_code}
+                />
+                <InputField
+                  label="Credit"
+                  name="course_credit"
+                  defaultValue={data?.course_credit}
+                  register={register}
+                  error={errors?.course_credit}
+                  type="number"
+                />
+                <SelectField
+                  label="Semester"
+                  name="semester"
+                  register={register}
+                  defaultValue={data?.semester}
+                  error={errors?.semester}
+                  data={["I", "II"]}
+                />
+              </div>
+
+              <div className="flex gap-2 md:flex-row">
+                <InputField
+                  label="Hours"
+                  name="hours"
+                  defaultValue={data?.hours}
+                  register={register}
+                  error={errors?.hours}
+                  type="number"
+                />
+                <SelectField
+                  label="Course Type"
+                  name="course_type"
+                  register={register}
+                  error={errors?.course_type}
+                  defaultValue={data?.course_type}
+                  defaultName={data?.course_type}
+                  data={["Transversal", "Fundamental", "Professional"]}
+                />
+              </div>
+              <div className="flex flex-col gap-2 md:flex-row">
+                <SelectField
+                  label="Course Type"
+                  name={"assigned_to_id"}
+                  register={register}
+                  error={errors?.assigned_to_id}
+                  defaultValue={data?.assigned_to__id}
+                  defaultName={data?.assigned_to__full_name}
+                  data={lecturerData}
+                  display={{ "name": "full_name", value: "id" }}
+
+
+                />
+              </div>
+
+              <div className="flex items-center justify-center md:mt-6 mt-4 w-full">
+                <MyButtonModal type={type} clicked={clicked} />
+              </div>
+
+            </div> : <></>}
+
+
+          </form>}
+          </>
+          :
+          <div className="flex flex-col gap-4 items-center justify-center p-20 w-full">
+            <h1>No Lecturer Registered</h1>
+            <MyButtonLink title={"Goto Lecturers Page"} clicked={clicked} href={`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageLecturers`} />
+          </div>
+        :
+        <div className="bg-white dark:bg-black flex items-center justify-center py-20">
+          <div className="animate-spin border-4 border-primary border-solid border-t-transparent h-16 rounded-full w-16"></div>
         </div>
+      }
 
-        <div className="flex gap-2 md:flex-row">
-          <InputField
-            label="Hours"
-            name="hours"
-            defaultValue={data?.hours}
-            register={register}
-            error={errors?.hours}
-            type="number"
-          />
-          <SelectField
-            label="Course Type"
-            name="course_type"
-            register={register}
-            error={errors?.course_type}
-            defaultValue={data?.course_type}
-            defaultName={data?.course_type}
-            data={["Transversal", "Fundamental", "Professional"]}
-          />
-        </div>
-        <div className="flex flex-col gap-2 md:flex-row">
-          <SearchLecturer
-            apiLecturer={lecturerData}
-            data={data}
-            register={register}
-            defaultValue={data?.assigned_to__id}
-            defaultName={data?.assigned_to__full_name}
-            name={"assigned_to_id"}
-          />
-        </div>
-
-        <div className="flex items-center justify-center md:mt-6 mt-4 w-full">
-          <MyButtonModal type={type} clicked={clicked} />
-        </div>
-
-      </div> : <></>}
-
-
-    </form>
+    </>
   );
 };
 

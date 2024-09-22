@@ -5,7 +5,7 @@ import { getData } from '@/functions'
 import { protocol } from '@/config'
 import NotificationError from '@/section-h/common/NotificationError'
 import { GetSchoolFeesUrl } from '@/Domain/Utils-H/feesControl/feesConfig'
-import ListPendingPlatformPage from '@/componentsTwo/List/ListPendingPlatformPage'
+import ListPendingPlatformPage from '@/componentsTwo/ListUtitlity/ListPendingPlatformPage'
 
 const page = async ({
   params,
@@ -15,7 +15,8 @@ const page = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
-  const apiData: any = await getData(protocol + "api" + params.domain + GetSchoolFeesUrl, { nopage: true, userprofile__specialty__school__campus__id: params.school_id, platform_paid: false, userprofile__no_specialty: false, fieldList: [ 
+  const apiData: any = await getData(protocol + "api" + params.domain + GetSchoolFeesUrl, { 
+    nopage: true, userprofile__specialty__school__campus__id: params.school_id, platform_paid: false, userprofile__no_specialty: false, ...searchParams, fieldList: [ 
     "id", "userprofile__id", "userprofile__user__full_name", "userprofile__user__username", "userprofile__user__matricle", "platform_charges", "balance",
     "userprofile__specialty__main_specialty__specialty_name", "userprofile__specialty__level__level"
   ] });  

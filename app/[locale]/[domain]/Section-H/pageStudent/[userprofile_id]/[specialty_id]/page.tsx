@@ -37,7 +37,8 @@ const page = async ({
     { id: 4, link: "", label: "Result", icon: "/images/course.svg", notification: false },
     { id: 5, link: "", label: "Fees", icon: "/images/fees.svg", notification: false },
     { id: 6, link: "", label: "TimeTable", icon: "/images/news.svg", notification: false },
-    { id: 7, link: "", label: "News", icon: "/images/news.svg", notification: true },
+    { id: 7, link: "", label: "Transcript", icon: "/images/course.svg", notification: true },
+    { id: 8, link: "", label: "News", icon: "/images/news.svg", notification: true },
   ]
 
   function removeDuplicates() {

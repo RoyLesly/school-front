@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import React from 'react'
 import LayoutAdmin from '@/section-h/compAdministration/LayoutAdmin'
-import ListAccountPage from '@/componentsTwo/List/ListAccountPage'
+import ListAccountPage from '@/componentsTwo/ListAdmin/ListAccountPage'
 import { getData } from '@/functions'
 import { protocol } from '@/config'
 import NotificationError from '@/section-h/common/NotificationError'

@@ -8,11 +8,12 @@ const TransHeader = ({ schoolinfo, params }: any) => {
         <div className='flex flex-col'>
             <div className="flex flex-row h-[110px] text-black">
 
-                <div className='flex flex-col items-center justify-center pt-0 px-2 w-[340px]'>
-                    <div className='flex font-bold items-center justify-center mb-1 text-lg tracking-widest'>{schoolinfo.school_name}</div>
-                    <div className='flex font-medium items-center pl-2 text-xs'>No: {schoolinfo.niu}</div>
-                    <div className='flex font-medium items-start pl-2 text-ms'>PO Box: {schoolinfo.po_box}, {schoolinfo.town}, {schoolinfo.region} - {schoolinfo.country}</div>
-                    <div className='flex font-medium gap-4 justify-start pl-2'>Email: <span className='italic text-blue-600'>{schoolinfo.email}</span></div>
+                <div className='flex flex-col gap-0 items-center justify-center pt-0 px-2 w-[340px]'>
+                    <div className='flex font-bold items-center justify-center text-[15px] text-center tracking-widest'>{schoolinfo.school_name}</div>
+                    <div className='flex font-medium h-4 items-center pl-2 py-0 text-[12px]'>No: {schoolinfo.niu}</div>
+                    <div className='flex font-medium h-4 items-center pl-2 py-0 text-[12px]'>PO Box: {schoolinfo.po_box}, {schoolinfo.town}, {schoolinfo.region} - {schoolinfo.country}</div>
+                    <div className='flex font-medium h-4 items-center pl-2 py-0 text-[12px]'>Email: <span className='italic text-blue-600'>{schoolinfo.email}</span></div>
+                    {schoolinfo.telephone_one && <div className='flex font-medium h-4 items-center pl-2 py-0 text-[12px]'>Telephone: <span className='italic text-blue-600'>{schoolinfo.telephone_one} {schoolinfo.telephone_two ? "/" + schoolinfo.telephone_two : ""}</span></div>}
                 </div>
 
                 <div className='flex items-center justify-center w-[113px]'>

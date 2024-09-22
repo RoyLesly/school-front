@@ -157,28 +157,51 @@ export const SchemaCreateEditTransactions = z.object({
     operation_type: z.string().trim().min(4, { message: "Must Contain 4 Characters Minimum" }),
     telephone: z.string().optional(),
     payer_name: z.string().trim().optional(),
+    account: z.string().trim().optional(),
     ref: z.string().trim().optional(),
     operator: z.string().trim().optional(),
     amount: z.coerce.number().optional(),
-    from_accunt: z.coerce.number().optional(),
+    from_account: z.coerce.number().optional(),
     to_account: z.coerce.number().optional(),
     balance: z.coerce.number().optional(),
 })
 
 export const SchemaEditTransactions = z.object({
-    id: z.coerce.number().optional(),
+    id: z.coerce.number(),
 }).merge(SchemaCreateEditTransactions)
 
 
 export const SchemaTransactionCreate = z.object({
     schoolfees_id: z.coerce.number().min(1, { message: "Must Contain 1 Characters Minimum"}),
     amount: z.coerce.number().min(1, { message: "Must Contain 1 Characters Minimum"}),
-    telephone: z.coerce.number().min(9, { message: "Must Put Telephone number"}),
+    // telephone: z.coerce.number().min(9, { message: "Must Put Telephone number"}),
+    telephone: z.coerce.number(),
     operator: z.string().trim().min(3, { message: "Must Select Payment Method"}),
     payment_method: z.string().trim().min(3, { message: "Must Select Payment Method"}),
     reason: z.string().trim().min(1, { message: "Must Contain 1 Characters Minimum"}),
     status: z.string().optional(),
+    origin: z.string().optional(),
+    url: z.string().optional(),
 })
+
+
+export const SchemaTranscriptApplicationCreate = z.object({
+    userprofile_id: z.coerce.number().min(1, { message: "Must Contain 1 Characters Minimum"}),
+    print_count: z.coerce.number().min(0),
+    status: z.enum(["PENDING", "APPROVED", "PRINTED"]),
+})
+
+export const SchemaTranscriptApplicationEditApprove = z.object({
+    id: z.coerce.number(),
+    approved_at: z.string(),
+    approved_by_id: z.coerce.number(),
+}).merge(SchemaTranscriptApplicationCreate)
+
+export const SchemaTranscriptApplicationEditPrint = z.object({
+    id: z.coerce.number(),
+    printed_at: z.string(),
+    printed_by_id: z.coerce.number(),
+}).merge(SchemaTranscriptApplicationCreate)
 
 export const SchemaAppearanceUpdate = z.object({
     id: z.coerce.number().min(1, { message: "Must Have and ID"}),
@@ -186,6 +209,10 @@ export const SchemaAppearanceUpdate = z.object({
     lang: z.string().trim().min(2, { message: "Must Select a Language"}),
     dark_mode: z.string().trim().min(3, { message: "Must Select Dark Mode"}),
 })
+
+export const SchemaPlatformChargesCreate = z.object({
+    target: z.string().trim().min(3, { message: "Must Select Target Group"}),
+});
 
 export const SchemaCreateEditNotifiation = z.object({
     target: z.string().trim().min(3, { message: "Must Select Target Group"}),

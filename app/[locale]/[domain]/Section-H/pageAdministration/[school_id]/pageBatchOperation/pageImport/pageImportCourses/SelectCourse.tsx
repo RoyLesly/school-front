@@ -52,7 +52,9 @@ const SelectCourse = ({ params, apiDomains, apiYears }: any) => {
                         fieldList: ["id", "main_specialty__specialty_name", "level__level", "academic_year"]
                     })
                     if (res && res.results) { setSpecialtyData(res.results) }
-                    if (res && res["unauthorized"]) { console.log("object") }
+                    if (res && res["unauthorized"]) { 
+                        // console.log("object") 
+                    }
                 }
                 getSpecialties()
             }
@@ -69,7 +71,9 @@ const SelectCourse = ({ params, apiDomains, apiYears }: any) => {
                         ]
                     })
                     if (res && res.results) { setCourseData(res.results) }
-                    if (res && res["unauthorized"]) { console.log("object") }
+                    if (res && res["unauthorized"]) { 
+                        // console.log("object") 
+                    }
                 }
                 getCourses()
                 const filSpec = specialtyData?.filter((item: GetSpecialtyInter) => item.id == parseInt(selectedSpecialtyID))
@@ -90,7 +94,9 @@ const SelectCourse = ({ params, apiDomains, apiYears }: any) => {
                         ]
                     })
                     if (res && res.results) { setCourseDataTwo(res.results) }
-                    if (res && res["unauthorized"]) { console.log("object") }
+                    if (res && res["unauthorized"]) { 
+                        // console.log("object") 
+                    }
                 }
                 const getToImportSpeciaties = async () => {
                     var res = await getData(protocol + "api" + params.domain + GetSpecialtyUrl, {
@@ -101,9 +107,11 @@ const SelectCourse = ({ params, apiDomains, apiYears }: any) => {
                             "id", "main_specialty__specialty_name", "main_specialty__id",
                         ]
                     })
-                    console.log(res, 1044)
+                    // console.log(res, 1044)
                     if (res && res.count) { setToImportSpecialty(res.results[0]); }
-                    if (res && res["unauthorized"]) { console.log("object") }
+                    if (res && res["unauthorized"]) { 
+                        // console.log("object") 
+                    }
                 }
                 getCourses()
                 getToImportSpeciaties()

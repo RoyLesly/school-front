@@ -17,10 +17,10 @@ const page = async ({
 }) => {
 
 
-  const apiYears = await getData(protocol + "api" + params.domain + AcademicYearUrl, {})
+  const acadYears: any = await getData(protocol + "api" + params.domain + AcademicYearUrl, { school: params.school_id })
   const apiDomains = await getData(protocol + "api" + params.domain + GetDomainUrl, { nopage: true })
   const apiLevels = await getData(protocol + "api" + params.domain + GetLevelUrl, { nopage: true })
-  const filteredYear = await searchParams && Object.keys(searchParams).length && apiYears.count && searchParams.academic_year && apiYears && apiYears.count ? searchParams.academic_year : apiYears.results.sort((a: string, b: string) => a[3] < b[3] ? 1 : a[3] > b[3] ? -1 : 0)[0]
+  const filteredYear = await searchParams && Object.keys(searchParams).length && acadYears.count && searchParams.academic_year && acadYears && acadYears.count ? searchParams.academic_year : acadYears.results.sort((a: string, b: string) => a[3] < b[3] ? 1 : a[3] > b[3] ? -1 : 0)[0]
 
   const apiData: any = await getData(protocol + "api" + params.domain + GetStatsBySpecialtyUrl, {
     school: params.school_id,
@@ -35,7 +35,7 @@ const page = async ({
         {searchParams && <NotificationError errorMessage={searchParams} />}
 
         {apiData && <ListAccSpecialtyPage
-          params={params} data={apiData} years={apiYears.results}
+          params={params} data={apiData} years={acadYears.results}
           thisYear={filteredYear}
           domains={apiDomains}
           levels={apiLevels}

@@ -15,7 +15,7 @@ const page = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
-  const apiData: any = await getData(protocol + "api" + params.domain + GetMainCourseUrl, { ...searchParams, fieldList: [
+  const apiData: any = await getData(protocol + "api" + params.domain + GetMainCourseUrl, { ...searchParams, nopage: true, fieldList: [
     "id", "course_name",
   ] })
   
@@ -25,7 +25,7 @@ const page = async ({
 
         {searchParams && <NotificationError errorMessage={searchParams} />}
 
-        {apiData && apiData.results && <ListMainCoursePage params={params} data={apiData.results} />}
+        {apiData && <ListMainCoursePage params={params} data={apiData} />}
 
       </>
     </LayoutAdmin>

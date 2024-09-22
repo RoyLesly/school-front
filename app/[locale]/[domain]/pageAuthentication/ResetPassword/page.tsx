@@ -96,8 +96,8 @@ const CheckUserForm = ({ params }: any) => {
             </form>
 
             <div className="flex items-center justify-between">
-              <a href="/pageAuthentication/Login" className="bg-white dark:text-primary-500 font-medium hover:underline px-3 py-1 rounded text-primary-600 text-sm">Back To Login</a>
-              <a href="/pageAuthentication/PasswordAndToken" className="bg-white dark:text-primary-500 font-medium hover:underline px-3 py-1 rounded text-primary-600 text-sm">Enter Token</a>
+              <a href={`/${params.domain}/pageAuthentication/Login`} className="bg-white dark:text-primary-500 font-medium hover:underline px-3 py-1 rounded text-primary-600 text-sm">Back To Login</a>
+              <a href={`/${params.domain}/pageAuthentication/PasswordAndToken`} className="bg-white dark:text-primary-500 font-medium hover:underline px-3 py-1 rounded text-primary-600 text-sm">Enter Token</a>
             </div>
           </div>
         </div>

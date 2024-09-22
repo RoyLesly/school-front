@@ -11,7 +11,7 @@ import { SchemaCreateEditMainSpecialty } from "@/Domain/schemas/schemas";
 import { GetFieldUrl, MainSpecialtyUrl } from "@/Domain/Utils-H/appControl/appConfig";
 import SelectField from "../SelectField";
 import { GetFieldInter } from "@/Domain/Utils-H/appControl/appInter";
-import { getData } from "@/functions";
+import { getData, handleResponseError } from "@/functions";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
 
 type Inputs = z.infer<typeof SchemaCreateEditMainSpecialty>;
@@ -66,8 +66,8 @@ const MainSpecialtyForm = ({
     if (type === "create") {
       const call = async () => {
         const response = await ActionCreate(newVals, SchemaCreateEditMainSpecialty, protocol + "api" + params.domain + MainSpecialtyUrl)
-        console.log(response)
-        if (response && response.id) {
+        const t = await handleResponseError(response, ["specialty_name", "specialty_short_name", "field_id"]);
+        if (t == "" && response && response.id) {
           router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageSettings/pageSpecialties/MainSpecialties?created="SUCCESSFULLY (${response.id}) !!!`);
           setOpen(false)
         }
@@ -99,9 +99,6 @@ const MainSpecialtyForm = ({
     }
 
   });
-
-  console.log(data)
-  console.log(fieldData)
 
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit}>

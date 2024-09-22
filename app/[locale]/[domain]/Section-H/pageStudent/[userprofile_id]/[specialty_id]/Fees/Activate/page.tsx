@@ -48,8 +48,6 @@ interface Props {
 
 const List: FC<Props> = async ({ schoolfees, params }) => {
 
-  // const [ loading, setLoading ] = useState(false)
-
   const onActivate = async (formData: FormData) => {
     "use server"
 
@@ -68,8 +66,9 @@ const List: FC<Props> = async ({ schoolfees, params }) => {
       operation_type: "other",
     }
 
+    console.log(data, 71);
     var pay: { operation: boolean, transaction: boolean } | any = await collectMoney({ amount: data.amount, service: data.operator, payer: payer });
-    console.log(pay, 72);
+    console.log(pay, 73);
 
     if (!pay.operation && pay.transaction == "could-not-perform-transaction") {
       redirect(`/${params.domain}/Section-H/pageStudent/${params.userprofile_id}/${params.specialty_id}/Fees/Activate?customerror=Transaction Cancelled by User`)

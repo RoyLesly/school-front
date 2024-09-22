@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import React from 'react'
 import LayoutAdmin from '@/section-h/compAdministration/LayoutAdmin'
-import ListConstantPage from '@/componentsTwo/List/ListConstantPage'
+import ListConstantPage from '@/componentsTwo/ListAdmin/ListConstantPage'
 import { getData } from '@/functions'
 import { protocol } from '@/config'
 import { GetSysConstantUrl } from '@/Domain/Utils-H/appControl/appConfig'

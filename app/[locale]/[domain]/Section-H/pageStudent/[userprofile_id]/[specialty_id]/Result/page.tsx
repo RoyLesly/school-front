@@ -1,10 +1,17 @@
-import { generateGrade, getData } from '@/functions';
+import { calcTotalandGrade, getData } from '@/functions';
+import ServerError from '@/section-h/common/ServerError';
 import { GetResultUrl } from '@/Domain/Utils-H/appControl/appConfig';
 import { GetResultInter } from '@/Domain/Utils-H/appControl/appInter';
+import { GetSchoolFeesUrl } from '@/Domain/Utils-H/feesControl/feesConfig';
+import { GetUserProfileUrl } from '@/Domain/Utils-H/userControl/userConfig';
 import { Metadata } from 'next';
-import React from 'react'
+import Link from 'next/link';
+import React, { Suspense } from 'react'
 import { FaDownload } from 'react-icons/fa6';
-import { protocol } from '@/config';
+import { ConfigData, protocol } from '@/config';
+import Table from '@/componentsTwo/Table';
+import { TableRowClassName } from '@/constants';
+import MessageModal from '@/componentsTwo/MessageModal';
 
 
 export const metadata: Metadata = {
@@ -16,128 +23,169 @@ const page = async ({
     params,
     searchParams,
 }: {
-    params: { userprofile_id: string,  domain: string, specialty_id: string };
+    params: { userprofile_id: string, domain: string, specialty_id: string };
     searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
-    const apiDataSem1: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "I", publish_exam: true, fieldList: ["id", "ca", "exam", "resit", "average", "course__main_course__course_name"] });
-    const apiDataSem2: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "II", publish_exam: true, fieldList: ["id", "ca", "exam", "resit", "average", "course__main_course__course_name"] });
-
+    const apiSchoolFees: any = await getData(protocol + "api" + params.domain + GetSchoolFeesUrl, {
+        userprofile__id: params.userprofile_id, nopage: true, fieldList: ["id", "platform_charges", "platform_paid", "balance",
+            "userprofile__specialty__tuition", "userprofile__specialty__payment_one", "userprofile__specialty__payment_two", "userprofile__specialty__payment_three"
+        ]
+    });
+    const apiProfile: any = await getData(protocol + "api" + params.domain + GetUserProfileUrl, { id: params.userprofile_id, fieldList: ["user__username"] });
+    const apiDataSem1: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "I", publish_exam: true, nopage: true, fieldList: [
+        "id", "ca", "exam", "resit", "average", "course__main_course__course_name", "student__user__full_name", "student__specialty__academic_year", "student__specialty__level__level", "student__specialty__main_specialty__specialty_name",
+        "course__id", "student__specialty__school__school_name", "student__specialty__school__address", "student__specialty__school__region"
+    ]});
+    const apiDataSem2: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "II", publish_exam: true, nopage: true, fieldList: [
+        "id", "ca", "exam", "resit", "average", "course__main_course__course_name", "student__user__full_name", "student__specialty__academic_year", "student__specialty__level__level", "student__specialty__main_specialty__specialty_name",
+        "course__id", "student__specialty__school__school_name", "student__specialty__school__address", "student__specialty__school__region"
+    ]});
 
     return (
-        <div className='h-screen mb-20 mt-16 mx-1 p-1 rounded text-black'>
+        <div>
+            {apiSchoolFees ?
+                apiSchoolFees.length == 1 ?
+                    apiSchoolFees[0].platform_paid ?
 
-            <div className='flex font-semibold items-center justify-center mb-2 text-xl'>FINAL RESULTS</div>
+                        <div className='h-screen mb-20 mt-16 mx-1 p-1 rounded text-black'>
 
-            <div className='flex flex-col'>
+                            {apiDataSem1 == "ECONNRESET" && <ServerError />}
 
-                <div className='font-medium justify-center py-2 text-center tracking-wide'>Semester I</div>
-
-                <div className="bg-bluedark dark:border-strokedark grid grid-cols-12 lg:grid-cols-12 md:px-2 md:text-lg py-1 text-sm text-white tracking-wider">
-                    <div className="col-span-6 flex items-center">
-                        <span className="">Course</span>
-                    </div>
-                    <div className="col-span-5 flex items-end justify-between">
-                        <span className="">CA</span>
-                        <span className="">Exam</span>
-                        <span className="">Resit</span>
-                        <span className="">Total</span>
-                    </div>
-                    <div className="col-span-1 flex items-center justify-between ml-2">
-                        <span className="hidden md:flex w-20">Grade</span>
-                        <span className="md:hidden md:item-center w-6">Gd</span>
-                    </div>
-                </div>
+                            <div className='flex font-semibold items-center justify-center mb-2 text-xl'>FINAL RESULTS</div>
 
 
-                {apiDataSem1.results && apiDataSem1.results.map((item: GetResultInter, key: number) => (
-                    <div
-                        className="border-stroke border-t dark:border-strokedark dark:text-white grid grid-cols-12 md:grid-cols-12 md:text-lg odd:bg-slate-50 odd:dark:bg-slate-800 px-2 text-black text-sm"
-                        key={key}
-                    >
-                        <div className="col-span-6 flex items-end">
-                            <span className="md:text-lg text-sm">
-                                {item.course__main_course__course_name}
-                            </span>
+
+
+                            {/* SEMESTER I DIV */}
+                            <div className='flex flex-col'>
+
+                                <div className='font-medium justify-center py-2 text-center tracking-wide'>Semester I</div>
+
+                                <Suspense fallback={<div>Loading ...</div>}>
+                                    {apiDataSem2?.length ?
+                                        <>
+                                            {(apiSchoolFees[0].userprofile__specialty__tuition - apiSchoolFees[0].balance) > (apiSchoolFees[0].userprofile__specialty__tuition * (ConfigData[`${params.domain}`]['higher'].schoolfees_control[1] / 100)) ?
+                                                <Table key={2}
+                                                    columns={columns}
+                                                    renderRow={renderRow}
+                                                    data={apiDataSem1}
+                                                    headerClassName='bg-blue-800 font-medium text-slate-50 italic'
+                                                />
+                                                :
+                                                <div className='flex font-medium items-center justify-center px-10 py-24 text-center text-wrap tracking-wider'>Not Meeting Minimum Required School Fees to View Results</div>
+                                            }
+
+                                            <div className='flex items-center justify-center mt-4'>
+                                            <MessageModal table="result_slip" type="custom" customClassName='rounded-full border-teal-700 border p-2' params={params} data={apiDataSem1} icon={<FaDownload size={20} />} extra_data={["Semester I"]} />
+                                            </div>
+
+                                        </>
+                                        :
+                                        <div className='flex font-medium items-center justify-center py-24 tracking-wider'>No CA Results</div>
+                                    }
+                                </Suspense>
+
+                            </div>
+
+
+
+
+
+                            {/* SEMESTER II DIV */}
+                            <div className='flex flex-col mt-10'>
+
+                                <div className='font-medium justify-center py-2 text-center tracking-wide'>Semester II</div>
+
+                                <Suspense fallback={<div>Loading ...</div>}>
+                                    {apiDataSem2?.length ?
+                                        <>
+                                            {(apiSchoolFees[0].userprofile__specialty__tuition - apiSchoolFees[0].balance) > (apiSchoolFees[0].userprofile__specialty__tuition * (ConfigData[`${params.domain}`]['higher'].schoolfees_control[3] / 100)) ?
+                                                <Table key={2}
+                                                    columns={columns}
+                                                    renderRow={renderRow}
+                                                    data={apiDataSem2}
+                                                    headerClassName='bg-blue-800 font-medium text-slate-50 italic'
+                                                />
+                                                :
+                                                <div className='flex font-medium items-center justify-center px-10 py-24 text-center text-wrap tracking-wider'>Not Meeting Minimum Required School Fees to View Results</div>
+                                            }
+
+                                            <div className='flex items-center justify-center mt-4'>
+                                            <MessageModal table="result_slip" type="custom" customClassName='rounded-full border-teal-700 border p-2' params={params} data={apiDataSem2} icon={<FaDownload size={20} />} extra_data={["Semester II"]} />
+                                            </div>
+
+                                        </>
+                                        :
+                                        <div className='flex font-medium items-center justify-center py-24 tracking-wider'>No CA Results</div>
+                                    }
+                                </Suspense>
+
+                            </div>
+
+
+
+                            <div className='flex flex-col mb-20 mt-6 px-2'>
+                                <span className='font medium'>Dear {apiProfile.count && apiProfile.results[0].user__username},</span>
+                                <span className='italic'>Education is the key to success.</span>
+                                <span className='italic mb-16'>You must learn a skill to survive financcially.</span>
+                            </div>
+
                         </div>
-                        <div className="col-span-5 flex items-end justify-between">
-                            <span className="">{item.ca}</span>
-                            <span className="">{item.exam}</span>
-                            <span className="">{item.resit}</span>
-                            <span className="">{item.average}</span>
-                            {item.resit && <span className="items-start"><span className='font-bold text-lg text-red'>*</span></span>}
+                        :
+                        <div className='flex flex-col gap-4 items-center justify-center pt-40 text-[18px] text-black'>
+                            <span>Account Not Active</span>
+                            <Link href={`/${params.domain}/Section-H/pageStudent/${params.userprofile_id}/${params.specialty_id}/Fees/Activate/`} className='bg-bluedark font-medium px-4 py-1 rounded text-white tracking-wider'>Activate</Link>
                         </div>
-                        <div className="col-span-1 flex items-center justify-between md:w-20 ml-2 w-6">
-                            <span className="items-start">
-                                {generateGrade(item.average)}
-                            </span>
-                        </div>
-
-                    </div>
-                ))}
-
-                <div className='flex items-center justify-center py-2'>
-                    {apiDataSem1.count ? <button className="bg-bluedark flex font-medium items-center justify-center md:gap-2 md:text-lg px-4 py-1 rounded text-white">
-                        Download <FaDownload />
-                    </button> : <></>}
-                </div>
-
-                <br />
-                <div className='justify-centerfont-medium py-2 text-center tracking-wide'>Semester II</div>
-
-
-                <div className="bg-bluedark dark:border-strokedark grid grid-cols-12 lg:grid-cols-12 md:px-2 md:text-lg py-1 text-sm text-white tracking-wider">
-                    <div className="col-span-6 flex items-center">
-                        <span className="">Course</span>
-                    </div>
-                    <div className="col-span-5 flex items-end justify-between">
-                        <span className="">CA</span>
-                        <span className="">Exam</span>
-                        <span className="">Resit</span>
-                        <span className="">Total</span>
-                    </div>
-                    <div className="col-span-1 flex items-center justify-between ml-2">
-                        <span className="hidden md:flex w-20">Grade</span>
-                        <span className="md:hidden md:item-center w-6">Gd</span>
-                    </div>
-                </div>
-
-
-                {apiDataSem2.results && apiDataSem2.results.map((item: GetResultInter, key: number) => (
-                    <div
-                        className="border-stroke border-t dark:border-strokedark dark:text-white grid grid-cols-12 md:grid-cols-12 md:text-lg odd:bg-slate-50 odd:dark:bg-slate-800 px-2 text-black text-sm"
-                        key={key}
-                    >
-                        <div className="col-span-6 flex items-end">
-                            <span className="md:text-lg text-sm">
-                                {item.course__main_course__course_name}
-                            </span>
-                        </div>
-                        <div className="col-span-5 flex items-end justify-between">
-                            <span className="">{item.ca}</span>
-                            <span className="">{item.exam}</span>
-                            <span className="">{item.resit}</span>
-                            <span className="">{item.average}</span>
-                            {item.resit && <span className="items-start"><span className='font-bold text-lg text-red'>*</span></span>}
-                        </div>
-                        <div className="col-span-1 flex items-center justify-between md:w-20 ml-2 w-6">
-                            <span className="items-start">
-                                {generateGrade(item.average)}
-                            </span>
-                        </div>
-                    </div>
-                ))}
-
-                <div className='flex items-center justify-center py-2'>
-                    {apiDataSem2.count ? <button className="bg-bluedark flex font-medium items-center justify-center md:gap-2 md:text-lg px-4 py-1 rounded text-white">
-                        Download <FaDownload />
-                    </button> : <></>}
-                </div>
-
-            </div>
-
+                    :
+                    <div className='text-black'>No School Fees Information</div>
+                :
+                <div className='text-black'>No School Fees Information</div>
+            }
         </div>
     )
 }
 
 export default page
+
+
+const columns = [
+    {
+        header: "Course",
+        accessor: "id",
+        className: "table-cell w-7/12 border-r border-white",
+    },
+    {
+        header: "CA",
+        accessor: "ca",
+        className: "table-cell w-1/12 text-[13px] border-r border-white",
+    },
+    {
+        header: "Exam",
+        accessor: "exam",
+        className: "table-cell w-1/12 text-[13px] border-r border-white",
+    },
+    {
+        header: "Resit",
+        accessor: "resit",
+        className: "table-cell w-2/12 text-center text-[13px] border-r border-white",
+    },
+    {
+        header: "Gd",
+        accessor: "action",
+        className: "table-cell w-1/12",
+    },
+];
+
+const renderRow = (item: GetResultInter, index: number) => (
+    <tr
+        key={item.id}
+        className={`${"font-semibold bg-blue-700" + TableRowClassName.sm}`}
+    >
+        <td className={`${item.course__main_course__course_name.length > 20 ? "text-[13px]" : ""} items-center table-cell text-center`}>{item.course__main_course__course_name.slice(0, 30)}</td>
+        <td className="items-center justify-center table-cell text-[12px] text-center">{item.ca}</td>
+        <td className="items-center justify-center table-cell text-[12px] text-center">{item.exam}</td>
+        <td className="items-center justify-center table-cell text-[12px] text-center">{item.resit ? item.resit : "-"}</td>
+        <td className={`${calcTotalandGrade(item.ca, item.exam, item.resit).passed ? "text-green-600" : "text-red"} items-center justify-center table-cell text-center`}>{calcTotalandGrade(item.ca, item.exam, item.resit).grade}</td>
+    </tr>
+);

@@ -10,6 +10,7 @@ import { MainCourseUrl } from "@/Domain/Utils-H/appControl/appConfig";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
 import { useState } from "react";
 import { SchemaCreateEditMainCourse } from "@/Domain/schemas/schemas";
+import { handleResponseError } from "@/functions";
 
 type Inputs = z.infer<typeof SchemaCreateEditMainCourse>;
 
@@ -42,7 +43,8 @@ const MainCourseForm = ({
     if (type === "create") {
       const call = async () => {
         const response = await ActionCreate(newVals, SchemaCreateEditMainCourse, protocol + "api" + params.domain + MainCourseUrl)
-        if (response && response.id) {
+        const t = await handleResponseError(response, ["course_name"]);
+        if (t == "" && response && response.id) {
           router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageSettings/pageCourses/MainCourses?created="SUCCESSFULLY (${response.id}) !!!`);
           setOpen(false)
         }

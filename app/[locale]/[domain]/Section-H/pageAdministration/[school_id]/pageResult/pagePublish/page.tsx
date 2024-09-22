@@ -18,27 +18,26 @@ const page = async ({
   params,
   searchParams,
 }: {
-  params: { school_id: string,  domain: string, };
+  params: { school_id: string, domain: string, };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
-  const apiAcademicYear: any = await getData(protocol + "api" + params.domain + AcademicYearUrl, { ...searchParams })
+  const acadYear: any = await getData(protocol + "api" + params.domain + AcademicYearUrl, { school: params.school_id })
 
   return (
     <LayoutAdmin>
       <>
         <Breadcrumb
-          pageName={`Publish Results - ${searchParams && !searchParams.specialty__academic_year ? apiAcademicYear && apiAcademicYear.count && apiAcademicYear.results[apiAcademicYear.count - 1] : searchParams?.specialty__academic_year}`}
+          pageName={`Publish Results - ${searchParams && !searchParams.specialty__academic_year ? acadYear && acadYear.count && acadYear.results[acadYear.count - 1] : searchParams?.specialty__academic_year}`}
           pageName1="Main Dashboard"
           link1={`/${params.domain}/Section-H/pageAdministration/${params.school_id}`}
         />
 
         {searchParams && <NotificationError errorMessage={searchParams} />}
-        {apiAcademicYear == "ECONNREFUSED" && <ServerError />}
 
         <div className='flex flex-col gap-4'>
 
-          {apiAcademicYear && apiAcademicYear.count && <PublishList searchParams={searchParams} params={params} apiYear={apiAcademicYear.results} />}
+          {acadYear && acadYear.count && <PublishList searchParams={searchParams} params={params} apiYear={acadYear.results} />}
 
         </div>
 
@@ -59,17 +58,16 @@ export const metadata: Metadata = {
 const PublishList = async ({ apiYear, params, searchParams }: any) => {
 
   const apiDataI: any = await getData(protocol + "api" + params.domain + GetPublishUrl, {
-      specialty__academic_year: apiYear[apiYear.length - 1], ...searchParams, semester: "I", fieldList: [
+    specialty__school__id: params.school_id, specialty__academic_year: apiYear[apiYear.length - 1], ...searchParams, semester: "I", fieldList: [
       "id", "ca", "semester", "exam", "resit", "specialty__level__level", "specialty__academic_year", "specialty__main_specialty__specialty_name"
     ]
   })
   const apiDataII: any = await getData(protocol + "api" + params.domain + GetPublishUrl, {
-    specialty__academic_year: apiYear[apiYear.length - 1], ...searchParams, semester: "II", fieldList: [
+    specialty__school__id: params.school_id, specialty__academic_year: apiYear[apiYear.length - 1], ...searchParams, semester: "II", fieldList: [
       "id", "ca", "semester", "exam", "resit", "specialty__level__level", "specialty__academic_year", "specialty__main_specialty__specialty_name"
     ]
   })
 
-  console.log(apiDataI)
 
   const onSearchPubishServerAction = async (formData: FormData) => {
     'use server'

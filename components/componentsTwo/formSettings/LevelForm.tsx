@@ -10,6 +10,7 @@ import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
 import { useState } from "react";
 import { SchemaCreateEditLevel } from "@/Domain/schemas/schemas";
 import { LevelUrl } from "@/Domain/Utils-H/appControl/appConfig";
+import { handleResponseError } from "@/functions";
 
 type Inputs = z.infer<typeof SchemaCreateEditLevel>;
 
@@ -38,7 +39,8 @@ const LevelForm = ({
     if (type === "create") {
       const call = async () => {
         const response = await ActionCreate(formVals, SchemaCreateEditLevel, protocol  + "api" + params.domain + LevelUrl )
-        if (response && response.id){
+        const t = await handleResponseError(response, ["level"]);
+        if (t == "" && response && response.id) {
           router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageSettings/pageLevels?created="SUCCESSFULLY (${response.id}) !!!`);
           setOpen(false)
         }

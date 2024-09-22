@@ -15,7 +15,7 @@ export const MonthList = [
 
 export const TableRowClassName = {
     all: "dark:even:bg-blue-300 even:bg-blue-200 hover:bg-slate-500", 
-    sm: "h-8",
-    md: "h-10", 
-    lg: "h-12"
+    sm: "h-10",
+    md: "h-12", 
+    lg: "h-14"
 }

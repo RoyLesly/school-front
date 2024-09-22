@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     description: "This is Marks Entry  Page",
 };
 
-const SelectLecturer = async ({ data, params, lecturer, searchParams }: any) => {
+const SelectLecturer = async ({ data, params, searchParams }: any) => {
 
     return (
         <div className='flex flex-col h-full'>
@@ -140,7 +140,7 @@ const SelectLecturer = async ({ data, params, lecturer, searchParams }: any) => 
 
 const SearchYear = async ({ params, searchParams }: any) => {
 
-    const years = await getData(protocol + "api" + params.domain + AcademicYearUrl, {})
+    const years = await getData(protocol + "api" + params.domain + AcademicYearUrl, { school: params.school_id })
 
     const onSearchDrugServerAction = async (formData: FormData) => {
         'use server'

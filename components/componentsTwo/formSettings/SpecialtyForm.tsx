@@ -6,24 +6,25 @@ import InputField from "../InputField";
 import { ActionCreate, ActionDelete, ActionEdit } from "@/serverActions/actionGeneral";
 import { ConfigData, protocol } from "@/config";
 import { useRouter } from "next/navigation";
-import { SpecialtyUrl, GetMainSpecialtyUrl, AcademicYearUrl, GetLevelUrl } from "@/Domain/Utils-H/appControl/appConfig";
-import { useEffect, useState } from "react";
-import { GetLevelInter, GetMainSpecialtyInter } from "@/Domain/Utils-H/appControl/appInter";
-import { getData } from "@/functions";
+import { SpecialtyUrl } from "@/Domain/Utils-H/appControl/appConfig";
 import SelectField from "../SelectField";
 import { SchemaCreateEditSpecialty } from "@/Domain/schemas/schemas";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
+import { useState } from "react";
+import { handleResponseError } from "@/functions";
 
 type Inputs = z.infer<typeof SchemaCreateEditSpecialty>;
 
 const SpecialtyForm = ({
   type,
   data,
+  extra_data,
   setOpen,
   params,
 }: {
   type: "create" | "update" | "delete";
   data?: any;
+  extra_data?: any;
   setOpen?: any;
   params?: any;
 }) => {
@@ -31,37 +32,11 @@ const SpecialtyForm = ({
     resolver: zodResolver(SchemaCreateEditSpecialty),
   });
 
+  const thisYear = new Date().getFullYear()
   const router = useRouter();
   const [clicked, setClicked] = useState<boolean>(false);
-  const [count, setCount] = useState<number>(0)
-  const [mainSpecialtyData, setmainSpecialtyData] = useState<GetMainSpecialtyInter[] | any>()
-  const [yearData, setYearData] = useState<string[] | any>()
-  const [levelData, setLevelData] = useState<GetLevelInter[] | any>()
-
-  useEffect(() => {
-    if (count == 0) {
-      const call = async () => {
-        const response = await getData(protocol + "api" + params.domain + GetMainSpecialtyUrl, { nopage: true, fieldList: ["id", "specialty_name"] })
-        const responseLevel = await getData(protocol + "api" + params.domain + GetLevelUrl, { nopage: true, fieldList: ["id", "level"] })
-        const responseYear = await getData(protocol + "api" + params.domain + AcademicYearUrl, { nopage: true })
-        if (response && response.length) {
-          if (type != "create" && data) {
-            setmainSpecialtyData(response.filter((item: GetMainSpecialtyInter) => item.specialty_name != data.main_specialty__main_specialty_name))
-          } else {
-            setmainSpecialtyData(response)
-          }
-          if (responseLevel) { setLevelData(responseLevel) }
-          if (responseYear) { setYearData(responseYear.results) }
-        }
-        setCount(1)
-
-      }
-      call()
-    }
-  }, [count, params, data, type])
 
   const onSubmit = handleSubmit((formVals) => {
-    setClicked(true);
 
     const newVals = {
       school_id: params.school_id,
@@ -74,16 +49,18 @@ const SpecialtyForm = ({
       payment_two: formVals.payment_two,
       payment_three: formVals.payment_three,
     }
+    if (
+      ((newVals.payment_one ? newVals.payment_one : 0) + (newVals.payment_two ? newVals.payment_two : 0) + (newVals.payment_three ? newVals.payment_three : 0)) != newVals.tuition
+    ) { return; }
+    setClicked(true);
 
-    console.log(newVals)
-    // return
 
 
     if (type === "create") {
       const call = async () => {
         const response = await ActionCreate(newVals, SchemaCreateEditSpecialty, protocol + "api" + params.domain + SpecialtyUrl)
-        console.log(response)
-        if (response && response.id) {
+        const t = await handleResponseError(response, ["main_specialty_id", "academic_year", "level_id", "tuition", "payment_one"]);
+        if (t == "" && response && response.id) {
           router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageSettings/pageSpecialties?created="SUCCESSFULLY (${response.id}) !!!`);
           setOpen(false)
         }
@@ -94,8 +71,7 @@ const SpecialtyForm = ({
     if (type === "update") {
       const call = async () => {
         const response = await ActionEdit(newVals, data.id, SchemaCreateEditSpecialty, protocol + "api" + params.domain + SpecialtyUrl)
-        console.log(response)
-        if (response && response.id) {
+        if (response && response.success) {
           router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageSettings/pageSpecialties?updated="SUCCESSFULLY (${response.id}) !!!`);
           setOpen(false)
         }
@@ -131,7 +107,7 @@ const SpecialtyForm = ({
           defaultName={data?.main_specialty__specialty_name}
           register={register}
           error={errors?.main_specialty_id}
-          data={mainSpecialtyData}
+          data={extra_data[0]}
           display={{ "name": "specialty_name", value: "id" }}
         />
       </div>
@@ -146,22 +122,21 @@ const SpecialtyForm = ({
             defaultName={data?.academic_year}
             register={register}
             error={errors?.academic_year}
-            data={yearData}
-          // display={{ "name": "specialty_name", value: "id" }}
+            data={extra_data[2] && extra_data[2].count ? extra_data[2].results : [`${thisYear-1}/${thisYear}`, `${thisYear}/${thisYear+1}`]}
           />
         </div>
         <div className="flex flex-wrap gap-4 justify-between w-full">
-          <SelectField
+         {extra_data[1] && <SelectField
             label="Level"
             name="level_id"
             defaultValue={data?.level__id}
             defaultName={data?.level__level}
             register={register}
             error={errors?.level_id}
-            data={levelData}
+            data={extra_data[1]}
             display={{ "name": "level", value: "id" }}
             type="number"
-          />
+          />}
         </div>
       </div>
        

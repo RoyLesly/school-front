@@ -48,7 +48,7 @@ const page = async ({
         <Image
           width={200}
           height={200}
-          src={ConfigData['local'].Logo.lg512.h}
+          src={ConfigData['local'].higher.logo512}
           alt="Logo"
           style={{ borderRadius: 150 }}
           priority
@@ -59,7 +59,7 @@ const page = async ({
         <Image
           width={130}
           height={130}
-          src={ConfigData['local'].Logo.sm256.h}
+          src={ConfigData['local'].higher.logo512}
           alt="Logo"
           style={{ borderRadius: 150 }}
           priority

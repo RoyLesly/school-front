@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import React from 'react'
 import LayoutAdmin from '@/section-h/compAdministration/LayoutAdmin'
-import ListDepartmentPage from '@/componentsTwo/List/ListDepartmentPage'
+import ListDepartmentPage from '@/componentsTwo/ListAdmin/ListDepartmentPage'
 import { getData } from '@/functions'
 import { protocol } from '@/config'
 import NotificationError from '@/section-h/common/NotificationError'

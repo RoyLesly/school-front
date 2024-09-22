@@ -4,15 +4,17 @@ const Table = ({
   columns,
   renderRow,
   data,
+  headerClassName,
 }: {
   columns: { header: string; accessor: string; className?: string }[];
   renderRow: (item: any, index: number) => React.ReactNode;
   data: any[];
+  rowClassName?: string;
+  headerClassName?: string;
 }) => {
   return (
-    <table className="md:mt-4 mt-2 text-black w-full">
-      <thead className="bg-blue-500 border border-slate-700 dark:bg-blue-700 h-8 text-white">
-      {/* <thead className="bg-blue-600 border border-black text-white"> */}
+    <table className="text-black w-full">
+      <thead className={`${headerClassName} ? ${headerClassName} : "bg-blue-600 border border-slate-700 dark:bg-blue-800 h-8 text-white"`}>
         <tr className="font-medium text-left text-lg">
           {columns.map((col) => (
             <th key={col.accessor} className={col.className}>{col.header}</th>

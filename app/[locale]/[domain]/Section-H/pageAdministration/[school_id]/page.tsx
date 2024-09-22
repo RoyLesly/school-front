@@ -46,27 +46,27 @@ const page = async ({
       <>
         {apiSchool && apiSchool.length == 1 &&
           <div className='flex flex-col gap-20 h-screen items-center justify-center px-10 tracking-widest'>
-                  <div className="hidden md:flex">
-        <Image
-          width={200}
-          height={200}
-          src={ConfigData[domain]["higher"].logo512}
-          alt="Logo"
-          style={{ borderRadius: 150 }}
-          priority
-        />
-      </div>
+            <div className="hidden md:flex">
+              <Image
+                width={200}
+                height={200}
+                src={ConfigData[domain]["higher"].logo512}
+                alt="Logo"
+                style={{ borderRadius: 150 }}
+                priority
+              />
+            </div>
 
-      <div className="flex md:hidden">
-        <Image
-          width={130}
-          height={130}
-          src={ConfigData[domain]["higher"].logo256}
-          alt="Logo"
-          style={{ borderRadius: 150 }}
-          priority
-        />
-      </div>
+            <div className="flex md:hidden">
+              <Image
+                width={130}
+                height={130}
+                src={ConfigData[domain]["higher"].logo256}
+                alt="Logo"
+                style={{ borderRadius: 150 }}
+                priority
+              />
+            </div>
             <div className='flex flex-col font-bold gap-10 items-center justify-center md:text-4xl text-2xl'>
               <div>WELCOME TO</div>
               <div className='flex text-center' >{apiSchool[0].school_name}</div>

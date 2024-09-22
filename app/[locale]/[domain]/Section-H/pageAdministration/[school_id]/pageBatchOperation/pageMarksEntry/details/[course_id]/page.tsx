@@ -20,9 +20,11 @@ const EditPage = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
-  const apiAcademicYear: any = await getData(protocol + "api" + params.domain + AcademicYearUrl, { ...searchParams })
+  const apiAcademicYear: any = await getData(protocol + "api" + params.domain + AcademicYearUrl, { ...searchParams, school: params.school_id })
   const apiResult: any = await getData( protocol + "api" + params.domain + GetResultUrl, { ...searchParams, course__id: params.course_id, course__semester: searchParams?.sem, nopage: true, fieldList: ["id", "course__specialty__id", "student__id"] })
 
+  console.log(apiResult, 26)
+  console.log(apiAcademicYear, 26)
   return (
     <LayoutAdmin>
       <>

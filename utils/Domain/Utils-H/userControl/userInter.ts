@@ -72,6 +72,7 @@ export type GetCustomUserInter = {
   title: string;
   is_active: boolean;
   is_superuser: boolean;
+  last_login?: string;
 };
 
 

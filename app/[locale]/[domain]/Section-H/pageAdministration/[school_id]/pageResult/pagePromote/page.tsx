@@ -21,7 +21,7 @@ const page = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
-  const apiAcademicYear: any = await getData(protocol + "api" + params.domain + AcademicYearUrl, { ...searchParams })
+  const apiAcademicYear: any = await getData(protocol + "api" + params.domain + AcademicYearUrl, { ...searchParams, school: params.school_id })
 
   return (
     <LayoutAdmin>
@@ -59,7 +59,7 @@ const PromoteList = async ({ apiYear, params, searchParams }: any) => {
 
   const apiDomain: any = await getData( protocol + "api" + params.domain + GetDomainUrl, { fieldList: [ "id", "domain_name" ] });
 
-  const apiSpecialty: any = await getData(protocol + "api" + params.domain + GetSpecialtyUrl, { ...searchParams, nopage: true,  fieldList: [
+  const apiSpecialty: any = await getData(protocol + "api" + params.domain + GetSpecialtyUrl, { ...searchParams, school__id: params.school_id, nopage: true,  fieldList: [
       "id", "level__level", "academic_year", "main_specialty__specialty_name"
     ]
   })

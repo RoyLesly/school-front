@@ -8,6 +8,7 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { FaPowerOff } from 'react-icons/fa6';
 import { protocol } from '@/config';
+import Loader from '@/section-h/common/Loader';
 
 const SelectDept = () => {
 
@@ -58,7 +59,8 @@ const SelectDept = () => {
         <div className='font-semibold items-center justify-center md:mb-4 md:text-4xl text-center text-xl'>Select Class</div>
 
         <div className='bg-white px-6 rounded'>
-          {myProfiles && myProfiles.length > 0 ?
+          {myProfiles ?
+            myProfiles.length > 0 ?
             <div  className='gap-6 grid grid-col-1 lg:grid-cols-3 md:grid-cols-2'>
               {myProfiles.map((item: GetUserProfileInter) => (
               <Link href={`/Section-H/pageStudent/${item.id}/${item.specialty__id}`} key={item.id} className='bg-blue-950 border-2 cursor-pointer dark:hover:bg-teal-300 dark:hover:text-black dark:text-teal-100 flex font-bold h-40 hover:animate-ping-once items-center justify-center lg:h-48 lg:w-[300px] md:h-40 md:text-2xl md:w-56 rounded text-lg text-white tracking-widest w-60'>
@@ -76,6 +78,11 @@ const SelectDept = () => {
             <div className='flex flex-col font-medium gap-4 justify-center text-center text-lg tracking-wide w-full'>
               <div className='flex items-center justify-center text-center text-red'>No Class Assigned !!!</div>
               <div className='flex items-center justify-center text-center'><code>Contact Administration</code></div>
+            </div>
+            :
+
+            <div className='flex flex-col font-medium gap-4 justify-center text-center text-lg tracking-wide w-full'>
+              <Loader />
             </div>
 
           }

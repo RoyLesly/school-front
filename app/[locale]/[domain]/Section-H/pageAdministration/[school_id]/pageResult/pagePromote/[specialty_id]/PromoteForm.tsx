@@ -1,6 +1,5 @@
 'use client';
 import { getData } from '@/functions';
-import { UserProfileCreateSchema } from '@/schemas-user';
 import { ActionCreate } from '@/serverActions/actionGeneral';
 import { GetSpecialtyInter } from '@/Domain/Utils-H/appControl/appInter';
 import { GetUserProfileUrl, UserProfileUrl } from '@/Domain/Utils-H/userControl/userConfig';
@@ -13,6 +12,7 @@ import { FiSave } from 'react-icons/fi';
 import { GrStatusGood } from 'react-icons/gr'
 import { SelectedPromoteStudentInter } from '@/serverActions/interfaces';
 import { protocol } from '@/config';
+import { SchemaCreateEditUserProfile } from '@/schemas-user';
 
 const PromoteForm = ({ studentData, params, programs, nextSpecialty }: any) => {
 
@@ -113,7 +113,7 @@ const PromoteForm = ({ studentData, params, programs, nextSpecialty }: any) => {
     const Submit = async () => {
         const promMine = (data: SelectedPromoteStudentInter) => {
             return (
-                ActionCreate({ ...data, specialty_id: nextSpecialtyID, session: session, program_id: programID, active: true }, UserProfileCreateSchema, protocol + "api" + params.domain + UserProfileUrl)
+                ActionCreate({ ...data, specialty_id: nextSpecialtyID, session: session, program_id: programID, active: true }, SchemaCreateEditUserProfile, protocol + "api" + params.domain + UserProfileUrl)
             )
         };
 
@@ -140,6 +140,9 @@ const PromoteForm = ({ studentData, params, programs, nextSpecialty }: any) => {
             console.log(103, "Not Logged In")
         }
     }
+
+    console.log(studentDataFiltered, 144)
+    console.log(studentDataMatricles, 145)
 
     return (
         <div>
@@ -228,7 +231,7 @@ const PromoteForm = ({ studentData, params, programs, nextSpecialty }: any) => {
 
                     :
 
-                    <div className='flex font-semibold italic items-center justify-center py-40 text-xl tracking-widest'>All Students Promoted</div>
+                    <div className='flex font-semibold italic items-center justify-center py-40 text-xl tracking-widest'>{nextSpecialtyID ? "All Students Promoted" : "Next Class Not Created"}</div>
 
                 :
                 <div className='flex font-semibold italic items-center justify-center py-40 text-xl tracking-widest'>No Student in This Class</div>

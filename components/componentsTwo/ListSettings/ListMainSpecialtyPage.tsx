@@ -43,7 +43,7 @@ const ListMainSpecialtyPage = ({ params, data }: { params: any, data: GetMainSpe
   const renderRow = (item: GetMainSpecialtyInter, index: number) => (
     <tr
       key={item.id}
-      className={`${TableRowClassName.all + " " + TableRowClassName.sm}`}
+      className={`${TableRowClassName.all + " " + TableRowClassName.md}`}
     >
       <td className="hidden md:table-cell">{index + 1}</td>
       <td className="table-cell">{item.specialty_name}</td>
@@ -54,9 +54,9 @@ const ListMainSpecialtyPage = ({ params, data }: { params: any, data: GetMainSpe
           <button className="bg-blue-300 flex h-7 items-center justify-center rounded-full w-7">
             <FormModal table="main_specialty" type="update" params={params} id={item.id} data={item} icon={<MdModeEdit />} />
           </button>
-          {role === "admin" && (
-            <FormModal table="main_specialty" type="delete" id={item.id} params={params} data={item} icon={<RiDeleteBin2Line />} />
-          )}
+          <button className="field-blue-300 flex h-7 items-center justify-center rounded-full w-7">
+            <FormModal table="main_specialty" type="delete" params={params} data={item} icon={<RiDeleteBin2Line />} />
+          </button>
         </div>
       </td>
     </tr>
@@ -69,13 +69,13 @@ const ListMainSpecialtyPage = ({ params, data }: { params: any, data: GetMainSpe
       <TabsSpecialty params={params} page={1} />
 
       {/* TOP */}
-      <div className="flex flex-col gap-4 items-center justify-between md:flex-row md:gap-2">
+      <div className="flex flex-col gap-4 items-center justify-between mb-2 md:flex-row md:gap-2">
         <div className="flex gap-2 items-center w-full">
-        <MyPageTitle title={"Titles"} />
+          <MyPageTitle title={"Titles"} />
           <div className="flex flex-row gap-2 justify-end md:gap-4 md:w-30 w-full">
-            {role === "admin" && (
+            <button className="flex h-7 items-center justify-center rounded-full w-10">
               <FormModal table="main_specialty" type="create" params={params} icon={<FaPlus />} />
-            )}
+            </button>
           </div>
         </div>
       </div>

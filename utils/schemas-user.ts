@@ -13,7 +13,8 @@ export const ProgramSchema = z.object({
     name: z.string().trim().min(4, { message: "Must Contain 4 Characters Minimum"}),
 })
 
-export const SchemaCreateCustomUser = z.object({
+export const SchemaCreateEditCustomUser = z.object({
+    id: z.string().optional(),
     username: z.string().optional(),
     first_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum"}),
     last_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum"}),
@@ -26,6 +27,9 @@ export const SchemaCreateCustomUser = z.object({
     parent_telephone: z.coerce.number().optional(),
     title: z.string().optional(),
     prefix: z.string().optional(),
+    pob: z.string().optional(),
+    dob: z.string().optional(),
+    is_active: z.boolean().optional(),
     dept: z.array(arraySchema).optional(),
     school: z.array(arraySchema).optional(),
     page: z.array(arraySchema).optional(),
@@ -46,7 +50,7 @@ export const SchemaEditCustomUser = z.object({
     // dept_id: z.array(DepartmentSchema).optional()
 })
 
-export const UserProfileCreateSchema = z.object({
+export const SchemaCreateEditUserProfile = z.object({
     user_id: z.coerce.number().min(1, { message: "Must Contain user Id"}),
     specialty_id: z.coerce.number().min(1, { message: "Must Contain Specialty Id"}),
     program_id: z.coerce.number().min(1, { message: "Must Contain Program Id"}),
@@ -65,5 +69,3 @@ export const UserProfileLectAdminEditSchema = z.object({
     user_id: z.coerce.number().min(1, { message: "Must Contain 1 Characters Minimum"}),
 })
 
-
-export type LoginZodType = z.infer<typeof SchemaCreateCustomUser>;

@@ -262,7 +262,7 @@ const LoginForm = () => {
             </form>
 
             <div className="flex items-center justify-between">
-              <a href={`https://wa.me/+237${ConfigData[`${domain}`].help_number}/?text=Enter%20Matricle:%20OR%20Username:%20Complain: `} className="bg-slate-200 dark:text-primary-500 font-medium hover:underline px-4 py-1 rounded text-slate-700 text-sm">Help</a>
+              <a href={`https://wa.me/+237${ConfigData[`${domain}`].contact_number}/?text=Enter%20Matricle:%20OR%20Username:%20Complain: `} className="bg-slate-200 dark:text-primary-500 font-medium hover:underline px-4 py-1 rounded text-slate-700 text-sm">Help</a>
               <a href="/pageAuthentication/CheckUser" className="bg-slate-200 dark:text-primary-500 font-medium hover:underline px-4 py-1 rounded text-slate-700 text-sm">Check User</a>
             </div>
           </div>

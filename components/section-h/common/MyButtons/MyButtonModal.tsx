@@ -1,7 +1,7 @@
 import React from 'react'
-import MyButtonLoading from '../MyButtons/MyButtonLoading'
+import { FaSave } from 'react-icons/fa'
 
-const MyButtonModal = ({ type, clicked }: { type: string, clicked: boolean }) => {
+const MyButtonModal = ({ type, clicked, title, icon }: { type: string, clicked: boolean, title?: string, icon?: string }) => {
 
     return <>
         {clicked ?
@@ -10,8 +10,9 @@ const MyButtonModal = ({ type, clicked }: { type: string, clicked: boolean }) =>
         </button>
 
             :
-            <button className={`${type == "create" ? "bg-green-400" : type == "update" ? "bg-blue-400" : "bg-redlight"} p-2 rounded-md text-white`}>
-                {type === "create" ? "Create" : type === "update" ? "Update" : type === "delete" ? "Delete" : type}
+            <button className={`${type == "create" ? "bg-green-600" : type == "update" ? "bg-blue-400" : "bg-redlight"} px-6 py-2 flex items-center gap-2 rounded-md text-white justify-center`}>
+                {title ? title : type === "create" ? "Create" : type === "update" ? "Update" : type === "delete" ? "Delete" : type} 
+                {icon}
             </button>
         }
     </>

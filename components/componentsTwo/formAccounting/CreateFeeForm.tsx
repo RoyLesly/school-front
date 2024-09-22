@@ -12,7 +12,7 @@ import { ActionCreate, ActionEdit } from "@/serverActions/actionGeneral";
 import { protocol } from "@/config";
 import { TransactionUrl } from "@/Domain/Utils-H/feesControl/feesConfig";
 import { GetTransactionsInter } from "@/Domain/Utils-H/feesControl/feesInter";
-import { getData } from "@/functions";
+import { getData, handleResponseError } from "@/functions";
 import { GetSysConstantUrl } from "@/Domain/Utils-H/appControl/appConfig";
 import { GetSysConstantInter } from "@/Domain/Utils-H/appControl/appInter";
 
@@ -80,7 +80,8 @@ const CreateFeeForm = ({
       if (newVals) {
         const call = async () => {
           const response = await ActionCreate(newVals, SchemaCreateEditTransactions, protocol + "api" + params.domain + TransactionUrl)
-          if (response && response.id) {
+          const t = await handleResponseError(response, ["schoolfees_id", "amount", "payment_method", "reason", "operation_type"]);
+          if (t == "" && response && response.id) {
             router.push(`/${params.domain}/Section-H/pageAccounting/${params.school_id}/pageFees?created="SUCCESSFULLY (${response.id}) !!!`);
             setOpen(false)
           }

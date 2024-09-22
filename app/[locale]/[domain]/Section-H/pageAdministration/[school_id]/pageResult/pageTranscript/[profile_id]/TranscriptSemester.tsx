@@ -1,15 +1,15 @@
 import React from 'react'
 
-const TranscriptSemester = async ({ semResults }: any) => {
+const TranscriptSemester = ({ semResults }: any) => {
   const getNum = (n: number) => {
-    var h = 20
-    var t = 16
-    if (n > 9){ h = 20, t = 16}
-    if (n > 11){ h = 18, t = 14}
-    if (n > 14) { h = 16, t = 12}
+    var h = 22
+    var t = 20
+    if (n > 11){ h = 22, t = 18}
+    if (n > 13) { h = 20, t = 16}
+    if (n > 15) { h = 18, t = 14}
     return [h, t]
   }
-  var num = await getNum(semResults.count);
+  var num = getNum(semResults.count);
 
   const checkResit: any = (av: number, resit: number | null) => {
     if (resit){ 
@@ -36,7 +36,7 @@ const TranscriptSemester = async ({ semResults }: any) => {
 
       {/* {semResults && semResults.results.map((item: GetResultInter) =>  */}
       {semResults && semResults.results.map((item: any) => 
-      <div key={item.id} className={`font-medium grid grid-cols-12 h-[${num[0]}px] items-center justify-center odd:bg-teal-50 px-2 text-[${num[1]}px] text-black`}>
+      <div key={item.id} className={`font-medium grid grid-cols-12 h-[${num[0]}px] items-center justify-center odd:bg-teal-0 px-2 text-[${num[1]}px] text-black`}>
         <div className='col-span-2'>{item.course__course_code}</div>
         <div className={`${item.course__main_course__course_name.length < 36 ? "text-[14px]" 
           : item.course__main_course__course_name.length < 41 ? "text-[13px]" 

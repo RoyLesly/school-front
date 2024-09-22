@@ -13,10 +13,10 @@ const Navbar = async ({ params }: any) => {
 
 
   return (
-    <nav className='bg-blue-900 fixed flex h-[56px] items-center justify-between left-0 px-6 py-3 top-0 w-full'>
+    <nav className='bg-blue-900 fixed flex h-[64px] items-center justify-between left-0 px-6 py-2 top-0 w-full'>
 
       {profile && profile.count && <div className='flex flex-col justify-between text-white'>
-        <span className='font-semibold tracking-widest'>{profile.results[0].specialty__school__school_name}</span>
+        <span className='font-semibold text-center tracking-widest'>{profile.results[0].specialty__school__school_name}</span>
         <div className='flex font-medium gap-4 italic items-center justify-center text-sm'>
           <span className='flex'>{profile.results[0].specialty__school__campus__region}</span>
           <span className='flex'>-</span>

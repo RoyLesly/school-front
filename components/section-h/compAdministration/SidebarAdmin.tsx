@@ -266,6 +266,18 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Transcript
                             </Link>
                           </li>}
+
+                          <li>
+                              <Link
+                                href={`/Section-H/pageAdministration/${user?.school}/pageResults/pagePortals`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageUtilities/pagePortals` &&
+                                  "text-white"
+                                  } `}
+                              >
+                                Portals
+                              </Link>
+                            </li>
+
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}
@@ -607,7 +619,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               View
                             </Link>
                           </li>
-                          <li>
+                          {/* <li>
                             <Link
                               href={`/Section-H/pageAdministration/${user?.school}/pageLecturers/pageAdmission`}
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageLecturers/pageAdmission` && "text-white"
@@ -615,7 +627,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             >
                               New Lecturer
                             </Link>
-                          </li>
+                          </li> */}
 
                         </ul>
                       </div>
@@ -711,15 +723,15 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           
                           <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageStudentsUnAssigned`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageStudentsUnAssigned`) && "text-white"
+                              href={`/Section-H/pageAdministration/${user?.school}/pageStudents/UnAssignedCampusStudents`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageStudents/UnAssignedCampusStudents`) && "text-white"
                                 }`}
                             >
                               Un-Assigned
                             </Link>
                           </li>
 
-                          <li>
+                          {/* <li>
                             <Link
                               href={`/Section-H/pageAdministration/${user?.school}/pageStudents/pageAdmission`}
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageStudents/pageAdmission`) && "text-white"
@@ -727,7 +739,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             >
                               New Admission
                             </Link>
-                          </li>
+                          </li> */}
 
                         </ul>
                       </div>
@@ -1033,18 +1045,38 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 Activation
                               </Link>
                             </li>
-
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageAdmin/pagePortals`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageAdmin/pagePortals` &&
+                                href={`/Section-H/pageAdministration/${user?.school}/pageUtilities`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageUtilities` &&
                                   "text-white"
                                   } `}
                               >
-                                Portals
+                                System Values
                               </Link>
                             </li>
 
+                            <li>
+                              <Link
+                                href={`/Section-H/pageAdministration/${user?.school}/pageUtilities/Department`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageUtilities/Department` &&
+                                  "text-white"
+                                  } `}
+                              >
+                                Departments
+                              </Link>
+                            </li>
+
+                            <li>
+                              <Link
+                                href={`/Section-H/pageAdministration/${user?.school}/pageUtilities/Account`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageAtilities/Account` &&
+                                  "text-white"
+                                  } `}
+                              >
+                                Accounts
+                              </Link>
+                            </li>
                             <li>
                               <Link
                                 href={`/Section-H/pageAdministration/${user?.school}/pageUtilities/pageResetTokens`}
@@ -1078,9 +1110,9 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     return (
                       <React.Fragment>
                         <Link
-                          href={`/Section-H/pageAdministration/${user?.school}/pageUtilities`}
-                          className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/Section-H/pageAdministration/${user?.school}/pageUtilities` ||
-                              pathname.includes(`/pageAdministration/${user?.school}/pageUtilities`)) &&
+                          href={`/Section-H/pageAdministration/${user?.school}/pageAdmin`}
+                          className={`group hidden relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/Section-H/pageAdministration/${user?.school}/pageAdmin` ||
+                              pathname.includes(`/pageAdministration/${user?.school}/pageAdmin`)) &&
                             "bg-graydark dark:bg-meta-4"
                             }`}
                           onClick={(e) => {

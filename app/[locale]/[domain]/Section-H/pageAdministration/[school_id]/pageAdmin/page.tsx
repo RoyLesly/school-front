@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import React from 'react'
 import LayoutAdmin from '@/section-h/compAdministration/LayoutAdmin'
-import ListCategoryPage from '@/componentsTwo/List/ListCategoryPage'
+import ListCategoryPage from '@/componentsTwo/ListAdmin/ListCategoryPage'
 import { getData } from '@/functions'
 import { protocol } from '@/config'
 import { GetSysCategoryUrl } from '@/Domain/Utils-H/appControl/appConfig'
