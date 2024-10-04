@@ -73,7 +73,7 @@ const DomainForm = (props: PropsType) => {
 
   return (
 
-    <form className="flex flex-col gap-4" onSubmit={onSubmit}>
+    <form className="bg-slate-300 flex flex-col gap-4 p-2 rounded" onSubmit={onSubmit}>
       {props.type === "create" && <h1 className="font-semibold text-xl">Create Domain</h1>}
       {props.type === "update" && <h1 className="font-semibold text-xl">Update Value</h1>}
 

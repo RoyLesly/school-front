@@ -5,6 +5,8 @@ import { GetDomainInter, GetLevelInter } from "@/Domain/Utils-H/appControl/appIn
 import MyPageTitle from "@/section-h/common/MyPageTitle";
 import { redirect } from "next/navigation";
 import MyTabs from "../MyTabs";
+import { FaDownload } from "react-icons/fa6";
+import MessageModal from "../MessageModal";
 
 
 const columns = [
@@ -50,9 +52,9 @@ const columns = [
   },
 ];
 
-const ListAccStudentPage = ({ params, data, years, thisYear, levels, domains }
-  : 
-  { params: any, data: any[] | any, years: any[], thisYear: string, levels: GetLevelInter[], domains: GetDomainInter[] }) => {
+const ListAccStudentPage = ({ params, searchParams, data, years, thisYear, levels, domains }
+  :
+  { params: any, searchParams: any, data: any[] | any, years: any[], thisYear: string, levels: GetLevelInter[], domains: GetDomainInter[] }) => {
   const renderRow = (item: any, index: number) => (
     <tr
       key={item.id}
@@ -74,10 +76,9 @@ const ListAccStudentPage = ({ params, data, years, thisYear, levels, domains }
     <div className="bg-white flex-1 m-2 mt-1 p-2 rounded-md text-black">
 
       <MyTabs
-        page={0} 
+        page={0}
         data={[
           // { page: 0,  title: "", link: `/${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/pageDomain`},
-          // { page: 1,  title: "", link: `/${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/pageField`},
           // { page: 2,  title: "", link: `/${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/pageSpecialty`},
         ]}
       />
@@ -87,16 +88,34 @@ const ListAccStudentPage = ({ params, data, years, thisYear, levels, domains }
         <div className="flex gap-2 items-center w-full">
           <MyPageTitle title={"Student Analyses"} params={params} />
           <div className="font-semi-bold hidden italic md:flex tracking-widest">{thisYear}</div>
-          <SelectYear 
-          domains={domains} 
-          levels={levels} 
-          years={years} 
-          thisYear={thisYear} 
-          link={`${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/analysesStudent`} />
+          <div>
+            {searchParams ? <MessageModal
+              table="excel_accounting_info" 
+              type="custom"
+              params={params} icon={<span className="flex gap-1 items-center justify-center"><FaDownload size={12} /></span>} 
+              data={data}
+              extra_data={{ 
+                searchParams: searchParams, 
+                type: "analyses_students", 
+                export_title: `StudentsFee`,
+                worksheet_name: "Students" 
+              }}
+              customClassName={`flex gap-2 bg-bluedash px-3 py-1 text-white font-medium capitalize gap-2 cursor-pointer`}
+            /> : null}
+          </div>
+          <div className="w-full">
+            <SelectYear
+              domains={domains}
+              levels={levels}
+              years={years}
+              thisYear={thisYear}
+              link={`${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/analysesStudent`}
+            />
+          </div>
         </div>
       </div>
 
-      <Table columns={columns} renderRow={renderRow} data={data.sort((a: any, b: any) => a.level > b.level ? 1 : a.level < b.level ? -1 : 0 )} />
+      <Table columns={columns} renderRow={renderRow} data={data.sort((a: any, b: any) => a.level > b.level ? 1 : a.level < b.level ? -1 : 0)} />
     </div>
   );
 };

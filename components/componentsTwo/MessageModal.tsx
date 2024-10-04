@@ -10,6 +10,11 @@ const ConfirmTranscriptApprove = dynamic(() => import("./messageForms/ConfirmTra
 const ConfirmTranscriptPreview = dynamic(() => import("./messageForms/ConfirmTranscriptPreview"), { loading: () => <MyLoadingModal />, });
 const ConfirmTranscriptPrint = dynamic(() => import("./messageForms/ConfirmTranscriptPrint"), { loading: () => <MyLoadingModal />, });
 const ResultSlip = dynamic(() => import("./messageForms/ResultSlip"), { loading: () => <MyLoadingModal />, });
+const PreInscriptionSlip = dynamic(() => import("./messageForms/PreInscriptionSlip"), { loading: () => <MyLoadingModal />, });
+const ExcelExtract = dynamic(() => import("./messageForms/ExcelExtract"), { loading: () => <MyLoadingModal />, });
+const ExcelExtractProfiles = dynamic(() => import("./messageForms/ExcelExtractProfiles"), { loading: () => <MyLoadingModal />, });
+const ExcelExtractAccountingInfo = dynamic(() => import("./messageForms/ExcelExtractAccountingInfo"), { loading: () => <MyLoadingModal />, });
+const AdmittedPreincriptionStudentDetails = dynamic(() => import("./messageForms/AdmittedPreincriptionStudentDetails"), { loading: () => <MyLoadingModal />, });
 
 const forms: {
   [key: string]: (type: "create" | "update" | "delete" | "custom" | any, params: any, setOpen: any, data?: any, extra_data?: any ) => JSX.Element;
@@ -19,6 +24,11 @@ const forms: {
   confirm_preview_transcript: (type, params, setOpen, data, extra_data) => <ConfirmTranscriptPreview type={type} data={data} extra_data={extra_data} params={params} setOpen={setOpen} />,
   confirm_print_transcript: (type, params, setOpen, data, extra_data) => <ConfirmTranscriptPrint type={type} data={data} extra_data={extra_data} params={params} setOpen={setOpen} />,
   result_slip: (type, params, setOpen, data, extra_data) => <ResultSlip type={type} data={data} extra_data={extra_data} params={params} setOpen={setOpen} />,
+  preinscription_slip: (type, params, setOpen, data, extra_data) => <PreInscriptionSlip type={type} data={data} extra_data={extra_data} params={params} setOpen={setOpen} />,
+  excel_extract: (type, params, setOpen, data, extra_data) => <ExcelExtract type={type} data={data} extra_data={extra_data} params={params} setOpen={setOpen} />,
+  excel_profiles: (type, params, setOpen, data, extra_data) => <ExcelExtractProfiles type={type} data={data} extra_data={extra_data} params={params} setOpen={setOpen} />,
+  excel_accounting_info: (type, params, setOpen, data, extra_data) => <ExcelExtractAccountingInfo type={type} data={data} extra_data={extra_data} params={params} setOpen={setOpen} />,
+  admitted_preincription_student_details: (type, params, setOpen, data, extra_data) => <AdmittedPreincriptionStudentDetails type={type} data={data} extra_data={extra_data} params={params} setOpen={setOpen} />,
 };
 
 const MessageModal = ({
@@ -38,6 +48,11 @@ const MessageModal = ({
     | "confirm_preview_transcript"
     | "confirm_print_transcript"
     | "result_slip"
+    | "preinscription_slip"
+    | "excel_extract"
+    | "excel_profiles"
+    | "excel_accounting_info"
+    | "admitted_preincription_student_details"
 
   type: "create" | "update" | "delete" | "custom" | "custom";
   icon: React.ReactNode;
@@ -49,7 +64,7 @@ const MessageModal = ({
   id?: number;
   formClassName?: string;
 }) => {
-  const size = type === "create" ? "md:w-10 md:h-10 w-8 h-8" : "w-7 h-7";
+  const size = type === "custom" ? "md:w-12 md:h-12 w-10 h-10" : "w-7 h-7";
   const bgColor =
     type === "create"
       ? "bg-green-400"

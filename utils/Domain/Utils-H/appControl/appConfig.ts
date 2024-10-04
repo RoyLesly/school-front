@@ -3,6 +3,7 @@ import { RootApi } from "@/config";
 
 export const SchoolUrl = RootApi + "/higher/higher_app_control/schoolinfo/"
 export const CampusUrl = RootApi + "/higher/higher_app_control/campus"
+
 export const SysCategoryUrl = RootApi + "/higher/higher_app_control/sys-category"
 export const SysConstantUrl = RootApi + "/higher/higher_app_control/sys-constants"
 export const DomainUrl = RootApi + "/higher/higher_app_control/domain"
@@ -19,8 +20,10 @@ export const SemesterUrl = RootApi + "/higher/higher_app_control/semester"
 export const AcademicYearUrl = RootApi + "/higher/higher_app_control/academic-year"
 
 
+export const GetSchoolIdentificationUrl = RootApi + "/higher/higher_app_control/get-school-identification"
 export const GetSchoolInfoUrl = RootApi + "/higher/higher_app_control/get-school-info"
 export const GetCampusInfoUrl = RootApi + "/higher/higher_app_control/get-school-campus"
+
 export const GetSysCategoryUrl = RootApi + "/higher/higher_app_control/get-sys-category"
 export const GetSysConstantUrl = RootApi + "/higher/higher_app_control/get-sys-constant"
 export const GetDomainUrl = RootApi + "/higher/higher_app_control/get-domain"

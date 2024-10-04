@@ -69,6 +69,55 @@ export const ActionCreate = async (data: unknown, schema: any, url: string, reva
     return { detail: "SERVER ERROR"}
 }
 
+export const ActionCreateNotProtected = async (data: unknown, schema: any, url: string, revalUrl?: string) => {
+
+    var config = {}
+
+    const result = schema.safeParse(data);
+    if (!result.success) {
+        let errorMessage: any = {};
+
+        result.error.issues.forEach((issue: any) => {
+            errorMessage[issue.path[0]] = issue.message;
+        });
+
+        return { error: errorMessage }
+    }
+
+    var response = null
+    if (url.includes("token")){
+        response = await axiosRequest<any>({
+            method: "post",
+            url: url,
+            payload: { ...result.data },
+            params: "remove_payload",
+            token: config
+        })
+    } else {
+        response = await axiosRequest<any>({
+            method: "post",
+            url: url,
+            payload: result.data,
+            params: "remove_payload",
+            token: config
+        })
+    }
+
+    if (response) {
+        if (response.data) {
+            return response.data
+        }
+        if (response?.data.errors) {
+            return { errors: response.data.errors };
+        }
+        if (response?.data.error?.toString().includes("[WinError]")) {
+            return { Error: "Mail Error" };
+        }
+    }
+
+    return { detail: "SERVER ERROR"}
+}
+
 
 export const ActionEdit = async (data: unknown, id: string | number, schema: any, url: string, revalUrl?: string) => {
     

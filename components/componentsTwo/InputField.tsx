@@ -5,6 +5,7 @@ type InputFieldProps = {
   type?: string;
   register: any;
   name: string;
+  label_two?: string;
   className?: string;
   readOnly?: boolean;
   defaultValue?: string;
@@ -14,6 +15,7 @@ type InputFieldProps = {
 
 const InputField = ({
   label,
+  label_two,
   type = "text",
   register,
   name,
@@ -24,8 +26,8 @@ const InputField = ({
   className,
 }: InputFieldProps) => {
   return (
-    <div className={`${className ? className : "flex "} flex-col gap-2 w-full`}>
-      <label className="text-gray-500">{label}</label>
+    <div className={`${className ? className : "flex "} flex-col gap-1 md:gap-2 w-full`}>
+      <label className="text-gray-500">{label} {label_two ? "("+label_two+")" : ""}</label>
       <input
         type={type}
         readOnly={readOnly}

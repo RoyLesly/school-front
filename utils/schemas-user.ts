@@ -14,12 +14,13 @@ export const ProgramSchema = z.object({
 })
 
 export const SchemaCreateEditCustomUser = z.object({
-    id: z.string().optional(),
+    id: z.coerce.number().optional(),
     username: z.string().optional(),
     first_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum"}),
     last_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum"}),
     full_name: z.string().optional(),
     sex: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum"}),
+    address: z.string().trim().min(1, { message: "Must Contain 6 Characters Minimum"}),
     email: z.string().trim().min(1, { message: "Must Contain 6 Characters Minimum"}),
     role: z.string().trim().min(1, { message: "Must Contain 2 Characters Minimum"}),
     telephone: z.coerce.number().optional(),
@@ -33,6 +34,34 @@ export const SchemaCreateEditCustomUser = z.object({
     dept: z.array(arraySchema).optional(),
     school: z.array(arraySchema).optional(),
     page: z.array(arraySchema).optional(),
+})
+
+export const SchemaCreateEditPreIncription = z.object({
+    id: z.string().optional(),
+    registration_number: z.string().optional(),
+    first_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum"}),
+    last_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum"}),
+    full_name: z.string().optional(),
+    sex: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum"}),
+    email: z.string().trim().min(1, { message: "Must Contain 6 Characters Minimum"}),
+    telephone: z.coerce.number().optional(),
+    address: z.string().optional(),
+    pob: z.string(),
+    dob: z.string(),
+    emergency_name: z.string().trim().optional(),
+    emergency_town: z.string().trim().optional(),
+    emergency_telephone: z.coerce.number().optional(),
+    specialty_one: z.string().optional(),
+    specialty_two: z.string().optional(),
+    academic_year: z.string().optional(),
+    session: z.string().optional(),
+    level: z.string().optional(),
+    program: z.string().optional(),
+    campus: z.string(),
+    admission_status: z.boolean().optional(),
+    action: z.enum(["CREATING", "UPDATING", "VERIFYING", "ADMISSION"]),
+    status: z.enum(["PENDING", "ADMITTED"]),
+
 })
 
 export const SchemaEditCustomUser = z.object({

@@ -1,47 +1,49 @@
-import { getData, getStartEndOfWeek } from '@/functions';
-import { GetDayProgramUrl } from '@/Domain/Utils-H/timeControl/timeConfig';
-import { GetDayProgramInter } from '@/Domain/Utils-H/timeControl/timeInter';
-import { GetUserProfileUrl } from '@/Domain/Utils-H/userControl/userConfig';
-import { Metadata } from 'next';
+import { Metadata } from 'next'
 import React from 'react'
-import { protocol } from '@/config';
-
-
-export const metadata: Metadata = {
-  title: "Time Table",
-  description: "Student Time Table",
-};
+import LayoutAdmin from '@/section-h/compAdministration/LayoutAdmin'
+import { getData } from '@/functions'
+import SessionExpired from '@/section-h/common/SessionExpired'
+import { GetSpecialtyUrl } from '@/Domain/Utils-H/appControl/appConfig'
+import { protocol } from '@/config'
+import NotificationError from '@/section-h/common/NotificationError'
+import { GetTimeSlotUrl } from '@/Domain/Utils-H/timeControl/timeConfig'
+import ListData from './ListData'
+import MyCalendar from './MyCalendar'
+import { GetSpecialtyInter } from '@/Domain/Utils-H/appControl/appInter'
+import { GetUserProfileInter } from '@/Domain/Utils-H/userControl/userInter'
+import { GetUserProfileUrl } from '@/Domain/Utils-H/userControl/userConfig'
 
 const page = async ({
   params,
-  searchParams
+  searchParams,
 }: {
-  params: { userprofile_id: string,  domain: string, specialty_id: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  params: { userprofile_id: string, specialty_id: string, domain: string };
+  searchParams: { month: string, year: string };
 }) => {
 
-  const apiProfile: any = await getData(protocol + "api" + params.domain + GetUserProfileUrl, { ...searchParams, id: params.userprofile_id, fieldList: [
-    "id", "user__full_name", "user__username", "specialty__main_specialty__specialty_name", 
-    "specialty__academic_year", "specialty__level__level", "session", "program__name"] });
-  const apiDayProgram: any = await getData(protocol + "api" + params.domain + GetDayProgramUrl, {
-    ...searchParams, timetable__specialty__id: params.specialty_id, timetable__publish: true, fieldList: [
-      "id", "day", "timetable__year_week", "period_0812__main_course__course_name", 
-      "period_1317__main_course__course_name", "period_1721__main_course__course_name",
+  const apiUserprofile: GetUserProfileInter[] | any = await getData(protocol + "api" + params.domain + GetUserProfileUrl, {
+    nopage: true, id: params.userprofile_id, fieldList: [
+      "id", "session"
+    ]
+  });
+
+  const apiTimeSlots: any = await getData(protocol + "api" + params.domain + GetTimeSlotUrl, {
+    nopage: true, timetableday__timetableweek__publish: true, course__specialty__id: params.specialty_id, session: apiUserprofile ? apiUserprofile[0].session : "Evening",
+    fieldList: [
+      "id", "title", "start", "end", "status", "start_time", "end_time", "timetableday__day", "timetableday__date", "timetableday__timetableweek__year_week", "timetableday__timetableweek__publish",
     ]
   });
 
   return (
-    <div className='h-screen mx-1 my-16 p-1 rounded text-black'>
+    <div className='h-full mb-20 mt-16 mx-1 p-1 rounded text-black'>
+      {searchParams && <NotificationError errorMessage={searchParams} />}
 
-      <div className='flex font-semibold items-center justify-center mb-2 text-xl'>TIME TABLE PAGE</div>
+      {apiTimeSlots['unauthorized'] && <SessionExpired />}
 
-      {apiDayProgram && apiProfile && apiProfile.count && apiDayProgram.count && <List data={apiDayProgram} params={params} profile={apiProfile.results[0]} />}
-
-      {/* {apiProfile && <div className='flex flex-col mb-20 mt-6 px-2'>
-        <span className='font medium'>Dear {apiProfile.count && apiProfile.results[0].user__username},</span>
-        <span className='italic'>We encourage you to keep on going, even when it gets tough.</span>
-        <span className='italic mb-16'>Learning is a life long enriching journey.</span>
-      </div>} */}
+      {apiTimeSlots && apiTimeSlots.length ? <MyCalendar apiTimeSlots={apiTimeSlots} /> : null}
+      {/* {apiTimeSlots && apiTimeSlots.length ? <ListData params={params} searchParams={searchParams} apiTimeSlots={apiTimeSlots} apiSpecialty={apiSpecialty[0]} /> 
+        : 
+        <div className='flex font-medium items-center justify-center pt-20 text-[20px] w-full'>No Time Table Yet</div>} */}
 
     </div>
   )
@@ -49,39 +51,10 @@ const page = async ({
 
 export default page
 
+export const metadata: Metadata = {
+  title: "TimeTable-Class",
+  description: "This is Time Table Class  Page",
+};
 
-const List = ({ data, profile, params }: any) => {
 
-  const period: any = data && data.count ? [... new Set(data.results.map((t: GetDayProgramInter) => t.timetable__year_week))] : []
 
-  return <div className='mb-10'>
-    {period && period.length > 0 && period.map((p: string, index: number) =>
-      <div key={index} className='border-2 flex flex-col'>
-        <div className='bg-slate-700 dark:bg-white dark:text-black flex font-medium gap-4 items-center justify-center pt-1 text-center text-white'>
-          <span>Year: {p.slice(0, 4)}</span>
-          <span>Week: {p.slice(4, 7)}</span>
-        </div>
-        <div className='bg-slate-700 dark:bg-white dark:text-black flex font-medium gap-4 items-center justify-center pb-1 text-center text-white'>
-          <span>Period: <b>({getStartEndOfWeek(p.slice(4, 7), p.slice(0, 4))[0].slice(0, 12)} - {getStartEndOfWeek(p.slice(4, 7), p.slice(0, 4))[1].slice(0, 12)})</b></span>
-        </div>
-        {data && data.count && data.results ? data.results.map((item: GetDayProgramInter) => {
-          return (
-            <div key={item.id} className='dark:odd:bg-slate-700 odd:bg-blue-200'>
-              {item.timetable__year_week == p && <div key={item.id}>
-                <div className="dark:border-strokedark dark:text-white flex flex-col px-2 text-black tracking-wider">
-                  <div className="items-center justify-center md:flex"><span className="font-bold">{item.day}</span></div>
-                  {profile.session == "Morning" && item.period_0812__main_course__course_name && <div className="flex gap-2 italic items-center justify-bteween md:flex pl-4 text-[12px]"><span className='flex w-16'>08-12</span><span className="flex font-medium">{item.period_0812__main_course__course_name}</span></div>}
-                  {profile.session == "Morning" && item.period_1317__main_course__course_name && <div className="flex gap-2 italic items-center justify-bteween md:flex pl-4 text-[12px]"><span className='flex w-16'>13-17</span><span className="flex font-medium">{item.period_1317__main_course__course_name}</span></div>}
-                  {profile.session == "Evening" && item.period_1721__main_course__course_name && <div className="flex gap-2 italic items-center justify-bteween md:flex pl-4 text-[12px]"><span className='flex w-16'>17-21</span><span className="flex font-medium">{item.period_1721__main_course__course_name}</span></div>}
-                </div>
-              </div>
-              }
-            </div>)
-        }
-        )
-          :
-          <>NOTHING ...........</>
-        }
-      </div>)}
-  </div>
-}

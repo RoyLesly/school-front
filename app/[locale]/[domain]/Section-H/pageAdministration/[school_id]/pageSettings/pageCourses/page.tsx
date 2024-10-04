@@ -5,7 +5,7 @@ import { getData } from '@/functions'
 import { protocol } from '@/config'
 import NotificationError from '@/section-h/common/NotificationError'
 import ListCoursePage from '@/componentsTwo/ListSettings/ListCoursePage'
-import { AcademicYearUrl, GetCourseUrl } from '@/Domain/Utils-H/appControl/appConfig'
+import { GetCourseUrl } from '@/Domain/Utils-H/appControl/appConfig'
 
 const page = async ({
   params,

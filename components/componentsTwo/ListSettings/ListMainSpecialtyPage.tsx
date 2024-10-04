@@ -1,6 +1,4 @@
-import TabsSpecialty from "@/[locale]/[domain]/Section-H/pageAdministration/[school_id]/pageSettings/pageSpecialties/TabsSpecialty";
 import FormModal from "@/componentsTwo/FormModal";
-import { role } from "@/componentsTwo/lib/data";
 import Table from "@/componentsTwo/Table";
 import { TableRowClassName } from "@/constants";
 import { GetMainSpecialtyInter } from "@/Domain/Utils-H/appControl/appInter";
@@ -8,6 +6,7 @@ import MyPageTitle from "@/section-h/common/MyPageTitle";
 import { FaPlus } from "react-icons/fa6";
 import { MdModeEdit } from "react-icons/md";
 import { RiDeleteBin2Line } from "react-icons/ri";
+import TabsSpecialty from "../TabsSettings/TabsSpecialty";
 
 
 const columns = [

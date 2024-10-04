@@ -7,9 +7,9 @@ import { ActionCreate, ActionDelete, ActionEdit } from "@/serverActions/actionGe
 import { protocol } from "@/config";
 import { useRouter } from "next/navigation";
 import { DepartmentUrl } from "@/Domain/Utils-H/userControl/userConfig";
-import { SchemaCreateEditDepartment } from "@/Domain/Utils-S/schemas/schemas";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
 import { useState } from "react";
+import { SchemaCreateEditDepartment } from "@/Domain/schemas/schemas";
 
 type Inputs = z.infer<typeof SchemaCreateEditDepartment>;
 

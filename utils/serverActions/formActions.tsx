@@ -5,8 +5,8 @@ import { collectMoney } from "@/payment";
 import { ActionCreate, ActionEdit } from "./actionGeneral";
 import { protocol } from "@/config";
 import { TranscriptApplicationUrl } from "@/Domain/Utils-H/feesControl/feesConfig";
-import { getSession } from "@/Domain/Utils-S/serverActions/sessionAction";
 import { jwtDecode } from "jwt-decode";
+import { getSession } from "./sessionAction";import { redirect } from "next/navigation";
 
 export const makePayment = async (state: any, formData: FormData) => {
     const result = await SchemaPlatformChargesCreate.safeParse({

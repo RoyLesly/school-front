@@ -6,19 +6,16 @@ import InputField from "../InputField";
 import { ActionCreate, ActionDelete, ActionEdit } from "@/serverActions/actionGeneral";
 import { protocol } from "@/config";
 import { useRouter } from "next/navigation";
-import { AcademicYearUrl, CourseUrl, GetDomainUrl, GetLevelUrl, GetMainCourseUrl, GetSpecialtyUrl } from "@/Domain/Utils-H/appControl/appConfig";
+import { CourseUrl, GetSpecialtyUrl } from "@/Domain/Utils-H/appControl/appConfig";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
 import { useEffect, useState } from "react";
 import { GetDomainInter, GetLevelInter, GetMainCourseInter, GetSpecialtyInter } from "@/Domain/Utils-H/appControl/appInter";
 import { getData, handleResponseError } from "@/functions";
 import SelectField from "../SelectField";
 import { SchemaCreateEditCourse } from "@/Domain/schemas/schemas";
-import MyPageTitle from "@/section-h/common/MyPageTitle";
 import { GetCustomUserInter } from "@/Domain/Utils-H/userControl/userInter";
 import { GetCustomUserUrl } from "@/Domain/Utils-H/userControl/userConfig";
-import Link from "next/link";
 import MyButtonLink from "@/section-h/common/MyButtons/MyButtonLink";
-import Loader from "@/section-h/common/Loader";
 
 type Inputs = z.infer<typeof SchemaCreateEditCourse>;
 
@@ -31,7 +28,7 @@ const CourseForm = ({
 }: {
   type: "create" | "update" | "delete";
   data?: any;
-  extra_data?: any;
+  extra_data?: { apiDomains: GetDomainInter[], apiMainCourses: GetMainCourseInter[] | any, apiLevels: GetLevelInter[], canCreate?: boolean, canEdit?: boolean, canDelete?: boolean };
   setOpen?: any;
   params?: any;
 }) => {
@@ -55,8 +52,8 @@ const CourseForm = ({
   useEffect(() => {
     if (count == 0 && data && data.specialty__id) {
       const call = async () => {
-        const responseLecturer = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "teacher", active: true, is_staff: false, school_id: params.school_id, fieldList: ["id", "full_name"] })
-        const responseAdmin = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "admin", active: true, is_staff: false, school_id: params.school_id, fieldList: ["id", "full_name"] })
+        const responseLecturer = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "teacher", active: true, is_staff: false, school__id: params.school_id, fieldList: ["id", "full_name"] })
+        const responseAdmin = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "admin", active: true, is_staff: false, school__id: params.school_id, fieldList: ["id", "full_name"] })
         const response = await getData(protocol + "api" + params.domain + GetSpecialtyUrl, {
           "specialty__main_specialty__field__domain__id": data.specialty__main_specialty__field__domain__id, 
           "academic_year": data.specialty__academic_year, nopage: true,
@@ -72,10 +69,10 @@ const CourseForm = ({
       }
       call()
     }
-    if (count == 0 && !data) {
+    if (count == 0 && !data && extra_data?.canCreate) {
       const call = async () => {
-        const responseLecturer = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "teacher", active: true, is_staff: false, school_id: params.school_id, fieldList: ["id", "full_name"] })
-        const responseAdmin = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "admin", active: true, is_staff: false, school_id: params.school_id, fieldList: ["id", "full_name"] })
+        const responseLecturer = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "teacher", active: true, is_staff: false, school__id: params.school_id, fieldList: ["id", "full_name"] })
+        const responseAdmin = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "admin", active: true, is_staff: false, school__id: params.school_id, fieldList: ["id", "full_name"] })
         if (responseLecturer && responseAdmin) {
           setLecturerData([...responseAdmin, ...responseLecturer])
         }
@@ -96,7 +93,8 @@ const CourseForm = ({
       }
       call()
     }
-  }, [count, params, data, type, selectedDomainID, selectedLevelID, selectedYear])
+  }, [count, params, data, type, selectedDomainID, extra_data, selectedLevelID, selectedYear])
+
   const onSubmit = handleSubmit((formVals) => {
     setClicked(true);
 
@@ -154,15 +152,17 @@ const CourseForm = ({
     }
 
   });
+  console.log(lecturerData)
+  console.log(extra_data?.canEdit)
+  console.log(extra_data?.canCreate)
 
-  console.log(data)
 
   return (
     <>
       {lecturerData ?
         lecturerData.length ?
           <>
-          {type === "create" ? <form className="flex flex-col gap-1 md:gap-4" onSubmit={onSubmit}>
+          {type === "create" ? <form className="bg-slate-300 flex flex-col gap-1 md:gap-4 p-2 text-black" onSubmit={onSubmit}>
             {type === "create" && <h1 className="font-semibold text-xl">Assign Course</h1>}
 
             <div className="flex flex-wrap gap-4 justify-between">
@@ -171,7 +171,7 @@ const CourseForm = ({
                 name="domain_id"
                 register={register}
                 error={errors?.domain_id}
-                data={extra_data[0]}
+                data={extra_data?.apiDomains}
                 defaultValue={data?.main_specialty__field__domain__id}
                 defaultName={data?.assigned_to__full_name}
                 display={{ "name": "domain_name", value: "id" }}
@@ -197,7 +197,7 @@ const CourseForm = ({
                   name="level_id"
                   register={register}
                   error={errors?.level}
-                  data={extra_data[2]}
+                  data={extra_data?.apiLevels}
                   display={{ "name": "level", value: "id" }}
                   functions={[setCount, setSelectedLevelID, 3]}
                 />
@@ -222,9 +222,11 @@ const CourseForm = ({
             {specialtyData ? <div className="flex flex-col gap-2 w-full">
 
               <SearchMainCourse
-                apiMainCourse={extra_data[1]}
+                apiMainCourse={extra_data?.apiMainCourses}
                 data={data}
                 error={errors?.main_course_id}
+                defaultName={data?.main_course__course_name}
+                defaultValue={data?.main_course__id}
                 name={"main_course_id"}
                 register={register}
               />
@@ -285,9 +287,9 @@ const CourseForm = ({
                 />
               </div>
 
-              <div className="flex items-center justify-center md:mt-6 mt-4 w-full">
+              {extra_data?.canCreate ? <div className="flex items-center justify-center md:mt-6 mt-4 w-full">
                 <MyButtonModal type={type} clicked={clicked} />
-              </div>
+              </div> : <></>}
 
             </div> : <></>}
 
@@ -305,7 +307,7 @@ const CourseForm = ({
 
 
           // UPDATE AND DELETE SECTION
-          <form className="flex flex-col gap-1 md:gap-4" onSubmit={onSubmit}>
+          <form className="bg-slate-300 flex flex-col gap-1 md:gap-4 p-2 rounded-lg" onSubmit={onSubmit}>
             {type === "update" && <h1 className="font-semibold text-xl">Update Course</h1>}
             {type === "delete" && <h1 className="font-semibold text-xl">Delete Course</h1>}
 
@@ -315,7 +317,7 @@ const CourseForm = ({
                 name="domain_id"
                 register={register}
                 error={errors?.domain_id}
-                data={extra_data[0]}
+                data={extra_data?.apiDomains}
                 defaultValue={data?.specialty__main_specialty__field__domain__id}
                 defaultName={data?.specialty__main_specialty__field__domain__domain_name}
                 display={{ "name": "domain_name", value: "id" }}
@@ -347,7 +349,7 @@ const CourseForm = ({
                 error={errors?.main_course_id}
                 defaultValue={data?.main_course__id}
                 defaultName={data?.main_course__course_name}
-                data={extra_data[1]}
+                data={extra_data?.apiMainCourses}
                 display={{ "name": "course_name", value: "id" }}
               />
 
@@ -397,9 +399,9 @@ const CourseForm = ({
                   data={["Transversal", "Fundamental", "Professional"]}
                 />
               </div>
-              <div className="flex flex-col gap-2 md:flex-row">
+              {extra_data?.canEdit ?<div className="flex flex-col gap-2 md:flex-row">
                 <SelectField
-                  label="Course Type"
+                  label="Lecturer"
                   name={"assigned_to_id"}
                   register={register}
                   error={errors?.assigned_to_id}
@@ -407,14 +409,12 @@ const CourseForm = ({
                   defaultName={data?.assigned_to__full_name}
                   data={lecturerData}
                   display={{ "name": "full_name", value: "id" }}
-
-
                 />
-              </div>
+              </div> : <></>}
 
-              <div className="flex items-center justify-center md:mt-6 mt-4 w-full">
+              {extra_data?.canEdit ? <div className="flex items-center justify-center md:mt-6 mt-4 w-full">
                 <MyButtonModal type={type} clicked={clicked} />
-              </div>
+              </div> : <></>}
 
             </div> : <></>}
 

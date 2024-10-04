@@ -45,15 +45,15 @@ const page = async ({
 
                             <div className='font-medium justify-center py-2 text-center tracking-wide'>Semester I</div>
 
-                            <div className="bg-bluedark dark:border-strokedark grid grid-cols-4 md:grid-cols-4 px-2 py-1 text-lg text-white tracking-wider">
-                                <div className="col-span-2 flex items-center">
+                            <div className="bg-bluedark dark:border-strokedark grid grid-cols-7 md:grid-cols-7 px-2 py-1 text-lg text-white tracking-wider">
+                                <div className="col-span-5 flex items-center">
                                     <span className="font-medium">Course</span>
                                 </div>
                                 <div className="col-span-1 flex items-end justify-end">
-                                    <span className="font-medium">Marks</span>
+                                    <span className="font-medium">CA</span>
                                 </div>
                                 <div className="col-span-1 flex items-end justify-end">
-                                    <span className="font-medium">Status</span>
+                                    <span className="font-medium text-sm"></span>
                                 </div>
                             </div>
 
@@ -62,10 +62,10 @@ const page = async ({
                                     (apiSchoolFees[0].userprofile__specialty__tuition - apiSchoolFees[0].balance) > (apiSchoolFees[0].userprofile__specialty__tuition * (ConfigData[`${params.domain}`]['higher'].schoolfees_control[0] / 100)) ?
                                         apiDataSem1.results.map((item: GetResultInter, key: number) => (
                                             <div
-                                                className="border-stroke border-t dark:border-strokedark dark:text-white grid grid-cols-4 md:grid-cols-4 odd:bg-slate-50 odd:dark:bg-slate-800 px-2 text-back text-black"
+                                                className="border-stroke border-t dark:border-strokedark dark:text-white grid grid-cols-7 md:grid-cols-7 odd:bg-slate-50 odd:dark:bg-slate-800 px-2 text-back text-black"
                                                 key={key}
                                             >
-                                                <div className="col-span-2 flex items-end">
+                                                <div className="col-span-5 flex items-end">
                                                     <span className="md:text-lg text-sm">
                                                         {item.course__main_course__course_name}
                                                     </span>
@@ -94,15 +94,15 @@ const page = async ({
 
                             <div className='justify-centerfont-medium py-2 text-center tracking-wide'>Semester II</div>
 
-                            <div className="bg-bluedark dark:border-strokedark grid grid-cols-4 md:grid-cols-4 px-2 py-1 text-lg text-white tracking-wider">
-                                <div className="col-span-2 flex items-center">
+                            <div className="bg-bluedark dark:border-strokedark grid grid-cols-7 md:grid-cols-7 px-2 py-1 text-lg text-white tracking-wider">
+                                <div className="col-span-5 flex items-center">
                                     <span className="font-medium">Course</span>
                                 </div>
                                 <div className="col-span-1 flex items-end justify-end">
-                                    <span className="font-medium">Marks</span>
+                                    <span className="font-medium">CA</span>
                                 </div>
                                 <div className="col-span-1 flex items-end justify-end">
-                                    <span className="font-medium">Status</span>
+                                    <span className="font-medium"></span>
                                 </div>
                             </div>
 
@@ -112,10 +112,10 @@ const page = async ({
                                     (apiSchoolFees[0].userprofile__specialty__tuition - apiSchoolFees[0].balance) > (apiSchoolFees[0].userprofile__specialty__tuition * (ConfigData[`${params.domain}`]['higher'].schoolfees_control[2] / 100)) ?
                                         apiDataSem2.results.map((item: GetResultInter, key: number) => (
                                             <div
-                                                className="border-stroke border-t dark:border-strokedark dark:text-white grid grid-cols-4 md:grid-cols-4 odd:bg-slate-50 odd:dark:bg-slate-800 px-2 text-back text-black"
+                                                className="border-stroke border-t dark:border-strokedark dark:text-white grid grid-cols-7 md:grid-cols-7 odd:bg-slate-50 odd:dark:bg-slate-800 px-2 text-back text-black"
                                                 key={key}
                                             >
-                                                <div className="col-span-2 flex items-end">
+                                                <div className="col-span-5 flex items-end">
                                                     <span className="md:text-lg text-sm">
                                                         {item.course__main_course__course_name}
                                                     </span>

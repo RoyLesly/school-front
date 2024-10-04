@@ -23,9 +23,7 @@ const EditPage = async ({
       <>
         <Breadcrumb
           pageName="SELECT" 
-          pageName1="Home" 
-          pageName2="Courses" 
-          link1={`/Section-H/pageLecturer/${params.school_id}`}
+          pageName1="Courses" 
           link2={`/Section-H/pageLecturer/${params.school_id}/MarksUpload/${params.lecturer_id}`}
         />
 

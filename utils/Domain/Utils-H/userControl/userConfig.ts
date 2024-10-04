@@ -8,6 +8,7 @@ export const UserActivityUrl = RootApi + "/higher/higher_user_control/useractivi
 export const DepartmentUrl = RootApi + "/higher/higher_user_control/department"
 export const UserProfileUrl = RootApi + "/higher/higher_user_control/userprofile"
 export const CustomUserUrl = RootApi + "/higher/higher_user_control/customuser"
+export const PreInscriptionUrl = RootApi + "/higher/higher_user_control/preinscription"
 
 export const GetUserProfileUrl = RootApi + "/higher/higher_user_control/get-userprofile"
 export const GetCustomUserUrl = RootApi + "/higher/higher_user_control/get-customuser"
@@ -20,6 +21,12 @@ export const CreatePasswordUrl = RootApi + "/higher/higher_user_control/create-p
 export const UpdatePasswordUrl = RootApi + "/higher/higher_user_control/update-password"
 export const ResetPasswordUrl = RootApi + "/higher/higher_user_control/password_reset/"
 export const ResetPasswordConfirmUrl = RootApi + "/higher/higher_user_control/password_reset/confirm/"
+
+
+// NOT PROTECTED
+export const OpenGetCustomUserNotProtectedUrl = RootApi + "/higher/higher_user_control/open-get-customuser"
+export const OpenGetPreInscriptionUrl = RootApi + "/higher/higher_user_control/open-get-preinscription"
+
 
 export const AssignGroupToUserUrl = RootApi + "/higher/higher_user_control/assign-group-to-user"
 export const AssignPermissionToGroupUrl = RootApi + "/higher/higher_user_control/assign-permission-to-group"

@@ -3,6 +3,8 @@ import { TableRowClassName } from "@/constants";
 import MyPageTitle from "@/section-h/common/MyPageTitle";
 import { redirect } from "next/navigation";
 import MyTabs from "../MyTabs";
+import MessageModal from "../MessageModal";
+import { FaDownload } from "react-icons/fa6";
 
 
 const columns = [
@@ -43,7 +45,7 @@ const columns = [
   },
 ];
 
-const ListAccDomainPage = ({ params, data, years, thisYear }: { params: any, data: any[] | any, years: any[], thisYear: string }) => {
+const ListAccDomainPage = ({ params, searchParams, data, years, thisYear }: { params: any, searchParams: any, data: any[] | any, years: any[], thisYear: string }) => {
   const renderRow = (item: any, index: number) => (
     <tr
       key={item.id}
@@ -77,6 +79,21 @@ const ListAccDomainPage = ({ params, data, years, thisYear }: { params: any, dat
         <div className="flex gap-2 items-center w-full">
           <MyPageTitle title={"Domain Analyses"} params={params} />
           <div className="font-semi-bold hidden italic md:flex tracking-widest">{thisYear}</div>
+          <div>
+            {searchParams ? <MessageModal
+              table="excel_accounting_info" 
+              type="custom"
+              params={params} icon={<span className="flex gap-1 items-center justify-center"><FaDownload size={12} /></span>} 
+              data={data}
+              extra_data={{ 
+                searchParams: searchParams, 
+                type: "analyses_domains", 
+                export_title: `DomainFee`,
+                worksheet_name: "Domains" 
+              }}
+              customClassName={`flex gap-2 bg-bluedash px-3 py-1 text-white font-medium capitalize gap-2 cursor-pointer`}
+            /> : null}
+          </div>
           <SelectYear years={years} thisYear={thisYear} link={`${params.domain}/Section-H/pageAccounting/${params.school_id}/pageAnalyses/analysesDomain`} />
         </div>
       </div>

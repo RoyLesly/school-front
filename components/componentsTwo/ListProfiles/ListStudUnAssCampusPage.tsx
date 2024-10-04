@@ -1,17 +1,11 @@
 import FormModal from "@/componentsTwo/FormModal";
-import { role } from "@/componentsTwo/lib/data";
 import Table from "@/componentsTwo/Table";
 import { TableRowClassName } from "@/constants";
 import MyPageTitle from "@/section-h/common/MyPageTitle";
-import { FaPlus, FaRightLong } from "react-icons/fa6";
+import { FaRightLong } from "react-icons/fa6";
 import TableSearch from "../TableSearch";
-import { getData } from "@/functions";
-import { protocol } from "@/config";
-import { GetDomainUrl, GetLevelUrl } from "@/Domain/Utils-H/appControl/appConfig";
 import { GetUserProfileInter } from "@/Domain/Utils-H/userControl/userInter";
-import Link from "next/link";
-import { GetProgramUrl } from "@/Domain/Utils-H/userControl/userConfig";
-import TabsUnAssignedStudents from "@/[locale]/[domain]/Section-H/pageAdministration/[school_id]/pageStudents/TabsUnAssignedStudents";
+import TabsUnAssignedStudents from "../TabsProfiles/TabsUnAssignedStudents";
 
 
 const columns = [
@@ -51,14 +45,14 @@ const ListStudUnAssCampusPage = async ({ params, data, extra_data }: { params: a
       <td>
         <div className="flex gap-2 items-center justify-center">
 
-        <div>
-          <FormModal 
-          table="assign_student_to_specialty" type="custom" 
-          params={params} icon={<span className="flex gap-1 items-center justify-center">Assign <FaRightLong size={12} /></span>} data={item} 
-          extra_data={extra_data} 
-          customClassName={`flex gap-2 bg-bluedash px-3 py-1 text-white font-medium capitalize gap-2 cursor-pointer`}
-          />
-        </div>        </div>
+          <div>
+            <FormModal
+              table="assign_student_to_specialty" type="custom"
+              params={params} icon={<span className="flex gap-1 items-center justify-center">Assign <FaRightLong size={12} /></span>} data={item}
+              extra_data={extra_data}
+              customClassName={`flex gap-2 bg-bluedash px-3 py-1 text-white font-medium capitalize gap-2 cursor-pointer`}
+            />
+          </div>        </div>
       </td>
     </tr>
   );
@@ -67,7 +61,7 @@ const ListStudUnAssCampusPage = async ({ params, data, extra_data }: { params: a
   return (
     <div className="bg-white flex-1 m-2 mt-1 p-2 rounded-md">
 
-<TabsUnAssignedStudents page={1} params={params} />
+      <TabsUnAssignedStudents page={1} params={params} />
 
 
       {/* TOP */}

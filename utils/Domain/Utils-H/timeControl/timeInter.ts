@@ -2,178 +2,106 @@ import { CourseInter, SpecialtyInter } from "../appControl/appInter";
 import { CustomUserInter } from "../userControl/userInter";
 
 
-export type TimeTableInter = {
+export type TimeTableWeekInter = {
   id: number;
   specialty: SpecialtyInter;
   year_week: string;
+  publish: boolean;
   created_by?: CustomUserInter;
   created_at: string;
   updated_by?: CustomUserInter;
   updated_at: string;
 };
 
-export type DayProgramInter = {
+export type TimeTableDayInter = {
   id: number;
+  date: string;
   day: string;
-  timetable: TimeTableInter;
-  period_0812: CourseInter;
-  period_1317: CourseInter;
-  period_1721: CourseInter;
-  assigned: string;
-  signed_in: string;
-  signed_our: string;
+  timetableweek_: TimeTableWeekInter;
+  created_by?: CustomUserInter;
+  created_at: string;
+};
+
+export type TimeSlotInter = {
+  id: number;
+  title: string;
+  timetableday :TimeTableDayInter;
+  course: CourseInter;
+  start: string;
+  end: string;
+  start_time: string;
+  end_time: string;
+  hours: number;
   created_by?: CustomUserInter;
   created_at: string;
 };
 
 
-export type GetTimeTableInter = {
+export type GetTimeTableWeekInter = {
   id: number;
+  specialty__id: number;
   specialty__main_specialty__specialty_name: string;
   specialty__academic_year: string;
-  specialty__level__level: string;
+  specialty__level__level: number;
+  specialty__main_specialty__field__id: string;
+  specialty__main_specialty__field__doamin__id: number;
+  specialty__main_specialty__field__doamin_name: string;
+  specialty__main_specialty__id: number;
   year_week: string;
   publish: boolean;
   created_by__full_name?: string;
 };
 
-export type GetDayProgramInter = {
-  id: number;
-  timetable__specialty__id: number;
-  timetable__specialty__main_specialty__specialty_name: string;
-  timetable__specialty__academic_year: string;
-  timetable__specialty__level__level: string;
-  timetable__year_week: string;
-  period_0812__id: number;
-  period_0812__main_course__course_name: string;
-  period_0812__assigned_to__id: string;
-  period_0812__assigned_to__full_name: string;
-  period_1317__id: number;
-  period_1317__main_course__course_name: string;
-  period_1317__assigned_to__id: string;
-  period_1317__assigned_to__full_name: string;
-  period_1721__id: number;
-  period_1721__main_course__course_name: string;
-  period_1721__assigned_to__id: string;
-  period_1721__assigned_to__full_name: string;
+export type GetTimeTableDayInter = {
+  timetableweek__id: number;
+  timetableweek__specialty__id: number;
+  timetableweek__specialty__main_specialty__specialty_name: string;
+  timetableweek__specialty__academic_year: string;
+  timetableweek__specialty__level__level: number;
+  timetableweek__specialty__main_specialty__field__id: string;
+  timetableweek__specialty__main_specialty__field__doamin__id: number;
+  timetableweek__specialty__main_specialty__field__doamin_name: string;
+  timetableweek__specialty__main_specialty__id: number;
+  timetableweek__year_week: string;
+  timetableweek__publish: boolean;
+  date: string;
   day: string;
-  period_0812: string;
-  period_1317: string;
-  assigned: boolean;
-  signed_in: string;
-  signed_our: string;
+  created_by__full_name?: string;
+}
+
+
+export type GetTimeSlotInter = {
+  id: number;
+  timetableday__id: number;
+  timetableday__date: string;
+  timetableday__day: string;
+  course__id: number;
+  course__main_course__id: number;
+  course__main_course__course_name: string;
+  timetableday__timetableweek__id: number;
+  timetableday__timetableweek__specialty__id: number;
+  timetableday__timetableweek__specialty__main_specialty__specialty_name: string;
+  timetableday__timetableweek__specialty__academic_year: string;
+  timetableday__timetableweek__specialty__level__level: number;
+  timetableday__timetableweek__specialty__main_specialty__field__id: string;
+  timetableday__timetableweek__specialty__main_specialty__field__doamin__id: number;
+  timetableday__timetableweek__specialty__main_specialty__field__doamin_name: string;
+  timetableday__timetableweek__specialty__main_specialty__id: number;
+  timetableday__timetableweek__year_week: string;
+  timetableday__timetableweek__publish: boolean;
+  title: string;
+  start: string;
+  end: string;
+  start_time: string;
+  end_time: string;
+  time?: string;
+  hours: number;
+  status: string;
+
+  created_by__id?: number;
   created_by__full_name?: string;
   created_at?: string;
+  updated_by__id?: number;
+  updated_by__full_name?: string;
+  updated_at?: string;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export type MondayInter = {
-  id: number;
-  timetable: TimeTableInter;
-  period_0810: string;
-  period_1012: string;
-  period_1315: string;
-  period_1517: string;
-  comment: string;
-  created_by?: CustomUserInter;
-  created_at: string;
-  updated_by?: CustomUserInter;
-  updated_at: string;
-};
-
-export type TuesdayInter = {
-  id: number;
-  timetable: TimeTableInter;
-  period_0810: string;
-  period_1012: string;
-  period_1315: string;
-  period_1517: string;
-  comment: string;
-  created_by?: CustomUserInter;
-  created_at: string;
-  updated_by?: CustomUserInter;
-  updated_at: string;
-};
-
-export type WednesdayInter = {
-  id: number;
-  timetable: TimeTableInter;
-  period_0810: string;
-  period_1012: string;
-  period_1315: string;
-  period_1517: string;
-  comment: string;
-  created_by?: CustomUserInter;
-  created_at: string;
-  updated_by?: CustomUserInter;
-  updated_at: string;
-};
-
-export type ThursdayInter = {
-  id: number;
-  timetable: TimeTableInter;
-  period_0810: string;
-  period_1012: string;
-  period_1315: string;
-  period_1517: string;
-  comment: string;
-  created_by?: CustomUserInter;
-  created_at: string;
-  updated_by?: CustomUserInter;
-  updated_at: string;
-};
-
-export type FridayInter = {
-  id: number;
-  timetable: TimeTableInter;
-  period_0810: string;
-  period_1012: string;
-  period_1315: string;
-  period_1517: string;
-  comment: string;
-  created_by?: CustomUserInter;
-  created_at: string;
-  updated_by?: CustomUserInter;
-  updated_at: string;
-};
-
-export type SaturdayInter = {
-  id: number;
-  timetable: TimeTableInter;
-  period_0810: string;
-  period_1012: string;
-  period_1315: string;
-  period_1517: string;
-  comment: string;
-  created_by?: CustomUserInter;
-  created_at: string;
-  updated_by?: CustomUserInter;
-  updated_at: string;
-};
-
-export type SundayInter = {
-  id: number;
-  timetable: TimeTableInter;
-  period_0810: string;
-  period_1012: string;
-  period_1315: string;
-  period_1517: string;
-  comment: string;
-  created_by?: CustomUserInter;
-  created_at: string;
-  updated_by?: CustomUserInter;
-  updated_at: string;
-};
-

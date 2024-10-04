@@ -1,7 +1,7 @@
 'use client';
 import { ConfigData, protocol } from '@/config';
 import React, { useEffect, useState } from 'react';
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import { useParams, useRouter } from 'next/navigation';
 import { useFormState } from 'react-dom';
 import Swal from 'sweetalert2';
@@ -48,7 +48,9 @@ const LoginForm = () => {
     }
     if (count == 3) {
       const getSchools = async () => {
-        var response = await getData(protocol  + "api" + domain + GetSchoolInfoUrl, { nopage: true, fieldList: ["id", "school_type", "school_name", "campus__id", "campus__name", "campus__region"] })
+        var response = await getData(protocol  + "api" + domain + GetSchoolInfoUrl, { nopage: true, fieldList: [
+          "id", "school_type", "school_name", "campus__id", "campus__name", "campus__region"
+        ] })
 
         if (response && response.length > 0) { setSchools(response); setCount(4) }
         if (response && response.length < 1) {
@@ -82,7 +84,7 @@ const LoginForm = () => {
       }
     }
     if (count == 5) {
-      const token: any = jwtDecode(access)
+      const token: JwtPayload | any = jwtDecode(access)
 
       if (token && token.school && token.school.length == 1) {
         localStorage.setItem("school", token.school[0])
@@ -92,11 +94,12 @@ const LoginForm = () => {
           return 
         }
         if (token.role == "teacher" && fil) {
-          router.push(`/${fil.school_type}/pageLecturer/${fil.id}/MarksUpload/${token.user_id}`); 
+          router.push(`/${fil.school_type}/pageLecturer/${fil.id}/${token.user_id}`); 
           return 
         }
         if (token.role == "student") {
-          router.push(`/Section-H/pageStudent`); 
+          router.push(`/${domain}/Section-H/pageStudent`); 
+          console.log("LOGIN LINE 99")
           return
         }
       }
@@ -104,6 +107,12 @@ const LoginForm = () => {
       if (token.school && token.school.length > 1) {
         if (token.role == "admin" || token.role == "teacher") {
           if (token.role == "admin") {
+            if (token.dept || token.dept.length > 0) { 
+              router.push(`/${domain}/pageAuthentication/pageSelectSchool?role=${token.role}`); 
+              return ;
+            }
+          }
+          if (token.role == "teacher") {
             if (token.dept || token.dept.length > 0) { 
               router.push(`/${domain}/pageAuthentication/pageSelectSchool?role=${token.role}`); 
               return ;
@@ -263,7 +272,7 @@ const LoginForm = () => {
 
             <div className="flex items-center justify-between">
               <a href={`https://wa.me/+237${ConfigData[`${domain}`].contact_number}/?text=Enter%20Matricle:%20OR%20Username:%20Complain: `} className="bg-slate-200 dark:text-primary-500 font-medium hover:underline px-4 py-1 rounded text-slate-700 text-sm">Help</a>
-              <a href="/pageAuthentication/CheckUser" className="bg-slate-200 dark:text-primary-500 font-medium hover:underline px-4 py-1 rounded text-slate-700 text-sm">Check User</a>
+              <a href={`/${domain}/pageAuthentication/CheckUser`} className="bg-slate-200 dark:text-primary-500 font-medium hover:underline px-4 py-1 rounded text-slate-700 text-sm">Check User</a>
             </div>
           </div>
         </div>

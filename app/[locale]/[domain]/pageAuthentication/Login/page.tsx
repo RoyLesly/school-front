@@ -24,8 +24,7 @@ const Home = async ({
 export default Home;
 
 export const metadata: Metadata = {
-  title:
-    "Login",
+  title: "Login",
   description: "This Login",
 };
 

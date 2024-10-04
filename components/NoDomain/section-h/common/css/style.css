@@ -269,7 +269,9 @@ input[type="search"]::-webkit-search-cancel-button {
   
   .rbc-toolbar-label {
     text-align: right !important;
-    padding: 0px 20px !important;
+    padding: 2px 20px !important;
+    background-color: #fff !important;
+    border-radius: 5px;
   }
   
   .rbc-btn-group:last-child {
@@ -293,6 +295,9 @@ input[type="search"]::-webkit-search-cancel-button {
   
   .rbc-time-header {
     /* display: none !important; */
+    background-color: #04046d !important;
+    padding: 1px;
+    color: #c3ebfa;
   }
 
   .rbc-allday-cell {
@@ -322,23 +327,24 @@ input[type="search"]::-webkit-search-cancel-button {
   
   .rbc-event {
     border: none !important;
-    color: black !important;
-    font-weight: 500;
-    padding: 4px !important;
-    width: 107% !important;
+    color: rgb(6, 61, 13) !important;
+    font-weight: 600;
+    margin: 2px 2px !important;
+    padding: 2px !important;
+    width: 100% !important;
   }
   
   .rbc-event:nth-child(1) {
     background-color: #5ad1f5 !important;
   }
   .rbc-event:nth-child(2) {
-    background-color: #58f399 !important;
+    background-color: #93def5 !important;
   }
   .rbc-event:nth-child(3) {
-    background-color: #eee67a !important;
+    background-color: #5ad1f5 !important;
   }
   .rbc-event:nth-child(4) {
-    background-color: #ec9dde !important;
+    background-color: #93def5 !important;
   }
   .rbc-event:nth-child(5) {
     background-color: #e2f8ff !important;
@@ -346,14 +352,8 @@ input[type="search"]::-webkit-search-cancel-button {
   .rbc-event:nth-child(6) {
     background-color: #fefce8 !important;
   }
-  .rbc-event:nth-child(7) {
-    background-color: #f2f1ff !important;
-  }
-  .rbc-event:nth-child(8) {
-    background-color: #fdf2fb !important;
-  }
   
   .rbc-event-label{
-    color: gray !important;
+    color: rgb(47, 3, 150) !important;
     margin-bottom: 0px;
   }

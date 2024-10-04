@@ -13,9 +13,8 @@ import { AcademicYearUrl } from "@/Domain/Utils-H/appControl/appConfig";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
 import { SchemaCreateEditCustomUser } from "@/schemas-user";
 import { CustomUserUrl, GetDepartmentUrl } from "@/Domain/Utils-H/userControl/userConfig";
-import { GetDepartmentInter } from "@/Domain/Utils-S/userControl/userInter";
 import Link from "next/link";
-// import MultipleSelectField from "../ListSettings/MultipleSelectField";
+import { GetDepartmentInter } from "@/Domain/Utils-H/userControl/userInter";
 
 const SchemaCreate = z.object({
   first_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum" }),
@@ -85,6 +84,7 @@ const LecturersForm = ({
       email: formVals.email,
       pob: formVals.pob,
       dob: formVals.dob,
+      address: formVals.address,
       sex: formVals.sex,
       prefix: ConfigData[params.domain]["higher"].prefix,
       dept: [parseInt(dept[0].id)],
@@ -193,6 +193,14 @@ const LecturersForm = ({
               />
 
               <div className="flex gap-2 w-full">
+              <InputField
+                  label="Address"
+                  name="address"
+                  defaultValue={data?.address}
+                  register={register}
+                  error={errors?.address}
+                  type="text"
+                />
                 <SelectField
                   label="Title"
                   name="title"
@@ -201,18 +209,10 @@ const LecturersForm = ({
                   error={errors?.title}
                   data={["Prof", "Dr", "Mr", "Mrs", "Miss", "Engr"]}
                 />
-                {/* {type === "update" && <MultipleSelectField
-                  label="Campus"
-                  name="school"
-                  defaultValue={data?.school__id}
-                  register={register}
-                  error={errors?.school}
-                  data={["Prof", "Dr", "Mr", "Mrs", "Miss", "Engr"]}
-                />} */}
               </div>
 
               <div className="flex gap-2 w-full">
-                <InputField
+                {/* <InputField
                   label="Place Of Birth"
                   name="pob"
                   defaultValue={data?.pob}
@@ -226,7 +226,7 @@ const LecturersForm = ({
                   register={register}
                   error={errors?.dob}
                   type="date"
-                />
+                /> */}
               </div>
             </div>
 

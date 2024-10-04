@@ -5,10 +5,7 @@ import { getData } from '@/functions'
 import { ConfigData, protocol } from '@/config'
 import NotificationError from '@/section-h/common/NotificationError'
 import { GetUserProfileUrl } from '@/Domain/Utils-H/userControl/userConfig'
-import ListStudsInfoPage from '@/componentsTwo/ListProfiles/ListStudsInfoPage'
-import ListStudsTransactionsPage from '@/componentsTwo/ListProfiles/ListStudsTransactionsPage'
-import { GetSchoolFeesUrl, GetTransactionUrl, TransactionUrl } from '@/Domain/Utils-H/feesControl/feesConfig'
-import TabsStudents from '../../TabsStudents'
+import { GetSchoolFeesUrl, TransactionUrl } from '@/Domain/Utils-H/feesControl/feesConfig'
 import { GetUserProfileInter } from '@/Domain/Utils-H/userControl/userInter'
 import { GetResultUrl } from '@/Domain/Utils-H/appControl/appConfig'
 import Link from 'next/link'
@@ -22,6 +19,7 @@ import { redirect } from 'next/navigation'
 import { collectMoney } from '@/payment'
 import { SchemaTransactionCreate } from '@/Domain/schemas/schemas'
 import { ActionCreate } from '@/serverActions/actionGeneral'
+import TabsStudents from '@/componentsTwo/TabsProfiles/TabsStudents'
 
 const page = async ({
   params,
@@ -83,8 +81,7 @@ const EditDelete: FC<EditDeleteProps> = async ({ apiStudentInfo, params }) => {
   if (apiSchoolFeesInfo && apiSchoolFeesInfo.length && !apiSchoolFeesInfo[0].platform_paid) {
     const onActivate = async (formData: FormData) => {
       "use server"
-      console.log("Activate")
-  
+
       var payer = formData.get("telephone");
       var operator = formData.get("operator");
       var url = formData.get("url");
@@ -212,7 +209,7 @@ const EditDelete: FC<EditDeleteProps> = async ({ apiStudentInfo, params }) => {
 
         {
           (apiSchoolFeesInfo[0].userprofile__specialty__tuition - apiSchoolFeesInfo[0].balance) >= (apiSchoolFeesInfo[0].userprofile__specialty__tuition * ConfigData[params.domain].higher.schoolfees_control[3]) ?
-          <Table columns={columns} renderRow={renderRow} data={apiMyResultsI} />
+          <Table columns={columns} renderRow={renderRow} data={apiMyResultsII} />
           :
           <div className='flex font-medium italic items-center justify-center py-32 text-xl tracking-wide'>Not Meeting Minimum School Fee Requirements {(apiSchoolFeesInfo[0].userprofile__specialty__tuition * ConfigData[params.domain].higher.schoolfees_control[3]).toLocaleString()} F</div>
         }
@@ -252,7 +249,7 @@ const columns = [
     className: "hidden md:table-cell w-1/12 md:w-1/12",
   },
   {
-    header: "Resit",
+    header: "Total",
     accessor: "resit",
     className: "hidden md:table-cell w-1/12 md:w-1/12",
   },

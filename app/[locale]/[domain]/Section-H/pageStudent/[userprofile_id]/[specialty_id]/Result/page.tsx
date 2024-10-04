@@ -153,7 +153,7 @@ const columns = [
     {
         header: "Course",
         accessor: "id",
-        className: "table-cell w-7/12 border-r border-white",
+        className: "table-cell w-8/12 border-r border-white",
     },
     {
         header: "CA",
@@ -166,14 +166,14 @@ const columns = [
         className: "table-cell w-1/12 text-[13px] border-r border-white",
     },
     {
-        header: "Resit",
+        header: "Res.",
         accessor: "resit",
-        className: "table-cell w-2/12 text-center text-[13px] border-r border-white",
+        className: "table-cell w-1/12 text-center text-[13px] border-r border-white",
     },
     {
         header: "Gd",
         accessor: "action",
-        className: "table-cell w-1/12",
+        className: "table-cell text-[13px] w-1/12",
     },
 ];
 
@@ -182,7 +182,7 @@ const renderRow = (item: GetResultInter, index: number) => (
         key={item.id}
         className={`${"font-semibold bg-blue-700" + TableRowClassName.sm}`}
     >
-        <td className={`${item.course__main_course__course_name.length > 20 ? "text-[13px]" : ""} items-center table-cell text-center`}>{item.course__main_course__course_name.slice(0, 30)}</td>
+        <td className={`${item.course__main_course__course_name.length > 25 ? "text-[12px]" : item.course__main_course__course_name.length > 22 ? "text-[13px]" : "text-[14px]"} items-center table-cell`}>{item.course__main_course__course_name.slice(0, 35)}</td>
         <td className="items-center justify-center table-cell text-[12px] text-center">{item.ca}</td>
         <td className="items-center justify-center table-cell text-[12px] text-center">{item.exam}</td>
         <td className="items-center justify-center table-cell text-[12px] text-center">{item.resit ? item.resit : "-"}</td>

@@ -78,7 +78,7 @@ const ProgramForm = ({
   });
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={onSubmit}>
+    <form className="bg-slate-300 flex flex-col gap-4 p-2 rounded" onSubmit={onSubmit}>
       {type === "create" && <h1 className="font-semibold text-xl">Create Program</h1>}
       {type === "update" && <h1 className="font-semibold text-xl">Update Program</h1>}
       {type === "delete" && <h1 className="font-semibold text-xl">Delete Program</h1>}

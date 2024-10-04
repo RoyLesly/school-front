@@ -111,6 +111,20 @@ const NotificationError:FC<Props> = ({ errorMessage }) => {
         alert()        
         return;
     }
+    if (errorMessage.customsuccess) {
+        const alert = () => {
+            Swal.fire({
+              title: `${errorMessage.customsuccess.toString()}`,
+              timer: 3000,
+              timerProgressBar: true,
+              showConfirmButton: false,
+              position: "top-end",
+              icon: "success",
+            })
+        }
+        alert()        
+        return;
+    }
     
     return (
         <></>

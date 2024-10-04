@@ -18,21 +18,27 @@ const page = async ({
 
 
   const acadYears: any = await getData(protocol + "api" + params.domain + AcademicYearUrl, { school: params.school_id })
-  const filteredYear = await searchParams && Object.keys(searchParams).length && acadYears.count && searchParams.academic_year && acadYears && acadYears.count ? searchParams.academic_year : acadYears.results.sort((a: string, b: string) => a[3]<b[3] ? 1 : a[3]>b[3] ? -1 : 0)[0]
+  const filteredYear = await searchParams && Object.keys(searchParams).length && acadYears.count && searchParams.academic_year && acadYears && acadYears.count ? searchParams.academic_year : acadYears.results.sort((a: string, b: string) => a[3] < b[3] ? 1 : a[3] > b[3] ? -1 : 0)[0]
 
-  const apiData: any = await getData(protocol + "api" + params.domain + GetStatsByDomainUrl, { 
+  const apiData: any = await getData(protocol + "api" + params.domain + GetStatsByDomainUrl, {
     school: params.school_id,
     academic_year: filteredYear,
     ...searchParams
   })
-  
+
   return (
     <LayoutAccounting>
       <>
 
         {searchParams && <NotificationError errorMessage={searchParams} />}
 
-        {apiData && <ListAccDomainPage params={params} data={apiData} years={acadYears.results} thisYear={filteredYear} />}
+        {apiData && <ListAccDomainPage
+          params={params}
+          data={apiData}
+          years={acadYears.results}
+          thisYear={filteredYear}
+          searchParams={searchParams}
+        />}
 
       </>
     </LayoutAccounting>

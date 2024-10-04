@@ -7,11 +7,9 @@ import { GetUserProfileUrl } from '@/Domain/Utils-H/userControl/userConfig';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import React, { Suspense } from 'react'
-import { FaDownload } from 'react-icons/fa6';
 import { ConfigData, protocol } from '@/config';
 import Table from '@/componentsTwo/Table';
 import { TableRowClassName } from '@/constants';
-import MessageModal from '@/componentsTwo/MessageModal';
 
 
 export const metadata: Metadata = {
@@ -21,7 +19,6 @@ export const metadata: Metadata = {
 
 const page = async ({
     params,
-    searchParams,
 }: {
     params: { userprofile_id: string, domain: string, specialty_id: string };
     searchParams?: { [key: string]: string | string[] | undefined };
@@ -76,10 +73,6 @@ const page = async ({
                                                 <div className='flex font-medium items-center justify-center px-10 py-24 text-center text-wrap tracking-wider'>Not Meeting Minimum Required School Fees to View Results</div>
                                             }
 
-                                            {/* <div className='flex items-center justify-center mt-4'>
-                                            <MessageModal table="result_slip" type="custom" customClassName='rounded-full border-teal-700 border p-2' params={params} data={apiDataSem1} icon={<FaDownload size={20} />} extra_data={["Semester I"]} />
-                                            </div> */}
-
                                         </>
                                         :
                                         <div className='flex font-medium items-center justify-center py-24 tracking-wider'>No CA Results</div>
@@ -110,11 +103,6 @@ const page = async ({
                                                 :
                                                 <div className='flex font-medium items-center justify-center px-10 py-24 text-center text-wrap tracking-wider'>Not Meeting Minimum Required School Fees to View Results</div>
                                             }
-
-                                            {/* <div className='flex items-center justify-center mt-4'>
-                                            <MessageModal table="result_slip" type="custom" customClassName='rounded-full border-teal-700 border p-2' params={params} data={apiDataSem2} icon={<FaDownload size={20} />} extra_data={["Semester II"]} />
-                                            </div> */}
-
                                         </>
                                         :
                                         <div className='flex font-medium items-center justify-center py-24 tracking-wider'>No CA Results</div>
@@ -166,12 +154,7 @@ const columns = [
         className: "table-cell w-1/12 text-[13px] border-r border-white",
     },
     {
-        header: "Total",
-        accessor: "total",
-        className: "table-cell w-2/12 text-center text-[13px] border-r border-white",
-    },
-    {
-        header: "Gd",
+        header: "",
         accessor: "action",
         className: "table-cell w-1/12",
     },
@@ -182,10 +165,11 @@ const renderRow = (item: GetResultInter, index: number) => (
         key={item.id}
         className={`${"font-semibold bg-blue-700" + TableRowClassName.sm}`}
     >
-        <td className={`${item.course__main_course__course_name.length > 20 ? "text-[13px]" : ""} items-center table-cell text-center`}>{item.course__main_course__course_name.slice(0, 30)}</td>
-        <td className="items-center justify-center table-cell text-[12px] text-center">{item.ca}</td>
-        <td className="items-center justify-center table-cell text-[12px] text-center">{item.exam}</td>
-        <td className="items-center justify-center table-cell text-[14px] text-center">{calcTotalandGrade(item.ca, item.exam, item.resit).mark}{calcTotalandGrade(item.ca, item.exam, item.resit).withResit ? <span className='text-lg text-red'>*</span> : ""}</td>
+        <td className={`${item.course__main_course__course_name.length > 25 ? "text-[13px]" : "text-[14px]"} items-center table-cell`}>{item.course__main_course__course_name.slice(0, 40)}</td>
+        {/* <td className={`${item.course__main_course__course_name.length > 20 ? "text-[13px]" : ""} items-center table-cell`}>{item.course__main_course__course_name.slice(0, 30)}</td> */}
+        <td className="items-center justify-center table-cell text-[13px] text-center">{item.ca}</td>
+        <td className="items-center justify-center table-cell text-[13px] text-center">{item.exam}</td>
+        {/* <td className="items-center justify-center table-cell text-[14px] text-center">{calcTotalandGrade(item.ca, item.exam, item.resit).mark}{calcTotalandGrade(item.ca, item.exam, item.resit).withResit ? <span className='text-lg text-red'>*</span> : ""}</td> */}
         <td className={`${calcTotalandGrade(item.ca, item.exam, item.resit).passed ? "text-green-600" : "text-red"} items-center justify-center table-cell text-center`}>{calcTotalandGrade(item.ca, item.exam, item.resit).grade}</td>
     </tr>
 );

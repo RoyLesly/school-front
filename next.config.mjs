@@ -23,6 +23,7 @@ const nextConfig = {
     },
     trailingSlash: true,
     experimental: {
+        reactCompiler: true,
         serverActions: {
             allowedOrigins: [
                 "localhost:3000", "localhost:4000", "e-conneq.com", 

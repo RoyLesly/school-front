@@ -1,5 +1,4 @@
 'use client';
-import TabsStudents from "@/[locale]/[domain]/Section-H/pageAdministration/[school_id]/pageStudents/TabsStudents";
 import { GetProgramInter, GetUserProfileInter } from "@/Domain/Utils-H/userControl/userInter";
 import InputField from "../InputField";
 import SelectField from "../SelectField";
@@ -13,6 +12,7 @@ import { protocol } from "@/config";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
+import TabsStudents from "../TabsProfiles/TabsStudents";
 
 const SchemaUpdate = z.object({
   first_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum" }),
@@ -66,7 +66,7 @@ const ListStudsInfoPage = ({ params, data, apiProgram }: { params: any, data: Ge
               {/* <!-- Input Fields --> */}
               <div className="bg-white border border-stroke dark:bg-boxdark dark:border-strokedark rounded-sm shadow-default">
               
-                <form className="bg-slate-50 flex flex-col gap-2 md:gap-6 md:p-6 p-2" onSubmit={onSubmit}>
+                <form className="bg-slate-300 flex flex-col gap-2 md:gap-6 md:p-6 p-2 text-black" onSubmit={onSubmit}>
 
                   <div className="flex flex-col md:flex-row">
                     <InputField

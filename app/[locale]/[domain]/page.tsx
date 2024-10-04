@@ -17,7 +17,12 @@ const Home = async ({
   console.log(params, 17)
 
   return (
-    <div className="bg-teal-50 dark:bg-slate-900 dark:text-slate-50 flex flex-col gap-10 h-screen items-center justify-center md:pb-40 pb-20 text-slate-950">
+    <div className="bg-teal-50 dark:bg-slate-900 dark:text-slate-50 flex flex-col gap-10 h-screen items-center justify-center md:pb-32 pb-16 text-slate-950">
+
+      <div className="flex justify-end m-10 md:px-20 px-10 text-slate-400 text-sm w-full">
+        <div></div>
+        <Link href={`/${params.domain}/pre-inscription`}>Pre-Enrolment</Link>
+      </div>
 
       <div className="hidden md:flex">
         <Image
@@ -57,7 +62,7 @@ export default Home;
 
 export const metadata: Metadata = {
   title:
-    "School",
-  description: "This Home",
+    "Home Page",
+  description: "This Home Page",
 };
 

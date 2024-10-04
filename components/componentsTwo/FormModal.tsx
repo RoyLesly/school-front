@@ -6,10 +6,10 @@ import Image from "next/image";
 import { useState } from "react";
 
 // USE LAZY LOADING
-const UsersForm = dynamic(() => import("./formsProfiles/UsersForm"), { loading: () => <h1>Loading...</h1>, });
-const LecturersForm = dynamic(() => import("./formsProfiles/LecturersForm"), { loading: () => <h1>Loading...</h1>, });
-const StudentsForm = dynamic(() => import("./formsProfiles/StudentsForm"), { loading: () => <h1>Loading...</h1>, });
-const AdminsForm = dynamic(() => import("./formsProfiles/AdminsForm"), { loading: () => <h1>Loading...</h1>, });
+const UsersForm = dynamic(() => import("./formsProfiles/UsersForm"), { loading: () => <MyLoadingModal />, });
+const LecturersForm = dynamic(() => import("./formsProfiles/LecturersForm"), { loading: () => <MyLoadingModal />, });
+const StudentsForm = dynamic(() => import("./formsProfiles/StudentsForm"), { loading: () => <MyLoadingModal />, });
+const AdminsForm = dynamic(() => import("./formsProfiles/AdminsForm"), { loading: () => <MyLoadingModal />, });
 const DomainForm = dynamic(() => import("./formSettings/DomainForm"), { loading: () => <MyLoadingModal />});
 const FieldForm = dynamic(() => import("./formSettings/FieldForm"), { loading: () => <MyLoadingModal />});
 const MainSpecialtyForm = dynamic(() => import("./formSettings/MainSpecialtyForm"), { loading: () => <MyLoadingModal />});
@@ -26,6 +26,10 @@ const CreateFeePreselectForm = dynamic(() => import("./formAccounting/CreateFeeP
 const PayPlatFormChargeForm = dynamic(() => import("./formsAdmin/PayPlatFormChargeForm"), { loading: () => <MyLoadingModal />});
 const PayFeesForm = dynamic(() => import("./formsAdmin/PayFeesForm"), { loading: () => <MyLoadingModal />});
 const AssignStudentToSpecialtyForm = dynamic(() => import("./formsProfiles/AssignStudentToSpecialtyForm"), { loading: () => <MyLoadingModal />});
+const AdmitStudentFromPreInscriptionForm = dynamic(() => import("./formsProfiles/AdmitStudentFromPreInscriptionForm"), { loading: () => <MyLoadingModal />});
+const TimeTableSelectMonth = dynamic(() => import("./formsTimeTable/TimeTableSelectMonth"), { loading: () => <MyLoadingModal />});
+const ClockInOutForm = dynamic(() => import("./formsTimeTable/ClockInOutForm"), { loading: () => <MyLoadingModal />});
+const EditTimeSlotForm = dynamic(() => import("./formsTimeTable/EditTimeSlotForm"), { loading: () => <MyLoadingModal />});
 
 
 const forms: {
@@ -37,7 +41,7 @@ const forms: {
   student: (type, params, setOpen, data, extra_data) => <StudentsForm type={type} data={data} extra_data={extra_data} params={params} setOpen={setOpen} />,
   domain: (type, params, setOpen, data) => <DomainForm type={type} data={data} params={params} setOpen={setOpen} />,
   field: (type, params, setOpen, data) => <FieldForm type={type} data={data} params={params} setOpen={setOpen} />,
-  main_specialty: (type, params, data, setOpen) => <MainSpecialtyForm type={type} data={data} params={params} setOpen={setOpen} />,
+  main_specialty: (type, params, setOpen, data, ) => <MainSpecialtyForm type={type} data={data} params={params} setOpen={setOpen} />,
   specialty: (type, params, setOpen, data, extra_data) => <SpecialtyForm type={type} data={data} extra_data={extra_data} params={params} setOpen={setOpen} />,
   main_course: (type, params, setOpen, data) => <MainCourseForm type={type} data={data} params={params} setOpen={setOpen} />,
   course: (type, params, setOpen, data, extra_data) => <CourseForm type={type} data={data} extra_data={extra_data} params={params} setOpen={setOpen} />,
@@ -45,14 +49,17 @@ const forms: {
   program: (type, params, setOpen, data) => <ProgramForm type={type} data={data} params={params} setOpen={setOpen} />,
 
   sys_category: (type, params, setOpen, data ) => <SysCategoryForm type={type} data={data} params={params} setOpen={setOpen} />,
+  admit_student_from_preinscription: (type, params, setOpen, data, extra_data ) => <AdmitStudentFromPreInscriptionForm type={type} data={data} params={params} setOpen={setOpen} extra_data={extra_data} />,
   assign_student_to_specialty: (type, params, setOpen, data, extra_data ) => <AssignStudentToSpecialtyForm type={type} data={data} params={params} setOpen={setOpen} extra_data={extra_data} />,
   sys_constant: (type, params, setOpen, data ) => <SysConstantForm type={type} data={data} params={params} setOpen={setOpen} />,
   department: (type, params, setOpen, data ) => <DepartmentForm type={type} data={data} params={params} setOpen={setOpen} />,
   account: (type, params, setOpen, data ) => <AccountForm type={type} data={data} params={params} setOpen={setOpen} />,
   pay_fees: (type, params, setOpen, data, extra_data, ) => <PayFeesForm type={type} params={params} data={data} setOpen={setOpen} extra_data={extra_data} />,
   platform_charge: (type, params, setOpen, data, extra_data) => <PayPlatFormChargeForm type={type} params={params} setOpen={setOpen} data={data} extra_data={extra_data} />,
-  create_fees_preselect: (type, data, params, setOpen) => <CreateFeePreselectForm apiDomains={data} params={params} setOpen={setOpen} />,
-  // create_fees: (type, data, params, setOpen) => <CreateFeeForm data={data} type={type} params={params} setOpen={setOpen} />,
+  create_fees_preselect: (type, params, setOpen, data) => <CreateFeePreselectForm apiDomains={data} params={params} setOpen={setOpen} />,
+  timetable_select_month: (type, params, setOpen, data) => <TimeTableSelectMonth data={data} type={type} params={params} setOpen={setOpen} />,
+  timetable_clock_in_form: (type, params, setOpen, data, extra_data) => <ClockInOutForm data={data} type={type} params={params} setOpen={setOpen} />,
+  timetable_edit_timeslot_form: (type, params, setOpen, data, extra_data) => <EditTimeSlotForm data={data} type={type} params={params} setOpen={setOpen} extra_data={extra_data} />,
 };
 
 const FormModal = ({
@@ -82,6 +89,7 @@ const FormModal = ({
     | "pay_fees"
     | "transcript_application"
 
+    | "admit_student_from_preinscription"
     | "assign_student_to_specialty"
     | "create_fees_preselect"
     | "create_fees"
@@ -99,7 +107,12 @@ const FormModal = ({
     | "department"
     | "account"
     | "sys_category"
-    | "sys_constant";
+    | "sys_constant"
+
+    //Timetable Higher
+    | "timetable_select_month"
+    | "timetable_clock_in_form"
+    | "timetable_edit_timeslot_form";
   type: "create" | "update" | "delete" | "custom" | "custom";
   icon: React.ReactNode;
   params?: any;

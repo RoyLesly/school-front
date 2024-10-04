@@ -5,7 +5,7 @@ import MyPageTitle from "@/section-h/common/MyPageTitle";
 import { FaRightLong } from "react-icons/fa6";
 import TableSearch from "../TableSearch";
 import { GetUserProfileInter } from "@/Domain/Utils-H/userControl/userInter";
-import TabsUnAssignedStudents from "@/[locale]/[domain]/Section-H/pageAdministration/[school_id]/pageStudents/TabsUnAssignedStudents";
+import TabsUnAssignedStudents from "../TabsProfiles/TabsUnAssignedStudents";
 
 
 const columns = [

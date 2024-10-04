@@ -51,6 +51,7 @@ const SpecialtyCountAndLevelChart = (
             fill={colors[index]}
             legendType="circle"
             radius={[5, 5, 0, 0]}
+            minPointSize={4}
           />)}
         </BarChart>
       </ResponsiveContainer>

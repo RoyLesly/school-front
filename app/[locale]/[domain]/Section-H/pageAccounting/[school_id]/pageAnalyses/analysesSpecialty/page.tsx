@@ -39,6 +39,7 @@ const page = async ({
           thisYear={filteredYear}
           domains={apiDomains}
           levels={apiLevels}
+          searchParams={searchParams}
         />}
 
       </>

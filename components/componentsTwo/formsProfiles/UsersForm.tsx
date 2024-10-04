@@ -13,9 +13,9 @@ import { AcademicYearUrl } from "@/Domain/Utils-H/appControl/appConfig";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
 import { SchemaCreateEditCustomUser } from "@/schemas-user";
 import { CustomUserUrl, GetDepartmentUrl } from "@/Domain/Utils-H/userControl/userConfig";
-import { GetDepartmentInter } from "@/Domain/Utils-S/userControl/userInter";
 import Link from "next/link";
 import MultipleSelectField from "../ListSettings/MultipleSelectField";
+import { GetDepartmentInter } from "@/Domain/Utils-H/userControl/userInter";
 
 const SchemaCreate = z.object({
   first_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum" }),

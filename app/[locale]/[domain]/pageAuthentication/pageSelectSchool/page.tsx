@@ -4,7 +4,7 @@ import { GetSchoolInfoUrl } from '@/Domain/Utils-H/appControl/appConfig';
 import { GetSchoolInfoInter } from '@/Domain/Utils-H/appControl/appInter';
 import { getData } from '@/functions';
 import Loader from '@/section-h/common/Loader';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import Link from 'next/link'
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
@@ -16,6 +16,7 @@ const SelectDept = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [schools, setSchools] = useState<GetSchoolInfoInter[]>()
   const [ dept, setDept ] = useState<string>()
+  const [ user, setUser ] = useState<JwtPayload>()
   const router = useRouter();
   const paramsRole = useSearchParams();
 
@@ -24,11 +25,12 @@ const SelectDept = () => {
       var access = localStorage.getItem("session");
       if (paramsRole.get("role") == "admin"){ setDept("pageAdministration") }
       if (paramsRole.get("role") == "teacher"){ setDept("pageLecturer") }
-      if (!paramsRole.get("role")){ router.push(`/pageAuthentication/Login`); }
+      if (!paramsRole.get("role")){ router.push(`${domain}/pageAuthentication/Login`); }
       if (access) {
-        var token = jwtDecode(access)
+        var token: JwtPayload = jwtDecode(access)
 
         if (token && token.school) {
+          setUser(token)
           const callSchool = async () => {
             var res = await getData(protocol + "api" + domain + GetSchoolInfoUrl, { nopage: true, fieldList: [ "id", "school_name", "school_type", "campus__name", "campus__region" ]})
             if (res && res.length > 0) {
@@ -39,7 +41,7 @@ const SelectDept = () => {
               }
             } else {
               localStorage.removeItem("session");
-              router.push(`/pageAuthentication/Login`);
+              router.push(`${domain}/pageAuthentication/Login`);
             }
             setLoading(false)
           }
@@ -47,7 +49,7 @@ const SelectDept = () => {
           setCount(1);
         }
       } else {
-        router.push(`/pageAuthentication/Login`)
+        router.push(`${domain}/pageAuthentication/Login`)
       }
     }
     if (count == 1 && schools && schools.length > 0) {
@@ -67,9 +69,9 @@ const SelectDept = () => {
         <div className='font-semibold items-center justify-center mb-4 text-4xl text-center'>Select Campus</div>
 
         <div className='gap-6 grid grid-col-1 lg:grid-cols-3 md:grid-cols-2'>
-          {!loading && schools && dept ?
+          {!loading && schools && dept && user ?
             schools.map((item: GetSchoolInfoInter) => (
-              <Link href={`/${domain}/${item.school_type}/${dept}/${item.id}`} key={item.id} className={`${item.school_type == "Section-H" ? "bg-slate-800" : item.school_type == "Section-S" ? "bg-blue-950" : "bg-teal-700"} border-2 cursor-pointer dark:hover:bg-teal-300 dark:hover:text-black dark:text-teal-100 flex font-bold h-[140px] hover:animate-ping-once items-center justify-center lg:h-48 lg:w-[300px] md:h-40 md:text-2xl md:w-56 rounded-es-[40px] rounded-tr-lg text-[16px] text-white tracking-widest w-60`}>
+              <Link href={`/${domain}/${item.school_type}/${dept}/${item.id}?id=${user.user_id}`} key={item.id} className={`${item.school_type == "Section-H" ? "bg-slate-800" : item.school_type == "Section-S" ? "bg-blue-950" : "bg-teal-700"} border-2 cursor-pointer dark:hover:bg-teal-300 dark:hover:text-black dark:text-teal-100 flex font-bold h-[140px] hover:animate-ping-once items-center justify-center lg:h-48 lg:w-[300px] md:h-40 md:text-2xl md:w-56 rounded-es-[40px] rounded-tr-lg text-[16px] text-white tracking-widest w-60`}>
                 <div onClick={() => { localStorage.setItem("school", item.id.toString()) }} className='flex flex-col items-center justify-center'>
                   <span className='md:px-6 pb-2 px-4 text-center text-wrap'>{item.school_name}</span>
                   <span className='italic md:text-xl text-yellow-100'>{item.campus__region}</span>

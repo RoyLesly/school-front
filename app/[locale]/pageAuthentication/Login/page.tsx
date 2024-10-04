@@ -1,7 +1,6 @@
 import { Metadata } from "next";
-import initTranslations from "../../../i18n";
 import LoginForm from "./LoginForm";
-import TranslationsProvider from "../../../../components/TranslationsProvider";
+import initTranslations from "@/i18n";
 
 const i18nNamespaces: string[] = ['common']
 const Home = async ({

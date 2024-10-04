@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { SchemaCreateEditMainSpecialty } from "@/Domain/schemas/schemas";
 import { GetFieldUrl, MainSpecialtyUrl } from "@/Domain/Utils-H/appControl/appConfig";
 import SelectField from "../SelectField";
-import { GetFieldInter } from "@/Domain/Utils-H/appControl/appInter";
+import { GetFieldInter, GetMainSpecialtyInter } from "@/Domain/Utils-H/appControl/appInter";
 import { getData, handleResponseError } from "@/functions";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
 
@@ -23,7 +23,7 @@ const MainSpecialtyForm = ({
   params,
 }: {
   type: "create" | "update" | "delete";
-  data?: any;
+  data: GetMainSpecialtyInter;
   setOpen?: any;
   params?: any;
 }) => {
@@ -100,8 +100,11 @@ const MainSpecialtyForm = ({
 
   });
 
+
+  console.log(data, 102)
+
   return (
-    <form className="flex flex-col gap-4" onSubmit={onSubmit}>
+    <form className="bg-slate-300 flex flex-col gap-4 p-2 rounded" onSubmit={onSubmit}>
       {type === "create" && <h1 className="font-semibold text-xl">Create Class Title</h1>}
       {type === "update" && <h1 className="font-semibold text-xl">Update Class Title</h1>}
       {type === "delete" && <h1 className="font-semibold text-xl">Delete Class Title</h1>}
@@ -129,7 +132,7 @@ const MainSpecialtyForm = ({
       <SelectField
         label="Field"
         name="field_id"
-        defaultValue={data?.field__id}
+        defaultValue={data?.field__id.toString()}
         defaultName={data?.field__field_name}
         register={register}
         error={errors?.field_id}

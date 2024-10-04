@@ -103,7 +103,7 @@ const MarksForm = ({ resultData, params }: any) => {
                 console.log(103, res)
                 if (res && res.length > 0) {
                     const t = res.map(item => item.status)
-                    router.push(`/Section-H/pageLecturer/${params.school_id}/MarksUpload/${params.lecturer_id}?updated="SUCCESSFULLY !!!`);
+                    router.push(`/${params.domain}/Section-H/pageLecturer/${params.school_id}/MarksUpload/${params.lecturer_id}?updated="SUCCESSFULLY !!!`);
                 }
             })
             .catch(err => {

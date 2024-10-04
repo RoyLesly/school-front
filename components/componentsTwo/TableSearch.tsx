@@ -22,7 +22,6 @@ const TableSearch:FC<SearchProps> = ({ searchString, placeholder }) => {
       return
     }
     router.push(pathname)
-
   }
 
   return (

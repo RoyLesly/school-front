@@ -32,7 +32,7 @@ export const ConfigData: any = {
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoEconneq.png", logo256: "/images/logo/LogoEconneq.png",
             campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
+                "Campus-A": [2.953624, 9.916485], "Campus-B": [2.953624, 9.916485], "Campus-C": [2.953393, 9.916840], "Campus-D": [2.953393, 9.916840]
             }
         },
         secondary: { 
@@ -65,9 +65,12 @@ export const ConfigData: any = {
             schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoEconneq.png", logo256: "/images/logo/LogoEconneq.png",
-            campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
-            }
+            campus_geolocations: [
+                { name: "Campus-A", geo: [4.047988, 9.725763], location: "Camrail"}, 
+                { name: "Campus-B", geo: [4.091598, 9.660658], location: "Bonaberi"}, 
+                { name: "Campus-C", geo: [4.084286, 9.745666], location: "Bonamoussadi"}, 
+                { name: "Campus-D", geo: [4.047988, 9.725763], location: "Dschang"}, 
+            ]
         },
         secondary: { 
             landing_message: ["Welcome To", "E-CONNEQ SECONDARY TESTING INSTITUTE"], help_number: "693358642",
@@ -78,7 +81,7 @@ export const ConfigData: any = {
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoEconneq.png", logo256: "/images/logo/LogoEconneq.png",
             campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
+                "Campus-A": [2.953624, 9.916485], "Campus-B": [2.953624, 9.916485], "Campus-C": [2.953393, 9.916840], "Campus-D": [2.953393, 9.916840]
             }
         },
     },
@@ -98,9 +101,14 @@ export const ConfigData: any = {
             schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoEconneq.png", logo256: "/images/logo/LogoEconneq.png",
-            campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
-            }
+            campus_geolocations: [
+                { name: "Campus-A", geo: [4.047988, 9.725763], location: "Camrail"}, 
+                // { name: "Campus-B", geo: [2.953624, 9.916485], location: "Kribi"}, 
+                // { name: "Campus-B", geo: [2.9511629, 9.9163013], location: "Kribi House"}, 
+                { name: "Campus-B", geo: [2.9524380, 9.9155450], location: "Kribi House"}, 
+                { name: "Campus-C", geo: [4.084286, 9.745666], location: "Bonamoussadi"}, 
+                { name: "Campus-D", geo: [4.047988, 9.725763], location: "Dschang"}, 
+            ]
         },
         secondary: { 
             landing_message: ["Welcome To", "E-CONNEQ COLEGE"], help_number: "693358642",
@@ -110,9 +118,10 @@ export const ConfigData: any = {
             schoolfees_control: [ 25, 50, 70, 95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoEconneq.png", logo256: "/images/logo/LogoEconneq.png",
-            campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
-            }
+            campus_geolocations: [
+                { name: "Campus-A", geo: [4.047988, 9.725763], location: "Camrail"}, 
+                { name: "Campus-B", geo: [4.091598, 9.660658], location: "Bonaberi"}, 
+            ]
         },
     },
     joan: {
@@ -132,10 +141,9 @@ export const ConfigData: any = {
             schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoJoan.png", logo256: "/images/logo/LogoJoan.png",
-            campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
-            }
-        },
+            campus_geolocations: [
+                { name: "Campus-A", geo: [4.047988, 9.725763], location: "Centre"}, 
+            ]        },
         secondary: { 
             landing_message: ["Welcome To", "ST JOAN COLEGE INSTITUTE"], help_number: "693358642",
             ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
@@ -145,7 +153,7 @@ export const ConfigData: any = {
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoJoan.png", logo256: "/images/logo/LogoJoan.png",
             campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
+                "Campus-A": [2.953624, 9.916485], "Campus-B": [2.953624, 9.916485], "Campus-C": [2.953393, 9.916840], "Campus-D": [2.953393, 9.916840]
             }
         },
     },
@@ -160,15 +168,18 @@ export const ConfigData: any = {
          },
         higher: { 
             landing_message: ["Welcome To", "THE BRAINS UNIVERSITY"], help_number: "693358642",
-            ca_mark: 14.9, exam_mark: 35.9, ca_limit: 30.0, exam_limit: 70.0, resit_limit: 60.0, 
+            ca_mark: 19.9, exam_mark: 29.9, ca_limit: 40.0, exam_limit: 60.0, resit_limit: 60.0, 
             prefix: "TBU", method: "2", 
             registration_seperate_tuition: true,
             schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoBrains.png", logo256: "/images/logo/LogoBrains.png",
-            campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
-            }
+            campus_geolocations: [
+                { name: "Campus-A", geo: [4.047988, 9.725763], location: "BP CITE"}, 
+                { name: "Campus-B", geo: [4.091598, 9.660658], location: "BONABERI"}, 
+                { name: "Campus-C", geo: [4.084286, 9.745666], location: "BONAMOUSSADI"}, 
+                { name: "Campus-D", geo: [4.047988, 9.725763], location: "DSCHANG"}, 
+            ]
         },
         secondary: { 
             landing_message: ["Welcome To", "THE BRAINS UNIVERSITY"], help_number: "693358642",
@@ -178,9 +189,9 @@ export const ConfigData: any = {
             schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoBrains.png", logo256: "/images/logo/LogoBrains.png",
-            campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
-            }
+            campus_geolocations: [
+                { name: "Campus-A", geo: [2.953624, 9.916485], location: "Camrail"},
+            ]
         },
     },
     kings: {
@@ -200,9 +211,9 @@ export const ConfigData: any = {
             schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoKings.png", logo256: "/images/logo/LogoKings.png",
-            campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
-            }
+            campus_geolocations: [
+                { name: "Campus-A", geo: [4.047988, 9.725763], location: "Limber"},
+            ]
         },
         secondary: { 
             landing_message: ["Welcome To", "THE Kings Colege"], help_number: "693358642",
@@ -213,7 +224,7 @@ export const ConfigData: any = {
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoVishi.png", logo256: "/images/logo/LogoVishi.png",
             campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
+                "Campus-A": [2.953624, 9.916485], "Campus-B": [2.953624, 9.916485], "Campus-C": [2.953393, 9.916840], "Campus-D": [2.953393, 9.916840]
             }
         },
     },
@@ -234,9 +245,9 @@ export const ConfigData: any = {
             schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoVishi.png", logo256: "/images/logo/LogoVishi.png",
-            campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
-            }
+            campus_geolocations: [
+                { name: "Campus-B", geo: [4.091598, 9.660658], location: "Bonaberi"}, 
+            ]
         },
         secondary: { 
             landing_message: ["Welcome To", "THE VISHI COLEGE"], help_number: "693358642",
@@ -247,7 +258,7 @@ export const ConfigData: any = {
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoVishi.png", logo256: "/images/logo/LogoVishi.png",
             campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
+                "Campus-A": [2.953624, 9.916485], "Campus-B": [2.953624, 9.916485], "Campus-C": [2.953393, 9.916840], "Campus-D": [2.953393, 9.916840]
             }
         },
     },
@@ -268,9 +279,9 @@ export const ConfigData: any = {
             schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoClings.png", logo256: "/images/logo/LogoClings.png",
-            campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
-            }
+            campus_geolocations: [
+                { name: "Campus-B", geo: [4.091598, 9.660658], location: "Bonaberi"}, 
+            ]
         },
         secondary: { 
             landing_message: ["Welcome To", "THE CLINGS COLEGE"], help_number: "693358642",
@@ -281,7 +292,7 @@ export const ConfigData: any = {
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoClings.png", logo256: "/images/logo/LogoClings.png",
             campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
+                "Campus-A": [2.953624, 9.916485], "Campus-B": [2.953624, 9.916485], "Campus-C": [2.953393, 9.916840], "Campus-D": [2.953393, 9.916840]
             }
         },
     },
@@ -302,9 +313,9 @@ export const ConfigData: any = {
             schoolfees_control: [ 0.25, 0.50, 0.70, 0.95 ],
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoStJohn.png", logo256: "/images/logo/LogoStJohn.png",
-            campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
-            }
+            campus_geolocations: [
+                { name: "Campus-A", geo: [4.047988, 9.725763], location: "Village"},
+            ]
         },
     },
     cohimms: {
@@ -325,7 +336,9 @@ export const ConfigData: any = {
             color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoCohimms.png", logo256: "/images/logo/LogoCohimms.png",
             campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
+                campus_geolocations: [
+                    { name: "Campus-A", geo: [4.047988, 9.725763], location: "Ndogpassi"},
+                ]
             }
         },
         secondary: { 
@@ -337,7 +350,7 @@ export const ConfigData: any = {
              color_1: "bg-teal-700", color_2: "bg-teal-50", color_3: "", color_4: "",
             logo512: "/images/logo/LogoCohimms.png", logo256: "/images/logo/LogoCohimms.png",
             campus_geolocations: {
-                A: [2.953624, 9.916485], B: [2.953624, 9.916485], C: [2.953393, 9.916840]
+                "Campus-A": [2.953624, 9.916485], "Campus-B": [2.953624, 9.916485], "Campus-C": [2.953393, 9.916840], "Campus-D": [2.953393, 9.916840]
             }
         },
     },

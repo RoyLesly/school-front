@@ -27,7 +27,7 @@ const page = async ({
 
   const session = await getSession();
   const apiSchool: GetSchoolInfoInter[] | any = await getData(protocol + "api" + params.domain + GetSchoolInfoUrl, { nopage: true, id: params.school_id })
-  console.log(searchParams)
+  console.log(searchParams, 30)
 
   if (!session.isLoggedIn) {
     return <NotLoggedIn />

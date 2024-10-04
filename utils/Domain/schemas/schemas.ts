@@ -117,17 +117,30 @@ export const SchemaCreateEditSysConstant = z.object({
 })
 
 
-export const SchemaCreateEditTimeTable = z.object({
+export const SchemaCreateEditTimeTableWeek = z.object({
     id: z.coerce.number().optional(),
     year_week: z.string().trim().min(3, { message: "Must Contain 3 Characters Minimum" }),
     specialty_id: z.coerce.number().optional(),
     publish: z.boolean().optional(),
 })
 
-export const SchemaCreateEditDayProgram = z.object({
+export const SchemaCreateEditTimeTableDay = z.object({
     id: z.coerce.number().optional(),
-    timetable_id: z.coerce.number().min(1, { message: "Must Contain 1 Characters Minimum" }),
+    timetableweek_id: z.coerce.number().min(1, { message: "Must Contain 1 Characters Minimum" }),
+    date: z.string().trim().min(3, { message: "Must Contain 3 Characters Minimum" }),
     day: z.string().trim().min(3, { message: "Must Contain 3 Characters Minimum" }),
+})
+
+export const SchemaCreateEditTimeSlot = z.object({
+    id: z.coerce.number().optional(),
+    timetableday_id: z.coerce.number().min(1, { message: "Must Contain 1 Characters Minimum" }),
+    course_id: z.coerce.number().min(1, { message: "Must Contain 1 Characters Minimum" }),
+    title: z.string().optional(),
+    start: z.string().trim().min(3, { message: "Must Contain 3 Characters Minimum" }),
+    end: z.string().trim().min(3, { message: "Must Contain 3 Characters Minimum" }),
+    session: z.string().trim().min(3, { message: "Must Contain 3 Characters Minimum" }),
+    action: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum" }),
+    status: z.string().trim().min(3, { message: "Must Contain 3 Characters Minimum" }),
 })
 
 

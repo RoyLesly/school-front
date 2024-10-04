@@ -90,11 +90,11 @@ const LoginForm = () => {
         localStorage.setItem("school", token.school[0])
         var fil: GetSchoolInfoInter | undefined = schools?.filter((item: GetSchoolInfoInter) => item.id.toString() == token.school[0])[0]
         if (token.role == "admin" && fil) { 
-          router.push(`/${fil.school_type}/pageAdministration/${fil.id}`); 
+          router.push(`/${domain}/${fil.school_type}/pageAdministration/${fil.id}`); 
           return 
         }
         if (token.role == "teacher" && fil) { 
-          router.push(`/${fil.school_type}/pageLecturer/${fil.id}`); 
+          router.push(`/${domain}/${fil.school_type}/pageLecturer/${fil.id}`); 
           return 
         }
       }
@@ -104,7 +104,7 @@ const LoginForm = () => {
         if (token.role == "admin" || token.role == "teacher") {
           if (token.role == "admin") {
             if (token.dept || token.dept.length > 0) { 
-              router.push(`/pageAuthentication/pageSelectSchool?role=${token.role}`); 
+              router.push(`/${domain}/pageAuthentication/pageSelectSchool?role=${token.role}`); 
               return ;
             }
           }
@@ -131,7 +131,7 @@ const LoginForm = () => {
       }
       if (token.school && token.school.length < 1) { 
         if (token.role == "student") {
-          router.push("/pageStudent"); 
+          router.push(`/${domain}/pageStudent`); 
           return
         }
         const alert = () => {
@@ -160,7 +160,7 @@ const LoginForm = () => {
         return
       }
     }
-  }, [count, access, refresh, router, schools])
+  }, [count, access, refresh, router, domain, schools])
 
   const onSubmitServerAction = async (prevState: any, formData: FormData) => {
     setLoading(true);

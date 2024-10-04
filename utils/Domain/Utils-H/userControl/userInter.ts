@@ -54,7 +54,10 @@ export type AppearanceInter = {
 
 
 
-
+export type GetDepartmentInter = {
+  id: number;
+  name: string;
+}
 
 
 export type GetCustomUserInter = {
@@ -75,6 +78,31 @@ export type GetCustomUserInter = {
   last_login?: string;
 };
 
+
+export type GetPreInscriptionInter = {
+  id: number;
+  registration_number: string;
+  first_name: string;
+  last_name: string;
+  full_name: string;
+  sex: string;
+  email: string;
+  telephone: string;
+  address: string;
+  pob: string;
+  dob: string;
+  status: string;
+  emergency_name: string;
+  emergency_town: string;
+  emergency_number: string;
+  academic_year: string;
+  program: string;
+  level: number;
+  session: string;
+  specialty_one: string;
+  specialty_two: string;
+  campus: string;
+};
 
 
 export type GetUserProfileInter = {

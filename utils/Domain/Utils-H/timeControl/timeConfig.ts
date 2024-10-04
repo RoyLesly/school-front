@@ -1,9 +1,10 @@
 import { RootApi } from "@/config";
 
-export const TimeTableUrl = RootApi + "/time/timetable"
-export const DayProgramUrl = RootApi + "/time/dayprogram"
-export const GetTimeTableUrl = RootApi + "/time/get-timetable"
-export const GetDayProgramUrl = RootApi + "/time/get-dayprogram"
+export const TimeTableWeekUrl = RootApi + "/higher/higher_time_control/timetableweek"
+export const TimeTableDayUrl = RootApi + "/higher/higher_time_control/timetableday"
+export const TimeSlotUrl = RootApi + "/higher/higher_time_control/timeslot"
+export const GetTimeTableWeekUrl = RootApi + "/higher/higher_time_control/get-timetableweek"
+export const GetTimeTableDayUrl = RootApi + "/higher/higher_time_control/get-timetableday"
 export const GetTimeSlotUrl = RootApi + "/higher/higher_time_control/get-timeslot"
 // export const MondayUrl = ConfigData + "/time/monday"
 // export const TuesdayUrl = ConfigData + "/time/tuesday"

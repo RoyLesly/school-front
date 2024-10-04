@@ -1,13 +1,11 @@
-import TabsCourse from "@/[locale]/[domain]/Section-H/pageAdministration/[school_id]/pageSettings/pageCourses/TabsCourse";
 import FormModal from "@/componentsTwo/FormModal";
-import { role } from "@/componentsTwo/lib/data";
 import Table from "@/componentsTwo/Table";
 import { TableRowClassName } from "@/constants";
 import { GetMainCourseInter } from "@/Domain/Utils-H/appControl/appInter";
 import MyPageTitle from "@/section-h/common/MyPageTitle";
 import { FaPlus } from "react-icons/fa6";
 import { MdModeEdit } from "react-icons/md";
-import { RiDeleteBin2Line } from "react-icons/ri";
+import TabsCourse from "../TabsSettings/TabsCourse";
 import TableSearch from "../TableSearch";
 
 

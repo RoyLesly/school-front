@@ -5,9 +5,9 @@ import Breadcrumb from '@/section-h/common/Breadcrumbs/Breadcrumb';
 import { getData, getStartEndOfWeek } from '@/functions';
 import {  } from '@/schemas/schemas';
 import { redirect } from 'next/navigation';
-import { GetTimeTableUrl, TimeTableUrl } from '@/Domain/Utils-H/timeControl/timeConfig';
+import { GetTimeTableWeekUrl, TimeTableWeekUrl } from '@/Domain/Utils-H/timeControl/timeConfig';
 import { ActionEdit } from '@/serverActions/actionGeneral';
-import { SchemaCreateEditTimeTable } from '@/Domain/schemas/schemas';
+import { SchemaCreateEditTimeTableWeek } from '@/Domain/schemas/schemas';
 import { protocol } from '@/config';
 
 const page = async ({
@@ -18,7 +18,7 @@ const page = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
-  const apiData = await getData(protocol + "api" + params.domain + GetTimeTableUrl, { id: params.timetable_id, fieldList: [
+  const apiData = await getData(protocol + "api" + params.domain + GetTimeTableWeekUrl, { id: params.timetable_id, fieldList: [
     "id", "specialty__id","specialty__level__level", "specialty__academic_year", "specialty__main_specialty__specialty_name", "year_week"
   ] })
 
@@ -70,7 +70,7 @@ const PublishConfirm = ({ apiData, params, searchParams }: any) => {
     console.log(data)
     // return
 
-    const response = await ActionEdit(data, data.id.toString(), SchemaCreateEditTimeTable, protocol + "api" + params.domain + TimeTableUrl)
+    const response = await ActionEdit(data, data.id.toString(), SchemaCreateEditTimeTableWeek, protocol + "api" + params.domain + TimeTableWeekUrl)
     console.log(70, response)
 
     if (response.id == apiData.id){

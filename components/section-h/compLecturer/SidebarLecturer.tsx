@@ -3,10 +3,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
-import SidebarLinkGroup from "./SidebarLinkGroup";
 import LogoHeader from "@/section-h/common/Header/LogoHeader";
 import { jwtDecode } from "jwt-decode";
+import { Subdomains } from "@/dataSource";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -24,7 +23,7 @@ interface UserProps {
 
 const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const pathname = usePathname();
-
+  const [domain, setDomain] = useState<string>("")
   const trigger = useRef<any>(null);
   const SidebarProc = useRef<any>(null);
   const [ count, setCount ] = useState(0);
@@ -74,7 +73,11 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   useEffect(() => {
     if (count == 0) {
       var access = localStorage.getItem("session")
-      var school = localStorage.getItem("school")
+      var school = localStorage.getItem("school");
+      if (pathname && pathname.length > 5){
+        var dom: any = Subdomains.filter((item: { id: number, subdomain: string }) => pathname.includes(item.subdomain))
+        if (dom && dom.length){ setDomain(dom[0].subdomain)}
+      }
 
       if (access && school) {
         var token = jwtDecode(access)
@@ -93,7 +96,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       }
       setCount(1);
     }
-  }, [ count])
+  }, [ count, pathname ])
 
   return (
     <aside
@@ -107,7 +110,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         trigger={trigger}
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
-        home={`/Section-H/pageAdministration/${user?.school}`}
+        home={`/${domain}/Section-H/pageAdministration/${user?.school}`}
       />
       {/* <!-- SidebarProc HEADER --> */}
 
@@ -133,7 +136,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Home --> */}
               <li>
                 <Link
-                  href={`/Section-H/pageLecturer/${user?.school}/${user?.id}`}
+                  href={`/${domain}/Section-H/pageLecturer/${user?.school}/${user?.id}`}
                   // className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                   className={`group relative hidden items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("pageDashboard") &&
@@ -174,7 +177,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Profile --> */}
               <li>
                 <Link
-                  href={`/Section-H/pageLecturer/${user?.school}/MyProfile/${user?.id}`}
+                  href={`/${domain}/Section-H/pageLecturer/${user?.school}/MyProfile/${user?.id}`}
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("pageDashboard") &&
                     "bg-graydark dark:bg-meta-4"
@@ -214,9 +217,9 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item My Courses --> */}
               <li>
                 <Link
-                  href={`/Section-H/pageLecturer/${user?.school}/MyCourses/${user?.id}`}
-                  // className={`group relative hidden flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                  className={`group relative hidden items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                  href={`/${domain}/Section-H/pageLecturer/${user?.school}/MyCourses/${user?.id}`}
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                  // className={`group relative hidden items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("pageDashboard") &&
                     "bg-graydark dark:bg-meta-4"
                   }`}
@@ -255,7 +258,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Marks Upload --> */}
               <li>
                 <Link
-                  href={`/Section-H/pageLecturer/${user?.school}/MarksUpload/${user?.id}`}
+                  href={`/${domain}/Section-H/pageLecturer/${user?.school}/MarksUpload/${user?.id}`}
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("pageDashboard") &&
                     "bg-graydark dark:bg-meta-4"
@@ -295,7 +298,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Time Table --> */}
               <li>
                 <Link
-                  href={`/Section-H/pageLecturer/${user?.school}/MyTimeTable/${user?.id}`}
+                  href={`/${domain}/Section-H/pageLecturer/${user?.school}/MyTimeTable/${user?.id}`}
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("pageDashboard") &&
                     "bg-graydark dark:bg-meta-4"

@@ -5,6 +5,8 @@ import { GetDomainInter, GetLevelInter } from "@/Domain/Utils-H/appControl/appIn
 import MyPageTitle from "@/section-h/common/MyPageTitle";
 import { redirect } from "next/navigation";
 import MyTabs from "../MyTabs";
+import MessageModal from "../MessageModal";
+import { FaDownload } from "react-icons/fa6";
 
 
 const columns = [
@@ -50,9 +52,9 @@ const columns = [
   },
 ];
 
-const ListAccSpecialtyPage = ({ params, data, years, thisYear, levels, domains }
+const ListAccSpecialtyPage = ({ params, searchParams, data, years, thisYear, levels, domains }
   : 
-  { params: any, data: any[] | any, years: any[], thisYear: string, levels: GetLevelInter[], domains: GetDomainInter[] }) => {
+  { params: any, searchParams: any, data: any[] | any, years: any[], thisYear: string, levels: GetLevelInter[], domains: GetDomainInter[] }) => {
   const renderRow = (item: any, index: number) => (
     <tr
       key={item.id}
@@ -87,6 +89,21 @@ const ListAccSpecialtyPage = ({ params, data, years, thisYear, levels, domains }
         <div className="flex gap-2 items-center w-full">
           <MyPageTitle title={"Class Analyses"} params={params} />
           <div className="font-semi-bold hidden italic md:flex tracking-widest">{thisYear}</div>
+          <div>
+            {searchParams ? <MessageModal
+              table="excel_accounting_info" 
+              type="custom"
+              params={params} icon={<span className="flex gap-1 items-center justify-center"><FaDownload size={12} /></span>} 
+              data={data}
+              extra_data={{ 
+                searchParams: searchParams, 
+                type: "analyses_specialties", 
+                export_title: `ClassFee`,
+                worksheet_name: "Classes" 
+              }}
+              customClassName={`flex gap-2 bg-bluedash px-3 py-1 text-white font-medium capitalize gap-2 cursor-pointer`}
+            /> : null}
+          </div>
           <SelectYear 
           domains={domains} 
           levels={levels} 

@@ -1,11 +1,11 @@
 import Table from "@/componentsTwo/Table";
 import { TableRowClassName } from "@/constants";
-import { FaEye, FaPlus } from "react-icons/fa6";import Link from "next/link";
-import TabsStudents from "@/[locale]/[domain]/Section-H/pageAdministration/[school_id]/pageStudents/TabsStudents";
 import { getData } from "@/functions";
 import { protocol } from "@/config";
 import { GetUserProfileUrl } from "@/Domain/Utils-H/userControl/userConfig";
 import { GetUserProfileInter } from "@/Domain/Utils-H/userControl/userInter";
+import Link from "next/link";
+import TabsStudents from "../TabsProfiles/TabsStudents";
 
 
 const columns = [
@@ -39,7 +39,7 @@ const columns = [
 const ListStudsSpecialtiesPage = async ({ params, data }: { params: any, data: GetUserProfileInter | any }) => {
   const apiMyProfiles = await getData(protocol + "api" + params.domain + GetUserProfileUrl, { nopage: true,
     user__id: data.user__id, 
-    fieldList: [ "id", "user__id", "user__full_name", "specialty__main_specialty__specialty_name", "specialty__academic_year", "specialty__level__level" ] 
+    fieldList: [ "id", "user__id", "specialty__id", "user__full_name", "specialty__main_specialty__specialty_name", "specialty__academic_year", "specialty__level__level" ] 
   })
   const renderRow = (item: GetUserProfileInter, index: number) => (
     <tr
@@ -59,7 +59,6 @@ const ListStudsSpecialtiesPage = async ({ params, data }: { params: any, data: G
     </tr>
   );
 
-
   return (
     <div className="bg-white flex-1 gap-2 m-2 mt-1 p-2 rounded-md">
 
@@ -72,7 +71,7 @@ const ListStudsSpecialtiesPage = async ({ params, data }: { params: any, data: G
 
       {apiMyProfiles && apiMyProfiles.length > 1 ? <div className="flex flex-col gap-1">
         <h1 className="capitalize font-semibold mb-1 text-center text-lg tracking-widest underline">OTHER CLASSES</h1>
-        <Table columns={columns} renderRow={renderRow} data={apiMyProfiles.filter((item: GetUserProfileInter) => item.user__id != data.user__id)} rowClassName="h-12" />
+        <Table columns={columns} renderRow={renderRow} data={apiMyProfiles.filter((item: GetUserProfileInter) => item.specialty__id != data.specialty__id)} rowClassName="h-12" />
       </div> : <></>}
     </div>
   );

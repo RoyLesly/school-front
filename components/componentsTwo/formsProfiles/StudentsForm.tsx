@@ -6,58 +6,18 @@ import InputField from "../InputField";
 import { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import SelectField from "../SelectField";
-import { GetSpecialtyInter } from "@/Domain/Utils-H/appControl/appInter";
+import { GetDomainInter, GetLevelInter, GetSpecialtyInter } from "@/Domain/Utils-H/appControl/appInter";
 import { getData, handleResponseError } from "@/functions";
 import { GetSpecialtyUrl } from "@/Domain/Utils-H/appControl/appConfig";
 import { ConfigData, protocol } from "@/config";
 import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
-import { CustomUserUrl, GetDepartmentUrl, UserProfileUrl } from "@/Domain/Utils-H/userControl/userConfig";
-import { GetDepartmentInter } from "@/Domain/Utils-S/userControl/userInter";
+import { CustomUserUrl, GetCustomUserUrl, GetDepartmentUrl, UserProfileUrl } from "@/Domain/Utils-H/userControl/userConfig";
 import Link from "next/link";
 import { ActionCreate } from "@/serverActions/actionGeneral";
 import { SchemaCreateEditCustomUser, SchemaCreateEditUserProfile } from "@/schemas-user";
 import { useRouter } from "next/navigation";
+import { GetDepartmentInter, GetProgramInter } from "@/Domain/Utils-H/userControl/userInter";
 
-// const schema = z.object({
-//   username: z
-//     .string()
-//     .min(3, { message: "Username must be at least 3 characters long!" })
-//     .max(20, { message: "Username must be at most 20 characters long!" }),
-//   email: z.string().email({ message: "Invalid email address!" }),
-//   password: z
-//     .string()
-//     .min(8, { message: "Password must be at least 8 characters long!" }),
-//   firstName: z.string().min(1, { message: "First name is required!" }),
-//   lastName: z.string().min(1, { message: "Last name is required!" }),
-//   phone: z.string().min(1, { message: "Phone is required!" }),
-//   address: z.string().min(1, { message: "Address is required!" }),
-//   bloodType: z.string().min(1, { message: "Blood Type is required!" }),
-//   // birthday: z.date({ message: "Birthday is required!" }),
-//   // sex: z.enum(["male", "female"], { message: "Sex is required!" }),
-//   img: z.instanceof(File, { message: "Image is required" }),
-// });
-
-const SchemaCreate = z.object({
-  first_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum" }),
-  last_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum" }),
-  sex: z.enum(["Male", "Female"]),
-  email: z.string().email(),
-  telephone: z.coerce.number().int().gte(610000000).lte(699999999),
-  address: z.string().optional(),
-  pob: z.string().optional(),
-  dob: z.string().optional(),
-  parent_name: z.string().optional(),
-  parent_telephone: z.coerce.number().int().gte(610000000).lte(699999999).optional(),
-
-  domain_id: z.coerce.number().optional(),
-  academic_year: z.string().optional(),
-  level_id: z.coerce.number().optional(),
-  specialty_id: z.coerce.number().int(),
-  program_id: z.coerce.number().int(),
-  session: z.enum(["Morning", "Evening"]),
-})
-
-type Inputs = z.infer<typeof SchemaCreate>;
 
 const StudentsForm = ({
   type,
@@ -69,9 +29,45 @@ const StudentsForm = ({
   type: "create" | "update" | "delete";
   params: any;
   setOpen: any;
-  extra_data: any;
+  extra_data: { domains: GetDomainInter[], department: GetDepartmentInter, levels: GetLevelInter[], programs: { results: GetProgramInter[] } };
   data?: any;
 }) => {
+
+
+  const SchemaCreate = z.object({
+    first_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum" }),
+    last_name: z.string().trim().min(2, { message: "Must Contain 2 Characters Minimum" }),
+    sex: z.enum(["Male", "Female"]),
+    telephone: z.coerce.number().int().gte(610000000).lte(699999999).refine(async (e) => {
+      const telephones = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { telephone: e });
+      console.log("telephone res", telephones, telephones.count)
+      if (telephones && telephones.count) return false;
+      else return true
+    }, "This telephone exist already"),
+    email: z.string().min(1, { message: "This field has to be filled." }).email("This is not a valid email.").refine(async (e) => {
+      const emails = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { email: e });
+      console.log("email res", emails.count)
+      if (emails && emails.count) return false;
+      else return true
+    }, "This email exist already"),
+    address: z.string().optional(),
+    pob: z.string().optional(),
+    dob: z.string().optional(),
+    parent_name: z.string().optional(),
+    parent_telephone: z.coerce.number().int().gte(610000000).lte(699999999).optional(),
+
+    domain_id: z.coerce.number().optional(),
+    academic_year: z.string().optional(),
+    level_id: z.coerce.number().optional(),
+    specialty_id: z.coerce.number().int(),
+    program_id: z.coerce.number().int(),
+    session: z.enum(["Morning", "Evening"]),
+  })
+  
+  type Inputs = z.infer<typeof SchemaCreate>;
+
+
+
   const {
     register,
     handleSubmit,
@@ -89,29 +85,18 @@ const StudentsForm = ({
   const [selectedDomainID, setSelectedDomainID] = useState<number>(0)
   const [selectedLevelID, setSelectedLevelID] = useState<number>(0)
   const [selectedYear, setSelectedYear] = useState<string>("");
-  const [dept, setDept] = useState<GetDepartmentInter | any>();
-
 
   useEffect(() => {
-    if (count == 0) {
-      var getDept = async () => {
-        var res = await getData(protocol + "api" + params.domain + GetDepartmentUrl, { name: "stud" })
-        if (res) {
-          if (res && res.count) { setDept(res.results) }
-          else { setDept([]) };
-        };
-        setCount(1)
-      }
-      getDept();
-    }
     if (count == 1) {
       if (selectedDomainID && selectedLevelID && selectedYear.length > 0) {
         const call = async () => {
-          const response = await getData(protocol + "api" + params.domain + GetSpecialtyUrl, {
+          console.log("object")
+          const response: GetSpecialtyInter[] | any | any[]= await getData(protocol + "api" + params.domain + GetSpecialtyUrl, {
             nopage: true, school_id: params.school_id,
             "main_specialty__field__domain__id": selectedDomainID, "level__id": selectedLevelID, "academic_year": selectedYear,
             fieldList: ["id", "main_specialty__specialty_name", "level__level", "academic_year"],
           })
+          console.log(response)
           if (response && response.length) {
             setSpecialtyData(response)
           };
@@ -119,13 +104,13 @@ const StudentsForm = ({
         }
         call()
       }
-      setCount(3);
     }
   }, [count, params, selectedDomainID, selectedYear, selectedLevelID]);
-
+  
+  console.log(extra_data.department)
 
   const onSubmit = handleSubmit((formVals) => {
-    // setClicked(true);
+    setClicked(true);
     const newData = {
       username: formVals.first_name?.toString().toUpperCase(),
       first_name: formVals.first_name?.toString().toUpperCase(),
@@ -133,11 +118,12 @@ const StudentsForm = ({
       full_name: formVals.first_name?.toString().toUpperCase() + " " + formVals.last_name?.toString().toUpperCase(),
       telephone: formVals.telephone,
       email: formVals.email,
+      address: formVals.address,
       pob: formVals.pob,
       dob: formVals.dob,
       sex: formVals.sex,
-      prefix: ConfigData[params.domain]["higher"].method + ConfigData[params.domain]["higher"].prefix,
-      dept: [parseInt(dept[0].id)],
+      prefix: ConfigData[params.domain]["higher"].method + formVals.academic_year?.slice(2, 4) + ConfigData[params.domain]["higher"].prefix,
+      dept: [parseInt(extra_data.department.id.toString())],
       school: [parseInt(params.school_id)],
       role: "student",
     }
@@ -149,6 +135,7 @@ const StudentsForm = ({
     if (type === "create") {
       const call = async () => {
         const response = await ActionCreate(newData, SchemaCreateEditCustomUser, protocol + "api" + params.domain + CustomUserUrl)
+        console.log(response)
         const t = await handleResponseError(response, ["username", "telephone", "email", "full_name", "dob"]);
         if (t == "" && response && response.id) {
           const response2 = await ActionCreate({ ...newProfileData, user_id: response.id }, SchemaCreateEditUserProfile, protocol + "api" + params.domain + UserProfileUrl)
@@ -166,9 +153,9 @@ const StudentsForm = ({
 
   return (
     <>
-      {dept ?
-        dept.length ?
-          <form className="Name Parent flex flex-col gap-4" onSubmit={onSubmit}>
+      {extra_data.department ?
+        extra_data.department.id ?
+          <form className="flex flex-col gap-4" onSubmit={onSubmit}>
             <h1 className="font-semibold text-xl">Create a new student</h1>
 
 
@@ -279,7 +266,7 @@ const StudentsForm = ({
                   name="domain_id"
                   register={register}
                   error={errors?.domain_id}
-                  data={extra_data[0]}
+                  data={extra_data.domains}
                   display={{ "name": "domain_name", value: "id" }}
                   functions={[setCount, setSelectedDomainID, 1]}
                 />
@@ -303,7 +290,7 @@ const StudentsForm = ({
                     name="level_id"
                     register={register}
                     error={errors?.level_id}
-                    data={extra_data[1]}
+                    data={extra_data.levels}
                     display={{ "name": "level", value: "id" }}
                     functions={[setCount, setSelectedLevelID, 1]}
                   />
@@ -327,7 +314,7 @@ const StudentsForm = ({
                   name="program_id"
                   register={register}
                   error={errors?.program_id}
-                  data={extra_data[2].results}
+                  data={extra_data.programs.results}
                   display={{ "name": "name", value: "id" }}
                 />
                 <SelectField

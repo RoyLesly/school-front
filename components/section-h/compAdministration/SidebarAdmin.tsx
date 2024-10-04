@@ -6,6 +6,7 @@ import Link from "next/link";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import LogoHeader from "@/section-h/common/Header/LogoHeader";
 import { jwtDecode } from "jwt-decode";
+import { Subdomains } from "@/dataSource";
 
 
 interface SidebarProps {
@@ -24,7 +25,7 @@ export interface UserProps {
 
 const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const pathname = usePathname();
-
+  const [domain, setDomain] = useState<string>("")
   const trigger = useRef<any>(null);
   const SidebarProc = useRef<any>(null);
   const [count, setCount] = useState(0);
@@ -76,9 +77,10 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     if (count == 0) {
       var access = localStorage.getItem("session")
       var school = localStorage.getItem("school")
-      setCount(1);
-
-
+      if (pathname && pathname.length > 5){
+        var dom: any = Subdomains.filter((item: { id: number, subdomain: string }) => pathname.includes(item.subdomain))
+        if (dom && dom.length){ setDomain(dom[0].subdomain)}
+      }
       if (access && school) {
         var token = jwtDecode(access)
         if (token) {
@@ -96,7 +98,9 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       }
       setCount(1);
     }
-  }, [count])
+  }, [count, pathname])
+
+  // console.log(domain, "104 admin side")
 
   return (
     <aside
@@ -109,7 +113,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         trigger={trigger}
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
-        home={`/Section-H/pageAdministration/${user?.school}`}
+        home={`/${domain}/Section-H/pageAdministration/${user?.school}`}
       />
       {/* <!-- SidebarProc HEADER --> */}
 
@@ -130,7 +134,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Calendar --> */}
               <li>
                 <Link
-                  href={`/Section-H/pageAdministration/${user?.school}/pageDashboard`}
+                  href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageDashboard`}
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("pageDashboard") &&
                     "bg-graydark dark:bg-meta-4"
                     }`}
@@ -170,7 +174,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Results --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === `/Section-H/pageAdministration/${user?.school}/pageResult` || pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageResult`)
+                  pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageResult` || pathname.includes(`/${domain}/Section-H/pageAdministration/${user?.school}/pageResult`)
                 }
               >
                 {(handleClick, open) => {
@@ -178,7 +182,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <Link
                         href="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/Section-H/pageAdministration/${user?.school}/pageResult`) &&
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageResult`) &&
                           "bg-graydark dark:bg-meta-4"
                           }`}
                         onClick={(e) => {
@@ -239,8 +243,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="flex flex-col gap-2.5 mb-5.5 mt-4 pl-6">
                           <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageResult`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageResult` &&
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageResult`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageResult` &&
                                 "text-white"
                                 }`}
                             >
@@ -249,8 +253,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageResult/pagePublish`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageResult/pagePublish` &&
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageResult/pagePublish`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageResult/pagePublish` &&
                                 "text-white"
                                 }`}
                             >
@@ -259,8 +263,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           {user && user?.is_superuser && <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageResult/pageTranscript`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageResult/pageTranscript` && "text-white"
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageResult/pageTranscript`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageResult/pageTranscript` && "text-white"
                                 }`}
                             >
                               Transcript
@@ -269,8 +273,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                           <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageResults/pagePortals`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageUtilities/pagePortals` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageResult/pagePortals`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/pagePortals` &&
                                   "text-white"
                                   } `}
                               >
@@ -291,7 +295,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- BATCH OPERATIONS --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === `/Section-H/pageAdministration/${user?.school}/pageBatchOperation` || pathname.includes(`Section-H/pageAdministration/${user?.school}/pageBatchOperation`)
+                  pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageBatchOperation` || pathname.includes(`Section-H/pageAdministration/${user?.school}/pageBatchOperation`)
                 }
               >
                 {(handleClick, open) => {
@@ -299,7 +303,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <Link
                         href="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/Section-H/pageAdministration${user?.school}//pageBatchOperation` ||
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/${domain}/Section-H/pageAdministration${user?.school}//pageBatchOperation` ||
                             pathname.includes(`Section-H/pageAdministration/${user?.school}/pageBatchOperation`)) &&
                           "bg-graydark dark:bg-meta-4"
                           }`}
@@ -365,8 +369,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="flex flex-col gap-2.5 mb-5.5 mt-4 pl-6">
                           {user && user?.is_superuser && <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageResult/pagePromote`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageResult/pagePromote` && "text-white"
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageResult/pagePromote`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageResult/pagePromote` && "text-white"
                                 }`}
                             >
                               Promotion
@@ -374,8 +378,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>}
                           <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageMarksEntry`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageMarksEntry` &&
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageMarksEntry`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageMarksEntry` &&
                                 "text-white"
                                 }`}
                             >
@@ -384,8 +388,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageCourseAssignment`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageCourseAssignment` &&
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageCourseAssignment`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageCourseAssignment` &&
                                 "text-white"
                                 } `}
                             >
@@ -394,7 +398,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageTimeTable`}
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageTimeTable`}
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `Section-H//pageAdministration/${user?.school}/pageBatchOperation/pageTimeTable` &&
                                 "text-white"
                                 } `}
@@ -404,7 +408,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageImport`}
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageBatchOperation/pageImport`}
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `Section-H//pageAdministration/${user?.school}/pageBatchOperation/pageImport` &&
                                 "text-white"
                                 } `}
@@ -425,7 +429,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- NOTIFICATIONS --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === `/Section-H/pageAdministration/${user?.school}/pageNotifications` || pathname.includes(`Section-H/pageAdministration/${user?.school}/pageNotifications`)
+                  pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageNotifications` || pathname.includes(`Section-H/pageAdministration/${user?.school}/pageNotifications`)
                 }
               >
                 {(handleClick, open) => {
@@ -433,7 +437,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <Link
                         href="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/Section-H/pageAdministration${user?.school}//pageNotifications` ||
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/${domain}/Section-H/pageAdministration${user?.school}//pageNotifications` ||
                             pathname.includes(`Section-H/pageAdministration/${user?.school}/pageNotifications`)) &&
                           "bg-graydark dark:bg-meta-4"
                           }`}
@@ -499,8 +503,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="flex flex-col gap-2.5 mb-5.5 mt-4 pl-6">
                           <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageNotifications/pageAnnouncements`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageNotifications/pageAnnouncements` &&
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageNotifications/pageAnnouncements`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageNotifications/pageAnnouncements` &&
                                 "text-white"
                                 }`}
                             >
@@ -542,7 +546,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Lecturers --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === `/Section-H/pageAdministration/${user?.school}/pageLecturers` || pathname.includes(`Section-H/pageAdministration/${user?.school}/pageLecturers`)
+                  pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageLecturers` || pathname.includes(`Section-H/pageAdministration/${user?.school}/pageLecturers`)
                 }
               >
                 {(handleClick, open) => {
@@ -550,7 +554,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <Link
                         href="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/Section-H/pageAdministration/${user?.school}/pageLecturers` ||
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageLecturers` ||
                             pathname.includes(`Section-H/pageAdministration/${user?.school}/pageLecturers`)) &&
                           "bg-graydark dark:bg-meta-4"
                           }`}
@@ -612,8 +616,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="flex flex-col gap-2.5 mb-5.5 mt-4 pl-6">
                           <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageLecturers`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageLecturers` && "text-white"
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageLecturers`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageLecturers` && "text-white"
                                 }`}
                             >
                               View
@@ -621,8 +625,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           {/* <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageLecturers/pageAdmission`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageLecturers/pageAdmission` && "text-white"
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageLecturers/pageAdmission`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageLecturers/pageAdmission` && "text-white"
                                 }`}
                             >
                               New Lecturer
@@ -643,7 +647,7 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Students --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === `/Section-H/pageAdministration/${user?.school}/pageStudents` || pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageStudents`)
+                  pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents` || pathname.includes(`/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents`)
                 }
               >
                 {(handleClick, open) => {
@@ -651,8 +655,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     <React.Fragment>
                       <Link
                         href="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/Section-H/pageAdministration/${user?.school}/pageStudents` ||
-                            pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageStudents`)) &&
+                        className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents` ||
+                            pathname.includes(`/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents`)) &&
                           "bg-graydark dark:bg-meta-4"
                           }`}
                         onClick={(e) => {
@@ -713,8 +717,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="flex flex-col gap-2.5 mb-5.5 mt-4 pl-6">
                           <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageStudents`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname == (`/Section-H/pageAdministration/${user?.school}/pageStudents`) && "text-white"
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname == (`/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents`) && "text-white"
                                 }`}
                             >
                               View
@@ -723,18 +727,28 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           
                           <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageStudents/UnAssignedCampusStudents`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageStudents/UnAssignedCampusStudents`) && "text-white"
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents/UnAssignedCampusStudents`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname.includes(`/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents/UnAssignedCampusStudents`) && "text-white"
                                 }`}
                             >
                               Un-Assigned
                             </Link>
                           </li>
+                          
+                          <li>
+                            <Link
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents/PreInscription`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname.includes(`/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents/PreInscription`) && "text-white"
+                                }`}
+                            >
+                              Pre-Enrolement
+                            </Link>
+                          </li>
 
                           {/* <li>
                             <Link
-                              href={`/Section-H/pageAdministration/${user?.school}/pageStudents/pageAdmission`}
-                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageStudents/pageAdmission`) && "text-white"
+                              href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents/pageAdmission`}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname.includes(`/${domain}/Section-H/pageAdministration/${user?.school}/pageStudents/pageAdmission`) && "text-white"
                                 }`}
                             >
                               New Admission
@@ -754,8 +768,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Users --> */}
               <li>
                 <Link
-                  href={`/Section-H/pageAdministration/${user?.school}/pageUsers`}
-                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageUsers`) &&
+                  href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUsers`}
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes(`/${domain}/Section-H/pageAdministration/${user?.school}/pageUsers`) &&
                     "bg-graydark dark:bg-meta-4"
                     }`}
                 >
@@ -810,15 +824,15 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 {/* <!-- Menu Settings --> */}
                 <SidebarLinkGroup
                   activeCondition={
-                    pathname === `/Section-H/pageAdministration/${user?.school}/pageSettings` || pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageSettings`)
+                    pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings` || pathname.includes(`/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings`)
                   }
                 >
                   {(handleClick, open) => {
                     return (
                       <React.Fragment>
                         <Link
-                          href={`/Section-H/pageAdministration/${user?.school}/pageSettings`}
-                          className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/Section-H/pageAdministration/${user?.school}/pageSettings` ||
+                          href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings`}
+                          className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings` ||
                               pathname.includes(`/pageAdministration/${user?.school}/pageSettings`)) &&
                             "bg-graydark dark:bg-meta-4"
                             }`}
@@ -885,8 +899,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageSettings/pageDomains`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === "/Section-H/pageAdministration/pageSettings/pageDomains" &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings/pageDomains`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === "/${domain}/Section-H/pageAdministration/pageSettings/pageDomains" &&
                                   "text-white"
                                   }`}
                               >
@@ -896,8 +910,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageSettings/pageFields`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === "/Section-H/pageAdministration/pageSettings/pageFields" &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings/pageFields`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === "/${domain}/Section-H/pageAdministration/pageSettings/pageFields" &&
                                   "text-white"
                                   } `}
                               >
@@ -907,8 +921,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageSettings/pageSpecialties`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageSettings/pageSpecialties` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings/pageSpecialties`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings/pageSpecialties` &&
                                   "text-white"
                                   } `}
                               >
@@ -918,8 +932,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageSettings/pageCourses`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageSettings/pageCourses` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings/pageCourses`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings/pageCourses` &&
                                   "text-white"
                                   } `}
                               >
@@ -929,8 +943,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageSettings/pageLevels`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageSettings/pageLevels` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings/pageLevels`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings/pageLevels` &&
                                   "text-white"
                                   } `}
                               >
@@ -940,8 +954,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageSettings/pagePrograms`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageSettings/pagePrograms` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings/pagePrograms`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageSettings/pagePrograms` &&
                                   "text-white"
                                   } `}
                               >
@@ -962,15 +976,15 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 {/* <!-- Menu Utilities --> */}
                 <SidebarLinkGroup
                   activeCondition={
-                    pathname === `/Section-H/pageAdministration/${user?.school}/pageUtilities` || pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageUtilities`)
+                    pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities` || pathname.includes(`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities`)
                   }
                 >
                   {(handleClick, open) => {
                     return (
                       <React.Fragment>
                         <Link
-                          href={`/Section-H/pageAdministration/${user?.school}/pageUtilities`}
-                          className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/Section-H/pageAdministration/${user?.school}/pageUtilities` ||
+                          href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities`}
+                          className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities` ||
                               pathname.includes(`/pageAdministration/${user?.school}/pageUtilities`)) &&
                             "bg-graydark dark:bg-meta-4"
                             }`}
@@ -1037,8 +1051,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageUtilities/pagePlatformActivation`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageUtilities/pagePlatformActivation` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/pagePlatformActivation`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/pagePlatformActivation` &&
                                   "text-white"
                                   } `}
                               >
@@ -1047,8 +1061,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             </li>
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageUtilities`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageUtilities` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities` &&
                                   "text-white"
                                   } `}
                               >
@@ -1058,8 +1072,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageUtilities/Department`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageUtilities/Department` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/Department`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/Department` &&
                                   "text-white"
                                   } `}
                               >
@@ -1069,8 +1083,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageUtilities/Account`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageAtilities/Account` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/Account`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageAtilities/Account` &&
                                   "text-white"
                                   } `}
                               >
@@ -1079,8 +1093,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             </li>
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageUtilities/pageResetTokens`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageUtilities/pageResetToken` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/pageResetTokens`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/pageResetToken` &&
                                   "text-white"
                                   } `}
                               >
@@ -1103,15 +1117,15 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 {user && user?.is_superuser &&
                 <SidebarLinkGroup
                   activeCondition={
-                    pathname === `/Section-H/pageAdministration/${user?.school}/pageAdmin` || pathname.includes(`/Section-H/pageAdministration/${user?.school}/pageAdmin`)
+                    pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin` || pathname.includes(`/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin`)
                   }
                 >
                   {(handleClick, open) => {
                     return (
                       <React.Fragment>
                         <Link
-                          href={`/Section-H/pageAdministration/${user?.school}/pageAdmin`}
-                          className={`group hidden relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/Section-H/pageAdministration/${user?.school}/pageAdmin` ||
+                          href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin`}
+                          className={`group hidden relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${(pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin` ||
                               pathname.includes(`/pageAdministration/${user?.school}/pageAdmin`)) &&
                             "bg-graydark dark:bg-meta-4"
                             }`}
@@ -1178,8 +1192,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageAdmin`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageAdmin` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin` &&
                                   "text-white"
                                   } `}
                               >
@@ -1189,8 +1203,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageAdmin/Department`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageAdmin/Department` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin/Department`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin/Department` &&
                                   "text-white"
                                   } `}
                               >
@@ -1200,8 +1214,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/Section-H/pageAdministration/${user?.school}/pageAdmin/Account`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/Section-H/pageAdministration/${user?.school}/pageAdmin/Account` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin/Account`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin/Account` &&
                                   "text-white"
                                   } `}
                               >

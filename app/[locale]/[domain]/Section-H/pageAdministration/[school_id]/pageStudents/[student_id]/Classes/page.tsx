@@ -18,7 +18,7 @@ const page = async ({
 
   const apiData: GetUserProfileInter | any = await getData(protocol + "api" + params.domain + GetUserProfileUrl, { 
     id: params.student_id, 
-    fieldList: [ "id", "user__id", "user__full_name", "specialty__main_specialty__specialty_name", "specialty__academic_year", "specialty__level__level" ] 
+    fieldList: [ "id", "user__id", "user__full_name", "specialty__id", "specialty__main_specialty__specialty_name", "specialty__academic_year", "specialty__level__level" ] 
   });
 
   return (

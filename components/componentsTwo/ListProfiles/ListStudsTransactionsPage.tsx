@@ -1,10 +1,10 @@
 import Table from "@/componentsTwo/Table";
 import { TableRowClassName } from "@/constants";
-import { FaEye, FaPlus } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa6";
 import Link from "next/link";
-import TabsStudents from "@/[locale]/[domain]/Section-H/pageAdministration/[school_id]/pageStudents/TabsStudents";
 import { GetSchoolFeesInter, GetTransactionsInter } from "@/Domain/Utils-H/feesControl/feesInter";
 import FormModal from "../FormModal";
+import TabsStudents from "../TabsProfiles/TabsStudents";
 
 
 const columns = [
@@ -54,7 +54,9 @@ const ListStudsTransactionsPage = async ({ params, data, school }: { params: any
       <td className="hidden md:table-cell">{item.created_at}</td>
       <td>
         <div className="flex gap-2 items-center justify-center">
-          <Link href={`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageStudents/${item.id}/Info`}><FaEye size={20} /></Link>
+          <Link href={`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageStudents/${item.id}/Info`} className="border px-2 py-1 rounded">
+          View
+          </Link>
         </div>
       </td>
     </tr>

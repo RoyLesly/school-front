@@ -30,9 +30,12 @@ const page = async ({
         ]
     });
     const apiProfile: any = await getData(protocol + "api" + params.domain + GetUserProfileUrl, { id: params.userprofile_id, fieldList: ["user__username"] });
-    const apiDataSem1: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "I", publish_resit: true, fieldList: ["id", "ca", "exam", "resit", "course__main_course__course_name"] });
-    const apiDataSem2: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "II", publish_resit: true, fieldList: ["id", "ca", "exam", "resit", "course__main_course__course_name"] });
+    const apiDataSem1: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "I", publish_resit: true, fieldList: ["id", "ca", "exam", "resit", "course__main_course__course_name", "average"] });
+    const apiDataSem2: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "II", publish_resit: true, fieldList: ["id", "ca", "exam", "resit", "course__main_course__course_name", "average"] });
 
+    console.log(apiDataSem1, 1)
+    console.log(apiDataSem2, 2)
+    console.log(apiSchoolFees, 2)
     return (
         <div>
             {apiSchoolFees ?
@@ -65,19 +68,22 @@ const page = async ({
                                 <Suspense fallback={<div>Loading ...</div>}>
                                     {apiDataSem1?.count ?
                                         <>
-                                            {(apiSchoolFees[0].userprofile__specialty__tuition - apiSchoolFees[0].balance) > (apiSchoolFees[0].userprofile__specialty__tuition * (ConfigData[`${params.domain}`]['higher'].schoolfees_control[1] / 100)) ?
-                                                apiDataSem1.results.map((item: GetResultInter, key: number) => (
+                                            {(apiSchoolFees[0].userprofile__specialty__tuition - apiSchoolFees[0].balance) > (apiSchoolFees[0].userprofile__specialty__tuition * (ConfigData[`${params.domain}`]['higher'].schoolfees_control[0] / 100)) ?
+                                                apiDataSem1.results.filter((item: GetResultInter) => (item.ca + item.exam) < 50).map((item: GetResultInter, key: number) => (
                                                     <div
                                                         className="border-stroke border-t dark:border-strokedark dark:text-white grid grid-cols-12 md:grid-cols-12 odd:bg-slate-50 odd:dark:bg-slate-800 px-2 text-back text-black"
                                                         key={key}
                                                     >
-                                                        <div className="col-span-10 flex items-end">
+                                                        <div className="col-span-8 flex items-end">
                                                             <span className="md:text-lg text-sm">
                                                                 {item.course__main_course__course_name}
                                                             </span>
                                                         </div>
                                                         <div className="col-span-2 flex items-end justify-between">
-                                                            <span className="">{item.ca}</span>
+                                                            <span className="">{item.resit}</span>
+                                                        </div>
+                                                        <div className="col-span-2 flex items-end justify-between">
+                                                            <span className="">{item.average}</span>
                                                             {item.resit && <span className="items-start"><span className='font-bold text-lg text-red'>*</span></span>}
                                                         </div>
 
@@ -90,10 +96,6 @@ const page = async ({
                                                 <div className='flex font-medium items-center justify-center px-10 py-24 text-center text-wrap tracking-wider'>Not Meeting Minimum Required School Fees to View Results</div>
                                             }
 
-                                            <button className="bg-bluedark flex font-medium items-center justify-center md:gap-2 md:text-lg mt-4 px-4 py-1 rounded text-white">
-                                                Download <FaDownload />
-                                            </button>
-
                                         </>
                                         :
                                         <div className='flex font-medium items-center justify-center py-24 tracking-wider'>No Resit Results</div>
@@ -101,8 +103,6 @@ const page = async ({
                                 </Suspense>
 
                             </div>
-
-
 
 
 
@@ -123,34 +123,31 @@ const page = async ({
                                 <Suspense fallback={<div>Loading ...</div>}>
                                     {apiDataSem2?.count ?
                                         <>
-                                            {(apiSchoolFees[0].userprofile__specialty__tuition - apiSchoolFees[0].balance) > (apiSchoolFees[0].userprofile__specialty__tuition * (ConfigData[`${params.domain}`]['higher'].schoolfees_control[3] / 100)) ?
-                                                apiDataSem1.results.map((item: GetResultInter, key: number) => (
+                                            {(apiSchoolFees[0].userprofile__specialty__tuition - apiSchoolFees[0].balance) > (apiSchoolFees[0].userprofile__specialty__tuition * (ConfigData[`${params.domain}`]['higher'].schoolfees_control[2] / 100)) ?
+                                                apiDataSem2.results.filter((item: GetResultInter) => (item.ca + item.exam) < 50).map((item: GetResultInter, key: number) => (
                                                     <div
                                                         className="border-stroke border-t dark:border-strokedark dark:text-white grid grid-cols-12 md:grid-cols-12 odd:bg-slate-50 odd:dark:bg-slate-800 px-2 text-back text-black"
                                                         key={key}
                                                     >
-                                                        <div className="col-span-10 flex items-end">
+                                                        <div className="col-span-8 flex items-end">
                                                             <span className="md:text-lg text-sm">
                                                                 {item.course__main_course__course_name}
                                                             </span>
                                                         </div>
                                                         <div className="col-span-2 flex items-end justify-between">
                                                             <span className="">{item.resit}</span>
+                                                        </div>
+                                                        <div className="col-span-2 flex items-end justify-between">
+                                                            <span className="">{item.average}</span>
                                                             {item.resit && <span className="items-start"><span className='font-bold text-lg text-red'>*</span></span>}
                                                         </div>
 
                                                     </div>
 
-
-
                                                 ))
                                                 :
                                                 <div className='flex font-medium items-center justify-center px-10 py-24 text-center text-wrap tracking-wider'>Not Meeting Minimum Required School Fees to View Results</div>
                                             }
-
-                                            <button className="bg-bluedark flex font-medium items-center justify-center md:gap-2 md:text-lg mt-4 px-4 py-1 rounded text-white">
-                                                Download <FaDownload />
-                                            </button>
 
                                         </>
                                         :

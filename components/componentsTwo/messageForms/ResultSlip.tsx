@@ -61,7 +61,7 @@ const ResultSlip = ({
   const [show, setShow] = useState<boolean>(false)
   const contentToPrint = useRef(null);
   // const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
-  const targetRef = () => document.getElementById("result_slip")
+  const targetRef = () => document.getElementById("slip")
 
   const handlePrint = useReactToPrint({
     documentTitle: `${extra_data[0]} - ${data ? data[0].student__user__full_name : ""}`,
@@ -83,7 +83,7 @@ const ResultSlip = ({
       {/* <div className={show ? "" : "hidden"}> */}
       <div className={show ? "" : ""}>
         <div
-          id="result_slip"
+          id="slip"
           // ref={contentToPrint}
           // ref={targetRef}
           className="bg-white border-[4px] border-teal-800 flex flex-col h-[559px] p-2 rounded-lg text-black w-[793px]"

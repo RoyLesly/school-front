@@ -15,8 +15,9 @@ const page = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
-  const apiData: any = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { nopage: true, role: "admin", is_staff: false, school__id: params.school_id, ...searchParams, fieldList: [
-    "id", "full_name", "telephone", "matricle", "email", "sex", "title", "first_name", "last_name", "title", "dob", "pob"
+  const apiData: any = await getData(protocol + "api" + params.domain + GetCustomUserUrl, { 
+    nopage: true, role: "admin", is_staff: false, is_active: true, school__id: params.school_id, ...searchParams, fieldList: [
+    "id", "full_name", "telephone", "matricle", "email", "sex", "title", "first_name", "last_name", "title", "dob", "pob", "address"
   ] })
   
   return (
@@ -25,7 +26,7 @@ const page = async ({
 
         {searchParams && <NotificationError errorMessage={searchParams} />}
 
-        {apiData && <ListAdminsPage params={params} data={apiData} />}
+        {apiData && <ListAdminsPage params={params} data={apiData} searchParams={searchParams} />}
 
       </>
     </LayoutAdmin>

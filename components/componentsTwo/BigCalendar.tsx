@@ -1,10 +1,8 @@
 "use client";
 
 import { Calendar, dateFnsLocalizer, View, Views } from "react-big-calendar";
-import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState } from "react";
-import { calendarEvents } from "./lib/data";
 import { format, parse, startOfWeek, getDay, Locale } from 'date-fns';
 import enUS from 'date-fns/locale/en-US';
 
@@ -35,9 +33,10 @@ const BigCalendar = ({ data, selectedDate }: { selectedDate: any, data: any }) =
   };
 
   return (
-      <Calendar
+      <div className="hidden md:flex">
+        <Calendar
         localizer={localizer}
-        events={calendarEvents}
+        events={data}
         startAccessor="start"
         defaultDate={selectedDate}
         endAccessor="end"
@@ -49,8 +48,9 @@ const BigCalendar = ({ data, selectedDate }: { selectedDate: any, data: any }) =
         onSelectSlot={(e) => { console.log(e, 71) }}
         onDoubleClickEvent={(e) => { console.log(e, 72) }}
         min={new Date(2024, 7, 0, 8, 0,)}
-        max={new Date(2024, 7, 0, 18, 0, 0)}
+        max={new Date(2024, 7, 0, 21, 0,)}
       />
+      </div>
   );
 };
 

@@ -1,4 +1,3 @@
-import TabsCourse from "@/[locale]/[domain]/Section-H/pageAdministration/[school_id]/pageSettings/pageCourses/TabsCourse";
 import FormModal from "@/componentsTwo/FormModal";
 import Table from "@/componentsTwo/Table";
 import { TableRowClassName } from "@/constants";
@@ -11,6 +10,7 @@ import TableSearch from "../TableSearch";
 import { getData } from "@/functions";
 import { protocol } from "@/config";
 import { AcademicYearUrl, GetDomainUrl, GetLevelUrl, GetMainCourseUrl } from "@/Domain/Utils-H/appControl/appConfig";
+import TabsCourse from "../TabsSettings/TabsCourse";
 
 
 const columns = [
@@ -22,7 +22,7 @@ const columns = [
   {
     header: "Course Name",
     accessor: "main_course__course_name",
-    className: "table-cell w-3/12 md:w-3/12",
+    className: "table-cell w-10/12 md:w-3/12",
   },
   {
     header: "class",
@@ -52,7 +52,7 @@ const columns = [
   {
     header: "Actions",
     accessor: "action",
-    className: "table-cell w-1/12 md:w-1/12",
+    className: "table-cell w-2/12 md:w-1/12",
   },
 ];
 
@@ -61,7 +61,7 @@ const ListCoursePage = async ({ params, data }: { params: any, data: GetCourseIn
   const apiYears: any[] = await getData(protocol + "api" + params.domain + AcademicYearUrl, { nopage: true })
   const apiDomains: any[] = await getData(protocol + "api" + params.domain + GetDomainUrl, { nopage: true })
   const apiMainCourses: any[] = await getData(protocol + "api" + params.domain + GetMainCourseUrl, { nopage: true })
-  const apiLevel: any[] = await getData(protocol + "api" + params.domain + GetLevelUrl, { nopage: true })
+  const apiLevels: any[] = await getData(protocol + "api" + params.domain + GetLevelUrl, { nopage: true })
 
   const thisYear = new Date().getFullYear();
 
@@ -80,7 +80,9 @@ const ListCoursePage = async ({ params, data }: { params: any, data: GetCourseIn
       <td>
         <div className="flex gap-2 items-center">
           <button className="bg-blue-300 flex h-7 items-center justify-center rounded-full w-7">
-            <FormModal table="course" type="update" params={params} id={item.id} data={item} icon={<MdModeEdit />} extra_data={[apiDomains, apiMainCourses, apiLevel]} />
+            <FormModal table="course" type="update" params={params} id={item.id} data={item} icon={<MdModeEdit />} extra_data={
+            { apiDomains: apiDomains, canEdit: true, apiMainCourses: apiMainCourses, apiLevel: apiLevels }
+          } />
           </button>
           <button className="bg-blue-300 flex h-7 items-center justify-center rounded-full w-7">
             <FormModal table="course" type="delete" params={params} data={item} icon={<RiDeleteBin2Line />} />
@@ -101,11 +103,11 @@ const ListCoursePage = async ({ params, data }: { params: any, data: GetCourseIn
         <div className="flex gap-2 items-center w-full">
           <MyPageTitle title={"Courses"} />
           <TableSearch placeholder="By Course Name" searchString="main_course__course_name" />
-          <TableSearch placeholder="By Class" searchString="specialty__main_specialty__specialty_name" />
-          <TableSearch placeholder="By Level" searchString="specialty__level__level" />
+          <div className="hidden md:flex"><TableSearch placeholder="By Class" searchString="specialty__main_specialty__specialty_name" /></div>
+          <div className="hidden md:flex"><TableSearch placeholder="By Level" searchString="specialty__level__level" /></div>
           <div className="flex flex-row gap-2 justify-end md:gap-4 md:w-30 w-full">
             <button className="bg-blue-300 flex h-7 items-center justify-center rounded-full w-10">
-              <FormModal table="course" type="create" params={params} icon={<FaPlus />} extra_data={[apiDomains, apiMainCourses, apiLevel]} />
+              <FormModal table="course" type="create" params={params} icon={<FaPlus />} extra_data={ {apiDomains: apiDomains, apiMainCourses: apiMainCourses, apiLevels: apiLevels , canCreate: true} } />
             </button>
           </div>
         </div>

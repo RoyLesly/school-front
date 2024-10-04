@@ -168,6 +168,21 @@ export type PublishInter = {
 
 
 
+
+export type GetSchoolIdentificationInter = {
+  id: number;
+  name: string;
+  front_end: string;
+  back_end: string;
+  school_type: string;
+  status: string;
+  created_by__full_name?: string;
+  created_at: string;
+  updated_by__full_name?: string;
+  updated_at: string;
+};
+
+
 export type GetSchoolInfoInter = {
   id: number;
   campus__id:number;
