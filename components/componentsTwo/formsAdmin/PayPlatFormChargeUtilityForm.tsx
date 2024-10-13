@@ -22,7 +22,7 @@ const SchemaCreate = z.object({
 
 type Inputs = z.infer<typeof SchemaCreate>;
 
-const PayPlatFormChargeForm = ({
+const PayPlatFormChargeUtilityForm = ({
   type,
   data,
   params,
@@ -32,7 +32,7 @@ const PayPlatFormChargeForm = ({
   type: "custom";
   extra_data: { onActivate: any, url: string, type: "single" | "multiple" };
   params: any;
-  data?: GetSchoolFeesInter;
+  data?: GetSchoolFeesInter[];
   setOpen?: any;
 }) => {
   const { register, handleSubmit, formState: { errors }, } = useForm<Inputs>({
@@ -52,12 +52,36 @@ const PayPlatFormChargeForm = ({
       telephone: parseInt(formVals.telephone.toString()),
     }
 
-    if (data && data.id && newData.amount && newData.service && newData.telephone) {
+    if (data && data.length == 1 && newData.amount && newData.service && newData.telephone) {
       const call = async () => {
         const response = await makePayment(newData);
         if (response && response.success) {
           if (response.pay.operation) {
-            const response2 = await ActionEdit({...data, userprofile_id: data.userprofile__id, platform_paid: true}, data.id, SchemaCreateEditSchoolFees, protocol + "api" + params.domain + SchoolFeesUrl)
+            const response2 = await ActionEdit({...data, userprofile_id: data[0].userprofile__id, platform_paid: true}, data[0].id, SchemaCreateEditSchoolFees, protocol + "api" + params.domain + SchoolFeesUrl)
+            if (response2 && response2.id){
+              router.push(`/${extra_data?.url}?customsuccess=Activated !!!`);
+              setClicked(false)
+            }
+          }
+          if (!response.pay.operation) {
+            router.push(`/${extra_data?.url}?customerror=${response.pay.transaction} !!!`);
+            setClicked(false)
+          }
+        }
+        if (response && response.error) {
+          router.push(`/${extra_data?.url}?customerror=${response.error} !!!`);
+          setClicked(false)
+        }
+      }
+      call()
+    }
+
+    if (0 && data && data.length > 1 && newData.amount && newData.service && newData.telephone) {
+      const call = async () => {
+        const response = await makePayment(newData);
+        if (response && response.success) {
+          if (response.pay.operation) {
+            const response2 = await ActionEdit({...data, userprofile_id: data[0].userprofile__id, platform_paid: true}, data[0].id, SchemaCreateEditSchoolFees, protocol + "api" + params.domain + SchoolFeesUrl)
             if (response2 && response2.id){
               router.push(`/${extra_data?.url}?customsuccess=Activated !!!`);
               setClicked(false)
@@ -100,7 +124,7 @@ const PayPlatFormChargeForm = ({
               <InputField
                 label="Amount"
                 name="amount"
-                defaultValue={data.platform_charges.toString()}
+                defaultValue={data[0].platform_charges.toString()}
                 register={register}
                 error={errors?.amount}
                 readOnly={true}
@@ -124,7 +148,7 @@ const PayPlatFormChargeForm = ({
                 label="ID"
                 name="id"
                 register={register}
-                defaultValue={data.id.toString()}
+                defaultValue={data[0].id.toString()}
                 readOnly={true}
                 className="hidden"
               />
@@ -164,7 +188,7 @@ const PayPlatFormChargeForm = ({
               <InputField
                 label="Amount"
                 name="amount"
-                defaultValue={data.platform_charges.toString()}
+                defaultValue={data[0].platform_charges.toString()}
                 register={register}
                 error={errors?.amount}
                 readOnly={true}
@@ -209,4 +233,4 @@ const PayPlatFormChargeForm = ({
   );
 };
 
-export default PayPlatFormChargeForm;
+export default PayPlatFormChargeUtilityForm;

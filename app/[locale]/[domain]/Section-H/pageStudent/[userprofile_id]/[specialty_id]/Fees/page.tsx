@@ -1,35 +1,39 @@
 import NotificationError from '@/section-h/common/NotificationError';
 import { getData } from '@/functions';
-import Link from 'next/link';
 import React, { FC } from 'react'
 import { GrStatusGood } from 'react-icons/gr';
 import { GetSchoolFeesInter, GetTransactionsInter } from '@/Domain/Utils-H/feesControl/feesInter';
-import { GetSchoolFeesUrl, GetTransactionUrl } from '@/Domain/Utils-H/feesControl/feesConfig';
+import { GetSchoolFeesUrl, GetTransactionUrl, TransactionUrl } from '@/Domain/Utils-H/feesControl/feesConfig';
 import { protocol } from '@/config';
+import FormModal from '@/componentsTwo/FormModal';
+import { FaPlus } from 'react-icons/fa6';
+import { redirect } from 'next/navigation';
+import { SchemaTransactionCreate } from '@/Domain/schemas/schemas';
+import { ActionCreate } from '@/serverActions/actionGeneral';
+import { collectMoney } from '@/payment';
+import initTranslations from '@/i18n';
 
 
 const page = async ({
   params,
   searchParams,
 }: {
-  params: { userprofile_id: string,  domain: string, specialty_id: string };
+  params: { locale: string, userprofile_id: string, domain: string, specialty_id: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
 
-  const schoolFees: any = await getData(protocol + "api" + params.domain + GetSchoolFeesUrl, {
-    userprofile__id: params.userprofile_id, fieldList: [
-      "id", "userprofile__user__full_name", "userprofile__specialty__main_specialty__specialty_name", "balance", "platform_paid",
-      "userprofile__specialty__tuition", "userprofile__user__matricle", "userprofile__specialty__academic_year", "userprofile__specialty__level__level",
+  const apiSchoolFees: any = await getData(protocol + "api" + params.domain + GetSchoolFeesUrl, {
+    userprofile__id: params.userprofile_id, nopage: true, fieldList: [
+      'id', "userprofile__id", "platform_paid", "balance", "userprofile__specialty__tuition", "platform_charges",
       "userprofile__specialty__payment_one", "userprofile__specialty__payment_two", "userprofile__specialty__payment_three"
     ]
-  });
+});
 
-  console.log(schoolFees, 21)
 
   return (
     <div className='mt-16 px-2'>
       {searchParams && <NotificationError errorMessage={searchParams} />}
-      {schoolFees && schoolFees.count && <List schoolfees={schoolFees.results[0]} params={params} />}
+      {apiSchoolFees && apiSchoolFees.length && <List apiSchoolFees={apiSchoolFees[0]} params={params} />}
     </div>
   )
 }
@@ -39,49 +43,107 @@ export default page
 
 
 interface Props {
-  schoolfees: GetSchoolFeesInter
+  apiSchoolFees: GetSchoolFeesInter
   params: any
 }
-const List: FC<Props> = async ({ schoolfees, params }) => {
+const List: FC<Props> = async ({ apiSchoolFees, params }) => {
 
+  const { t } = await initTranslations(params.locale, ['common'])
 
   const transactions: any = await getData(protocol + "api" + params.domain + GetTransactionUrl, {
-    schoolfees__id: schoolfees.id, fieldList: [
+    schoolfees__id: apiSchoolFees.id, fieldList: [
       "id", "schoolfees__id", "amount", "reason", "status", "telephone", "payer_name", "operator", "ref",
       "created_by__first_name", "payment_method", "created_at"
     ]
   });
+  const onActivate = async (formData: FormData) => {
+    "use server"
+
+    var payer = formData.get("telephone");
+    var operator = formData.get("operator");
+    var url = formData.get("url");
+    var origin = formData.get("origin");
+
+    const data = {
+      schoolfees_id: apiSchoolFees.id,
+      telephone: payer,
+      operator: operator,
+      payment_method: operator,
+      amount: apiSchoolFees.platform_charges,
+      reason: "Platform Charges",
+      account: "PLATFORM CHARGES",
+      status: "completed",
+      operation_type: "other",
+      origin: origin,
+    }
+
+    var pay: any = await collectMoney({ amount: data.amount, service: data.operator, payer: payer });
+    console.log(pay, 72);
+
+    if (!pay.operation && pay.transaction == "could-not-perform-transaction") {
+      redirect(`${url}?customerror=Transaction Cancelled by User`)
+    }
+    if (!pay.operation && pay.transaction == "low-balance-payer") {
+      redirect(`${url}?customerror=Not Enough Funds`)
+    }
+    if (!pay.operation && pay.transaction == "ENOTFOUND") {
+      redirect(`${url}?error=Transaction Error`)
+    }
+    if (!pay.operation && !pay.transaction) {
+      redirect(`${url}?error=Transaction Error`)
+    }
+
+    if (pay.operation) {
+      const response = await ActionCreate(data, SchemaTransactionCreate, protocol + "api" + params.domain + TransactionUrl)
+      console.log(response, 80)
+
+      if (response.error) {
+        redirect(`${url}?error=${JSON.stringify(response.error).replaceAll(" ", "-")}`)
+      }
+      if (response?.errors) {
+        redirect(`${url}?error=${JSON.stringify(response.errors).replaceAll(" ", "-")}`)
+      }
+      if (response?.detail) {
+        redirect(`${url}?error=${JSON.stringify(response.detail).replaceAll(" ", "-")}`)
+      }
+      if (response?.id) {
+        redirect(`${params.domain}/Section-H/pageStudent/${params.userprofile_id}/${params.specialty_id}/Fees?success=Successfully Activated-${JSON.stringify(response.schoolfees.userprofile.user.full_name).replaceAll(" ", "-")}`)
+      }
+    } else {
+    //   redirect(`${url}/${params.schoolfees_id}?error=Transaction Failed`)
+    }
+}
 
 
   return <div className='bg-slate-50 mb-32 rounded text-black'>
 
     <div className='flex flex-col items-center justify-center'>
-      <span className='flex font-semibold items-center py-2 text-center text-lg text-wrap'>{schoolfees.userprofile__user__full_name} - {schoolfees.userprofile__user__matricle}</span>
-      <span>{schoolfees.userprofile__specialty__main_specialty__specialty_name}</span>
-      <span>Academic Year: {schoolfees.userprofile__specialty__academic_year}</span>
+      <span className='flex font-semibold items-center py-2 text-center text-lg text-wrap'>{apiSchoolFees.userprofile__user__full_name} - {apiSchoolFees.userprofile__user__matricle}</span>
+      <span>{apiSchoolFees.userprofile__specialty__main_specialty__specialty_name}</span>
+      <span>Academic Year: {apiSchoolFees.userprofile__specialty__academic_year}</span>
     </div>
 
     <div className='flex items-center justify-between px-2'>
-      <div>      
-        <span>Level: {schoolfees.userprofile__specialty__level__level}</span>
+      <div>
+        <span>Level: {apiSchoolFees.userprofile__specialty__level__level}</span>
       </div>
-      <div>      
-        <span className='text-lg'>Tuition: {schoolfees.userprofile__specialty__tuition.toLocaleString()} F</span>
+      <div>
+        <span className='text-lg'>Tuition: {apiSchoolFees.userprofile__specialty__tuition.toLocaleString()} F</span>
       </div>
     </div>
 
     <div className='flex items-center justify-between px-2'>
       <div className='flex flex-row gap-2 items-center justify-between text-sm'>
         <span className='flex'>1st: </span>
-        <span className='font-semibold italic'>{schoolfees.userprofile__specialty__payment_one.toLocaleString()} F</span>
+        <span className='font-semibold italic'>{apiSchoolFees.userprofile__specialty__payment_one.toLocaleString()} F</span>
       </div>
       <div className='flex flex-row gap-2 items-center justify-between text-sm'>
         <span className='flex'>2nd: </span>
-        <span className='font-semibold italic'>{schoolfees.userprofile__specialty__payment_two.toLocaleString()} F</span>
+        <span className='font-semibold italic'>{apiSchoolFees.userprofile__specialty__payment_two.toLocaleString()} F</span>
       </div>
       <div className='flex flex-row gap-2 items-center justify-between text-sm'>
         <span className='flex'>3rd: </span>
-        <span className='font-semibold italic'>{schoolfees.userprofile__specialty__payment_three.toLocaleString()} F</span>
+        <span className='font-semibold italic'>{apiSchoolFees.userprofile__specialty__payment_three.toLocaleString()} F</span>
       </div>
     </div>
 
@@ -109,7 +171,7 @@ const List: FC<Props> = async ({ schoolfees, params }) => {
     <div className='grid grid-cols-11 mt-4 text-lg'>
       <div className='col-span-1'></div>
       <div className='col-span-5'>Total Paid</div>
-      <div className='col-span-3 font-bold italic'>{(schoolfees.userprofile__specialty__tuition - schoolfees.balance).toLocaleString()} F</div>
+      <div className='col-span-3 font-bold italic'>{(apiSchoolFees.userprofile__specialty__tuition - apiSchoolFees.balance).toLocaleString()} F</div>
       <div className='col-span-2'></div>
     </div>
 
@@ -120,18 +182,31 @@ const List: FC<Props> = async ({ schoolfees, params }) => {
       </div>
       <div className='flex gap-4 items-center'>
         <span className='flex'>Balance:</span>
-        <span className='flex font-semibold'>{(schoolfees.userprofile__specialty__tuition - (schoolfees.userprofile__specialty__tuition - schoolfees.balance)).toLocaleString()} F</span>
+        <span className='flex font-semibold'>{(apiSchoolFees.userprofile__specialty__tuition - (apiSchoolFees.userprofile__specialty__tuition - apiSchoolFees.balance)).toLocaleString()} F</span>
       </div>
     </div>
 
     <div className='flex gap-6 items-center justify-between mb-2 mt-10 px-4'>
       <span>Account Status:</span>
-      <div>{schoolfees.platform_paid ? 
-        <span className='px-4 py-1 rounded'><GrStatusGood color='green' size={40} /></span> 
-        : 
-        <div className='flex gap-2'>
-          <Link href={`/${params.domain}/Section-H/pageStudent/${params.userprofile_id}/${params.specialty_id}/Fees/Activate`} className='bg-red font-medium px-4 py-1 rounded text-white'>Activate</Link>
-        </div>}
+      <div>{apiSchoolFees.platform_paid ?
+        <span className='px-4 py-1 rounded'><GrStatusGood color='green' size={40} /></span>
+        :
+        <FormModal
+          table="platform_charge"
+          type="custom"
+          params={params}
+          icon={<FaPlus />}
+          data={apiSchoolFees}
+          extra_data={{
+            url: `${params.domain}/Section-H/pageStudent/${params.userprofile_id}/${params.specialty_id}/Fees`,
+            type: "single",
+            onActivate: onActivate,
+          }}
+          buttonTitle={`Activate`}
+          // buttonTitle={`${t("pay_now")}`}
+          customClassName={`flex gap-2 border bg-bluedash px-6 py-2 rounded text-white font-medium capitalize gap-2 cursor-pointer`}
+        />
+      }
       </div>
     </div>
 

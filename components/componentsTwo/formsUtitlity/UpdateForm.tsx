@@ -14,9 +14,6 @@ const UpdateForm = ({ params, years, accounts }: any) => {
 
     const updateAction = async () => {
         setClicked(true)
-        console.log(years, 14)
-        console.log(accounts, 15)
-
 
         var data = []
         for (let index = 0; index < years.length; index++) {
@@ -32,8 +29,6 @@ const UpdateForm = ({ params, years, accounts }: any) => {
             }
         }
 
-        console.log(data, 29)
-
         if (data && data.length > 0) {
             await Promise.allSettled(data.map((item: any, index: number) => {
                 return (
@@ -44,8 +39,8 @@ const UpdateForm = ({ params, years, accounts }: any) => {
                     console.log(10500, res)
                     if (res && res.length > 0) {
                         const t = res.map(item => item.status)
-                        if (t[0] == "fulfilled") { router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageAdmin/Account?updated=SUCCESSFULLY !!!`); }
-                        else { router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageAdmin/Account?error=${t[0]}`); }
+                        if (t[0] == "fulfilled") { router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageUtilities/Account?updated=SUCCESSFULLY !!!`); }
+                        else { router.push(`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageUtilities/Account?error=${t[0]}`); }
                     }
                 })
                 .catch(err => {

@@ -1061,8 +1061,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             </li>
                             <li>
                               <Link
-                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/SysConstant`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/SysConstant` &&
                                   "text-white"
                                   } `}
                               >
@@ -1192,8 +1192,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities` &&
                                   "text-white"
                                   } `}
                               >
@@ -1203,8 +1203,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin/Department`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin/Department` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/Department`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/Department` &&
                                   "text-white"
                                   } `}
                               >
@@ -1214,8 +1214,8 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
                             <li>
                               <Link
-                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin/Account`}
-                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageAdmin/Account` &&
+                                href={`/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/Account`}
+                                className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === `/${domain}/Section-H/pageAdministration/${user?.school}/pageUtilities/Account` &&
                                   "text-white"
                                   } `}
                               >

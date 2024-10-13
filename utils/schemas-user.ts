@@ -53,6 +53,7 @@ export const SchemaCreateEditPreIncription = z.object({
     emergency_telephone: z.coerce.number().optional(),
     specialty_one: z.string().optional(),
     specialty_two: z.string().optional(),
+    specialty_three: z.string().optional(),
     academic_year: z.string().optional(),
     session: z.string().optional(),
     level: z.string().optional(),

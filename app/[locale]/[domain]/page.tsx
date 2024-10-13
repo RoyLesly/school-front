@@ -53,6 +53,7 @@ const Home = async ({
 
       <Link href="/pageAuthentication/Login" className="bg-teal-600 mt-4 px-6 py-2 rounded text-white text-xl tracking-widest uppercase">{t("login")}</Link>
 
+<div className="mt-40 opacity-50 text-[8px]">Main v3.0</div>
     </div>
   );
 };

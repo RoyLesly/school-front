@@ -55,8 +55,8 @@ const page = async ({
 export default page
 
 export const metadata: Metadata = {
-  title: "Result Settings",
-  description: "This is Result Settings Page",
+  title: "Results",
+  description: "This is Results Page",
 };
 
 
@@ -73,7 +73,7 @@ const EditDelete: FC<EditDeleteProps> = async ({ apiStudentInfo, params }) => {
   const apiMyResultsII: any = await getData(protocol + "api" + params.domain + GetResultUrl, { active: true, nopage: true, student__id: apiStudentInfo.id, course__specialty__id: apiStudentInfo.specialty__id, course__semester: "II", fieldList: ["id", "course__main_course__course_name", "course__assigned_to__full_name", "course__semester", "ca", "exam", "resit", "average", "validated"] });
   const apiSchoolFeesInfo: any = await getData(protocol + "api" + params.domain + GetSchoolFeesUrl, {
     userprofile__id: apiStudentInfo.id, nopage: true, fieldList: [
-      'id', "platform_paid", "balance", "userprofile__specialty__tuition", "platform_charges",
+      'id', "userprofile__id", "platform_paid", "balance", "userprofile__specialty__tuition", "platform_charges",
       "userprofile__specialty__payment_one", "userprofile__specialty__payment_two", "userprofile__specialty__payment_three"
     ]
   });
@@ -86,7 +86,7 @@ const EditDelete: FC<EditDeleteProps> = async ({ apiStudentInfo, params }) => {
       var operator = formData.get("operator");
       var url = formData.get("url");
       var origin = formData.get("origin");
-  
+
       const data = {
         schoolfees_id: apiSchoolFeesInfo[0].id,
         telephone: payer,
@@ -100,12 +100,8 @@ const EditDelete: FC<EditDeleteProps> = async ({ apiStudentInfo, params }) => {
         origin: origin,
       }
 
-      console.log(url, 105)
-      console.log(data, 105)
-  
       var pay: any = await collectMoney({ amount: data.amount, service: data.operator, payer: payer });
-      console.log(pay, 72);
-  
+
       if (!pay.operation && pay.transaction == "could-not-perform-transaction") {
         redirect(`${url}?customerror=Transaction Cancelled by User`)
       }
@@ -118,11 +114,11 @@ const EditDelete: FC<EditDeleteProps> = async ({ apiStudentInfo, params }) => {
       if (!pay.operation && !pay.transaction) {
         redirect(`${url}?error=Transaction Error`)
       }
-  
+
       if (pay.operation) {
         const response = await ActionCreate(data, SchemaTransactionCreate, protocol + "api" + params.domain + TransactionUrl)
         console.log(response, 80)
-  
+
         if (response.error) {
           redirect(`${url}?error=${JSON.stringify(response.error).replaceAll(" ", "-")}`)
         }
@@ -139,8 +135,14 @@ const EditDelete: FC<EditDeleteProps> = async ({ apiStudentInfo, params }) => {
         redirect(`${url}/${params.schoolfees_id}?error=Transaction Failed`)
       }
     }
+
     return <div className="flex item justify-center mx-4 text-center">
-      <AccountActivation onActivate={onActivate} params={params} schoolfees={apiSchoolFeesInfo[0]} url={`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageStudents/${params.student_id}/Results`} />
+      <AccountActivation
+        onActivate={onActivate}
+        params={params}
+        schoolfees={apiSchoolFeesInfo[0]}
+        url={`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageStudents/${params.student_id}/Results`}
+      />
 
     </div>
   }
@@ -163,7 +165,6 @@ const EditDelete: FC<EditDeleteProps> = async ({ apiStudentInfo, params }) => {
 
 
   return (
-  // <></>
     <div className="bg-white border border-stroke dark:bg-boxdark dark:border-strokedark p-2 rounded-sm shadow-default">
 
       <div className='flex items-center justify-between p-2'>
@@ -194,9 +195,10 @@ const EditDelete: FC<EditDeleteProps> = async ({ apiStudentInfo, params }) => {
 
         {
           (apiSchoolFeesInfo[0].userprofile__specialty__tuition - apiSchoolFeesInfo[0].balance) >= (apiSchoolFeesInfo[0].userprofile__specialty__tuition * ConfigData[params.domain].higher.schoolfees_control[1]) ?
-          <Table columns={columns} renderRow={renderRow} data={apiMyResultsI} />
-          :
-          <div className='flex font-medium italic items-center justify-center py-32 text-xl tracking-wide'>Not Meeting Minimum School Fee Requirements {(apiSchoolFeesInfo[0].userprofile__specialty__tuition * ConfigData[params.domain].higher.schoolfees_control[1]).toLocaleString()} F</div>
+            <Table columns={columns} renderRow={renderRow} data={apiMyResultsI} />
+            :
+            <div className='flex font-medium italic items-center justify-center py-32 text-xl tracking-wide'>
+              Not Meeting Minimum School Fee Requirements {(apiSchoolFeesInfo[0].userprofile__specialty__tuition * ConfigData[params.domain].higher.schoolfees_control[1]).toLocaleString()} F</div>
         }
       </div>
 
@@ -209,9 +211,9 @@ const EditDelete: FC<EditDeleteProps> = async ({ apiStudentInfo, params }) => {
 
         {
           (apiSchoolFeesInfo[0].userprofile__specialty__tuition - apiSchoolFeesInfo[0].balance) >= (apiSchoolFeesInfo[0].userprofile__specialty__tuition * ConfigData[params.domain].higher.schoolfees_control[3]) ?
-          <Table columns={columns} renderRow={renderRow} data={apiMyResultsII} />
-          :
-          <div className='flex font-medium italic items-center justify-center py-32 text-xl tracking-wide'>Not Meeting Minimum School Fee Requirements {(apiSchoolFeesInfo[0].userprofile__specialty__tuition * ConfigData[params.domain].higher.schoolfees_control[3]).toLocaleString()} F</div>
+            <Table columns={columns} renderRow={renderRow} data={apiMyResultsII} />
+            :
+            <div className='flex font-medium italic items-center justify-center py-32 text-xl tracking-wide'>Not Meeting Minimum School Fee Requirements {(apiSchoolFeesInfo[0].userprofile__specialty__tuition * ConfigData[params.domain].higher.schoolfees_control[3]).toLocaleString()} F</div>
         }
 
       </div>

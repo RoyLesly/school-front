@@ -190,7 +190,7 @@ const PreInscriptionSlip = ({
                   <div className="flex gap-4">
                     <span className="w-5/12">Location:</span>
                     <span className={`font-semibold italic text-center w-7/12`}>
-                      {ConfigData[params.domain]["higher"].campus_geolocations.filter((item: any) => item.name == data?.campus)[0]["location"]}
+                      {ConfigData[params.domain]["higher"].campus.filter((item: any) => item.name == data?.campus)[0]["location"]}
                     </span>
                   </div>
                   <div className="flex gap-4">

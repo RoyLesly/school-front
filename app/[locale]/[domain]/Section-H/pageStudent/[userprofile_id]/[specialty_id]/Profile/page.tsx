@@ -38,9 +38,8 @@ const MyProfile = ({ params }: any) => {
   return (
     <div className='bg-slate-200 flex flex-col gap-4 h-screen items-center justify-center p-3 rounded'>
 
-      {/* <div className='font-semibold items-center justify-center mb-10 text-4xl text-center'>
-        <Link href={"/pageAuthentication/Logout"}><FaPowerOff color="red" /></Link>
-      </div> */}
+{/* {searchParams && <NotificationError errorMessage={searchParams} />} */}
+
 
       <div className='font-semibold my-4 text-4xl text-slate-600'><h1>MY PROFILE</h1></div>
 

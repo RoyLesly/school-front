@@ -82,13 +82,13 @@ const ListAccountPage = ({ params, data }: { params: any, data: GetAccountInter[
           <TableSearch placeholder="Search By Name" searchString="name" />
           <TableSearch placeholder="Search By Year" searchString="year" />
         </div>
-        <div className="flex flex-row gap-2 items-end justify-end md:gap-4 md:w-60 self-end w-full">
-          <Link href={`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageAdmin/Account/UpdateAccount`} className="bg-blue-300 flex font-medium gap-1 items-center justify-center px-2 py-1 rounded">Update <TbRefresh /></Link>
+        <div className="flex flex-row gap-2 items-center justify-end md:gap-4 md:w-60 py-2 self-end w-full">
+          <Link href={`/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageUtilities/Account/UpdateAccount`} className="bg-blue-300 flex font-medium gap-1 items-center justify-center px-2 py-1 rounded">Update <TbRefresh /></Link>
           <div className="flex flex-row gap-2 justify-end md:gap-4 md:w-30 w-full">
-            <button className="bg-brown-300 flex h-8 items-center justify-center rounded-full w-8">
+            <button className="bg-brown-300 flex h-8 items-center justify-center rounded-full w-10">
               <Image src="/icons/filter.png" alt="" width={14} height={14} />
             </button>
-            <button className="bg-yellow-300 flex h-8 items-center justify-center rounded-full w-8">
+            <button className="bg-yellow-300 flex h-8 items-center justify-center rounded-full w-10">
               <FaSortAlphaDown color="black" />
             </button>
             {role === "admin" && (

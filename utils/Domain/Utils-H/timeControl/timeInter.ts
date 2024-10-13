@@ -96,6 +96,7 @@ export type GetTimeSlotInter = {
   end_time: string;
   time?: string;
   hours: number;
+  session: string;
   status: string;
 
   created_by__id?: number;

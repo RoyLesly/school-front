@@ -7,10 +7,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { protocol } from '@/config';
 import { getDataNotProtected } from '@/functions';
-import { GetPreInscriptionInter } from '@/Domain/Utils-H/userControl/userInter';
-import generatePDF, { Resolution, Margin, Options } from 'react-to-pdf';
+import { GetCustomUserInter, GetPreInscriptionInter } from '@/Domain/Utils-H/userControl/userInter';
+import { Resolution, Margin, Options } from 'react-to-pdf';
 import PreInscriptionForm from './[registration_number]/PreInscriptionForm';
-import { OpenGetPreInscriptionUrl } from '@/Domain/Utils-H/userControl/userConfig';
+import { OpenGetCustomUserNotProtectedUrl, OpenGetPreInscriptionUrl } from '@/Domain/Utils-H/userControl/userConfig';
+import AdmissionForm from './[registration_number]/AdmissionForm';
 
 
 const SchemaCreate = z.object({
@@ -32,7 +33,9 @@ const CheckForm = ({ params }: any) => {
     const targetRef = () => document.getElementById("reg_form")
     const [page, setPage] = useState<number>(1);
     const [responseData, setResponseData] = useState<GetPreInscriptionInter>();
-    const [foundLength, setFoundLength] = useState<number>(-1);
+    const [customUserData, setCustomUserData] = useState<GetCustomUserInter>();
+    const [foundPreInscriptionLength, setFoundPreInscriptionLength] = useState<number>(-1);
+    const [foundUserLength, setFoundUserLength] = useState<number>(-1);
 
     const onSubmit = handleSubmit((formVals) => {
         setClicked(true);
@@ -48,25 +51,36 @@ const CheckForm = ({ params }: any) => {
             telephone: formVals.telephone,
         }
         const n = ch(newData.registration_number, newData.full_name, newData.telephone);
-        const call = async () => {
+        const getPreInscription = async () => {
             if (n) {
                 const response = await getDataNotProtected(
-                    protocol + "api" + params.domain + OpenGetPreInscriptionUrl,
-                    { ...n }
+                    protocol + "api" + params.domain + OpenGetPreInscriptionUrl, { ...n }
                 )
                 if (response && response.count == 1) {
-                    setFoundLength(1)
-                    setPage(2)
+                    setFoundPreInscriptionLength(response.count)
                     setResponseData(response.results[0]);
+                    const responseTwo = await getDataNotProtected(
+                        protocol + "api" + params.domain + OpenGetCustomUserNotProtectedUrl,
+                        { nopage: true, telephone: response.results[0].telephone }
+                    )
+                    console.log(responseTwo, 65)
+                    if (responseTwo && responseTwo.length == 1) {
+                        setFoundUserLength(responseTwo.length)
+                        setPage(3)
+                        setCustomUserData(responseTwo[0]);
+                    } else {
+                        setPage(2)
+                        setFoundUserLength(responseTwo.length)
+                    }
+                    setClicked(false)
+                } else {
+                    setFoundPreInscriptionLength(response.count)
                 }
-                if (response && response.count > 1) {
-                    setFoundLength(2)
-                }
-                else { setFoundLength(0); }
             }
             setClicked(false)
         }
-        call()
+        getPreInscription()
+        
     })
 
     return (
@@ -79,17 +93,25 @@ const CheckForm = ({ params }: any) => {
                     </div>
                 </div>
                 :
+                responseData && page == 3 ?
+                <div className='flex flex-col gap-2 h-full w-full'>
+                    <h1 className='flex font-bold h-[5%] justify-center text-center text-xl w-full'>Admitted Successfully</h1>
+                    <div className='flex flex-col gap-2 items-center justify-center'>
+                        <AdmissionForm data={customUserData} params={params} />
+                    </div>
+                </div>
+                :
                 <div className='md:border md:p-4 p-2 rounded-lg'>
                     <h1 className='flex font-bold my-2 text-center text-xl'>Fill Any Field below to see admission status</h1>
 
                     <form onSubmit={onSubmit} className='flex flex-col gap-4 md:m-4'>
-                        <InputField
+                        {/* <InputField
                             label="Name"
                             label_two="Nom"
                             name="full_name"
                             register={register}
                             error={errors.full_name}
-                        />
+                        /> */}
                         <InputField
                             label="Telephone"
                             label_two="Telephone"
@@ -98,22 +120,22 @@ const CheckForm = ({ params }: any) => {
                             error={errors.telephone}
                             type='number'
                         />
-                        <InputField
+                        {/* <InputField
                             label="Pre-Inscription Number"
                             label_two="Numero"
                             name="registration_number"
                             register={register}
                             error={errors.registration_number}
-                        />
+                        /> */}
 
                         <MyButtonModal type={"update"} title={"Search"} clicked={clicked} />
 
-                        {foundLength > 1 ? 
+                        {foundPreInscriptionLength > 1 ? 
                         <div className='bg-white flex flex-col font-bold items-center justify-center p-2 rounded text-center text-red'>
                             <span>Found Many Similar Results</span>
                             <span>Add more Information to retrieve Your Status</span>
                         </div> 
-                        : foundLength == 0 ? 
+                        : foundPreInscriptionLength == 0 ? 
                         <div className='bg-white flex flex-col font-bold items-center justify-center p-2 rounded text-center text-red'>
                             <span>No Results Found</span>
                         </div> 

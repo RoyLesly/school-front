@@ -45,7 +45,6 @@ const page = async ({
         {apiData && <ListPreInscriptionPage
           params={params}
           data={apiData}
-          title={"Admitted Students"}
           page={2}
           extra_data={
             { apiDomains: apiDomains, apiLevels: apiLevels, apiPrograms: apiPrograms.results, apiDepartments: apiDepartments.results, apiYears: apiYears.results }

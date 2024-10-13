@@ -10,7 +10,7 @@ const MyButtonModal = ({ type, clicked, title, icon, className }: { type: string
         </button>
 
             :
-            <button className={`${type == "create" ? "bg-green-600" : type == "update" ? "bg-blue-400" : ""} ${className} px-6 py-2 flex items-center gap-2 rounded-md text-white justify-center`}>
+            <button className={`${type == "create" ? "bg-green-600" : type == "update" ? "bg-blue-400" : "bg-blue-700"} ${className} font-medium px-6 py-2 flex items-center gap-2 rounded-md text-white justify-center`}>
                 {title ? title : type === "create" ? "Create" : type === "update" ? "Update" : type === "delete" ? "Delete" : type} 
                 {icon}
             </button>

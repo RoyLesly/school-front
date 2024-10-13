@@ -26,7 +26,7 @@ const page = async ({
       {apiSchool && apiSchool.length ? <div className="flex flex-col gap-4 h-screen md:p-4 p-2 text-slate-900 w-full">
         <PreInsNavBar params={params} searchParams={searchParams} page={2} school_identification={apiSchool[0]} />
 
-        <div className='border flex flex-col h-full items-center justify-center w-full'>
+        <div className='flex flex-col h-full items-center justify-center w-full'>
             <CheckForm params={params} />
         </div>
       </div>

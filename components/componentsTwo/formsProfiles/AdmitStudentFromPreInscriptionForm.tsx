@@ -106,7 +106,6 @@ const AdmitStudentFromPreInscriptionForm = ({
       if (type === "custom") {
         const call = async () => {
           const response1 = await ActionCreate(newUserData, SchemaCreateEditCustomUser, protocol + "api" + params.domain + CustomUserUrl)
-          console.log(response1)
           const t = await handleResponseError(response1, ["username", "telephone", "sex", "email", "full_name", "dob"]);
           if (t == "" && response1 && response1.id) {
             const response2 = await ActionCreate({ ...newProfileData, user_id: response1.id }, SchemaCreateEditUserProfile, protocol + "api" + params.domain + UserProfileUrl)

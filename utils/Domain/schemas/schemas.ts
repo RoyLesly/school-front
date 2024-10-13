@@ -224,7 +224,9 @@ export const SchemaAppearanceUpdate = z.object({
 })
 
 export const SchemaPlatformChargesCreate = z.object({
-    target: z.string().trim().min(3, { message: "Must Select Target Group"}),
+    telephone: z.coerce.number().min(10, { message: "Minimum 10"}),
+    amount: z.coerce.number().min(5, { message: "Minimum 5"}),
+    service: z.string().trim().min(3, { message: "Must Select Service"}),
 });
 
 export const SchemaCreateEditNotifiation = z.object({

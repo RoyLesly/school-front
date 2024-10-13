@@ -26,13 +26,11 @@ const PreForm = ({ data, params }: { params: any, data?: GetSchoolIdentification
     sex: z.enum(["Male", "Female"]),
     telephone: z.coerce.number().int().gte(610000000).lte(699999999).refine(async (e) => {
       const telephones = await getDataNotProtected(protocol + "api" + params.domain + OpenGetCustomUserNotProtectedUrl, { telephone: e });
-      console.log("telephone res", telephones, telephones.count)
       if (telephones && telephones.count) return false;
       else return true
     }, "This telephone exist already"),
     email: z.string().min(1, { message: "This field has to be filled." }).email("This is not a valid email.").refine(async (e) => {
       const emails = await getDataNotProtected(protocol + "api" + params.domain + OpenGetCustomUserNotProtectedUrl, { email: e });
-      console.log("email res", emails.count)
       if (emails && emails.count) return false;
       else return true
     }, "This email exist already"),
@@ -47,6 +45,7 @@ const PreForm = ({ data, params }: { params: any, data?: GetSchoolIdentification
     academic_year: z.string(),
     specialty_one: z.string(),
     specialty_two: z.string().optional(),
+    specialty_three: z.string().optional(),
     campus: z.string(),
     program: z.string(),
     session: z.enum(["Morning", "Evening"]),
@@ -60,7 +59,6 @@ const PreForm = ({ data, params }: { params: any, data?: GetSchoolIdentification
   });
 
   const router = useRouter();
-  const [count, setCount] = useState(0);
   const [clicked, setClicked] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const thisYear = new Date().getFullYear()
@@ -255,15 +253,6 @@ const PreForm = ({ data, params }: { params: any, data?: GetSchoolIdentification
 
           <div className='flex flex-col gap-2 md:flex-row'>
             <SelectField
-              label="Program"
-              label_two="Programme"
-              name="program"
-              defaultValue={data?.program}
-              register={register}
-              error={errors?.program}
-              data={ConstProgramList}
-            />
-            <SelectField
               label="Specialty One"
               label_two="1ere Filiere"
               name="specialty_one"
@@ -281,9 +270,26 @@ const PreForm = ({ data, params }: { params: any, data?: GetSchoolIdentification
               error={errors?.specialty_one}
               data={ConstSpecialtyList}
             />
+                        <InputField
+              label="Other"
+              label_two="Autre"
+              name="specialty_three"
+              defaultValue={data?.specialty_three}
+              register={register}
+              error={errors?.specialty_three}
+            />
           </div>
 
           <div className='flex flex-col gap-2 md:flex-row'>
+          <SelectField
+              label="Program"
+              label_two="Programme"
+              name="program"
+              defaultValue={data?.program}
+              register={register}
+              error={errors?.program}
+              data={ConstProgramList}
+            />
             <SelectField
               label="Campus"
               name="campus"
@@ -291,7 +297,7 @@ const PreForm = ({ data, params }: { params: any, data?: GetSchoolIdentification
               register={register}
               error={errors?.campus}
               display={{ name: "location", value: "name" }}
-              data={ConfigData[params.domain]["higher"].campus_geolocations}
+              data={ConfigData[params.domain]["higher"].campus}
             />
           </div>
 

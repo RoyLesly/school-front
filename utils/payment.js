@@ -19,12 +19,10 @@ export const getTransactionByIDs = async ({IDs}) => {
 export const collectMoney = async ({amount, service, payer}) => {
     try {
         const payment = await new PaymentOperation({applicationKey: application_key, accessKey: access_key, secretKey: secret_key});
-        console.log(amount, service, payer, 22)
         const response = await payment.makeCollect({amount: amount, service: service, payer: payer, nonce: RandomGenerator.nonce()});
         console.log(response, 24)
         return { operation: response.isOperationSuccess(), transaction: response.isTransactionSuccess() }
     } catch (error) {
-        console.log(error, 35)
         var err = {...error}
         if (err?.code?.includes("low-balance-payer")){
             return { operation: false, transaction: "low-balance-payer" }
@@ -33,9 +31,13 @@ export const collectMoney = async ({amount, service, payer}) => {
             return { operation: false, transaction: "ENOTFOUND" }
         }
         if (err?.code?.includes("could-not-perform-transaction")){
-            return { operation: false, transaction: "could-not-perform-transaction" }
+            return { operation: false, transaction: "Cancel By User" }
         }
-        return { operation: false, transaction: false }
+        if (err?.code?.includes("invalid-amount")){
+            return { operation: false, transaction: "The-amount-should-be-greater-than-10-XAF" }
+        }
+        console.log(error)
+        return { operation: false, transaction: "Failed Operation" }
     }
 }
 

@@ -8,21 +8,14 @@ import { TranscriptApplicationUrl } from "@/Domain/Utils-H/feesControl/feesConfi
 import { jwtDecode } from "jwt-decode";
 import { getSession } from "./sessionAction";import { redirect } from "next/navigation";
 
-export const makePayment = async (state: any, formData: FormData) => {
-    const result = await SchemaPlatformChargesCreate.safeParse({
-        telephone: formData.get("telephone"),
-        amount: formData.get("amount"),
-        service: formData.get("operator"),
-    })
-    console.log(state, 12)
+export const makePayment = async (data: { telephone: number, amount: number, service: string }) => {
+    const result = await SchemaPlatformChargesCreate.safeParse(data);
     if (result.success){
-        // var pay: { operation: boolean, transaction: boolean } | any = await collectMoney({ amount: result.data.amount, service: result.data.service, payer: result.data.telephone })
-        // console.log(pay, 15)
-        return { data: result.data }
+        var pay: { operation: boolean, transaction: boolean } | any = await collectMoney({ amount: result.data.amount, service: result.data.service, payer: result.data.telephone })
+        return { success: true, pay: pay }
     }
     if (result.error){
-        console.log(result, 19)
-        return { error: result.error.format() }
+        return { error: true, data: result.error.format() }
     }
 }
 

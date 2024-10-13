@@ -7,6 +7,7 @@ import NotificationError from '@/section-h/common/NotificationError'
 import { AcademicYearUrl, GetDomainUrl, GetLevelUrl, GetSchoolInfoUrl } from '@/Domain/Utils-H/appControl/appConfig'
 import ListPreInscriptionPage from '@/componentsTwo/ListProfiles/ListPreInscriptionPage'
 import { GetDepartmentUrl, GetProgramUrl, OpenGetPreInscriptionUrl } from '@/Domain/Utils-H/userControl/userConfig'
+import { GetPreInscriptionInter } from '@/Domain/Utils-H/userControl/userInter'
 
 const page = async ({
   params,
@@ -23,7 +24,7 @@ const page = async ({
   })
 
   const apiData: any = await getData(protocol + "api" + params.domain + OpenGetPreInscriptionUrl, {
-    nopage: true, ...searchParams, campus: apiSchool[0].campus__name, status: "PENDING", fieldList: [
+    nopage: true, ...searchParams, status: "PENDING", fieldList: [
       "id", "registration_number", "status", "first_name", "last_name", "full_name", "telephone", "email", "sex", "dob", "pob",
       "specialty_one", "specialty_two", "academic_year", "address", "admission_status", "emergency_name", "emergency_telephone",
       "program", "session", "level", "campus"
@@ -35,7 +36,7 @@ const page = async ({
   const apiDomains: any = await getData(protocol + "api" + params.domain + GetDomainUrl, { nopage: true})
   const apiPrograms: any = await getData(protocol + "api" + params.domain + GetProgramUrl, { })
   const apiDepartments: any = await getData(protocol + "api" + params.domain + GetDepartmentUrl, { name: "stud" })
-
+console.log(apiSchool[0].campus__name)
   return (
     <LayoutAdmin>
       <>
@@ -44,8 +45,9 @@ const page = async ({
 
         {apiData && <ListPreInscriptionPage
           params={params}
-          data={apiData}
-          page={1}
+          data={apiData && apiData.filter((item: GetPreInscriptionInter) => item.campus != apiSchool[0].campus__name)}
+          page={3}
+          
           extra_data={
             { apiDomains: apiDomains, apiLevels: apiLevels, apiPrograms: apiPrograms.results, apiDepartments: apiDepartments.results, apiYears: apiYears.results }
           }

@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { FaSearch } from 'react-icons/fa';
 import MobileView from './MobileView';
+import DesktopView from './DesktopView';
 
 const SearchData = ({ searchParams, params, apiTimeSlot }: any) => {
 
@@ -76,6 +77,17 @@ const SearchData = ({ searchParams, params, apiTimeSlot }: any) => {
             }))}
             />
             <MobileView selectedDate={selectedDate}
+                data={Sorting(apiTimeSlot).map(
+                    (item: GetTimeSlotInter) => ({
+                        ...item,
+                        // start: new Date(item.start),
+                        // end: new Date(item.end)
+                    }))
+                } 
+                yearweek={apiTimeSlot.map((a: GetTimeSlotInter) => a.timetableday__timetableweek__year_week)}
+                params={params}
+            />
+            <DesktopView selectedDate={selectedDate}
                 data={Sorting(apiTimeSlot).map(
                     (item: GetTimeSlotInter) => ({
                         ...item,

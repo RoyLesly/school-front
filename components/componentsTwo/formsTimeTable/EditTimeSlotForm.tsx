@@ -4,15 +4,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import MyButtonModal from "@/section-h/common/MyButtons/MyButtonModal";
-import SelectField from "@/componentsTwo/SelectField";
-import { GetCourseInter, GetSpecialtyInter } from "@/Domain/Utils-H/appControl/appInter";
-import { getData, getWeekRangeOfMonth } from "@/functions";
-import { MonthList, TimeSlotsList } from "@/constants";
+import { GetCourseInter } from "@/Domain/Utils-H/appControl/appInter";
+import { getWeekRangeOfMonth } from "@/functions";
+import { TimeSlotsList } from "@/constants";
 import { GetTimeSlotInter, GetTimeTableWeekInter, TimeSlotInter } from "@/Domain/Utils-H/timeControl/timeInter";
-import { protocol } from "@/config";
-import { GetTimeTableWeekUrl } from "@/Domain/Utils-H/timeControl/timeConfig";
-import InputField from "../InputField";
 import { FaDeleteLeft } from "react-icons/fa6";
 
 

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-// import "jsvectormap/dist/css/jsvectormap.css";
+// import "jsvectormap/dist/jsvectormap.css";
 import "flatpickr/dist/flatpickr.min.css";
 import "@/NoDomain/section-h/common/css/satoshi.css";
 import "@/NoDomain/section-h/common/css/style.css";

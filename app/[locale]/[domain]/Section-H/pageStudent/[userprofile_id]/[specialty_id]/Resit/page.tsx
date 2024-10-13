@@ -2,13 +2,20 @@ import { getData } from '@/functions';
 import ServerError from '@/section-h/common/ServerError';
 import { GetResultUrl } from '@/Domain/Utils-H/appControl/appConfig';
 import { GetResultInter } from '@/Domain/Utils-H/appControl/appInter';
-import { GetSchoolFeesUrl } from '@/Domain/Utils-H/feesControl/feesConfig';
+import { GetSchoolFeesUrl, TransactionUrl } from '@/Domain/Utils-H/feesControl/feesConfig';
 import { GetUserProfileUrl } from '@/Domain/Utils-H/userControl/userConfig';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import React, { Suspense } from 'react'
-import { FaDownload, FaMinus } from 'react-icons/fa6';
+import { FaDownload, FaMinus, FaPlus } from 'react-icons/fa6';
 import { ConfigData, protocol } from '@/config';
+import NotificationError from '@/section-h/common/NotificationError';
+import { redirect } from 'next/navigation';
+import { ActionCreate } from '@/serverActions/actionGeneral';
+import { SchemaTransactionCreate } from '@/Domain/schemas/schemas';
+import { collectMoney } from '@/payment';
+import FormModal from '@/componentsTwo/FormModal';
+import initTranslations from '@/i18n';
 
 
 export const metadata: Metadata = {
@@ -20,9 +27,11 @@ const page = async ({
     params,
     searchParams,
 }: {
-    params: { userprofile_id: string,  domain: string, specialty_id: string };
+    params: { locale: string, userprofile_id: string, domain: string, specialty_id: string };
     searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
+
+    const { t } = await initTranslations(params.locale, ['common'])
 
     const apiSchoolFees: any = await getData(protocol + "api" + params.domain + GetSchoolFeesUrl, {
         userprofile__id: params.userprofile_id, nopage: true, fieldList: ["id", "platform_charges", "platform_paid", "balance",
@@ -33,11 +42,68 @@ const page = async ({
     const apiDataSem1: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "I", publish_resit: true, fieldList: ["id", "ca", "exam", "resit", "course__main_course__course_name", "average"] });
     const apiDataSem2: any = await getData(protocol + "api" + params.domain + GetResultUrl, { student__id: params.userprofile_id, course__semester: "II", publish_resit: true, fieldList: ["id", "ca", "exam", "resit", "course__main_course__course_name", "average"] });
 
-    console.log(apiDataSem1, 1)
-    console.log(apiDataSem2, 2)
-    console.log(apiSchoolFees, 2)
+    const onActivate = async (formData: FormData) => {
+        "use server"
+  
+        var payer = formData.get("telephone");
+        var operator = formData.get("operator");
+        var url = formData.get("url");
+        var origin = formData.get("origin");
+  
+        const data = {
+          schoolfees_id: apiSchoolFees[0].id,
+          telephone: payer,
+          operator: operator,
+          payment_method: operator,
+          amount: apiSchoolFees[0].platform_charges,
+          reason: "Platform Charges",
+          account: "PLATFORM CHARGES",
+          status: "completed",
+          operation_type: "other",
+          origin: origin,
+        }
+  
+        var pay: any = await collectMoney({ amount: data.amount, service: data.operator, payer: payer });
+        console.log(pay, 72);
+  
+        if (!pay.operation && pay.transaction == "could-not-perform-transaction") {
+          redirect(`${url}?customerror=Transaction Cancelled by User`)
+        }
+        if (!pay.operation && pay.transaction == "low-balance-payer") {
+          redirect(`${url}?customerror=Not Enough Funds`)
+        }
+        if (!pay.operation && pay.transaction == "ENOTFOUND") {
+          redirect(`${url}?error=Transaction Error`)
+        }
+        if (!pay.operation && !pay.transaction) {
+          redirect(`${url}?error=Transaction Error`)
+        }
+  
+        if (pay.operation) {
+          const response = await ActionCreate(data, SchemaTransactionCreate, protocol + "api" + params.domain + TransactionUrl)
+          console.log(response, 80)
+  
+          if (response.error) {
+            redirect(`${url}?error=${JSON.stringify(response.error).replaceAll(" ", "-")}`)
+          }
+          if (response?.errors) {
+            redirect(`${url}?error=${JSON.stringify(response.errors).replaceAll(" ", "-")}`)
+          }
+          if (response?.detail) {
+            redirect(`${url}?error=${JSON.stringify(response.detail).replaceAll(" ", "-")}`)
+          }
+          if (response?.id) {
+            redirect(`${params.domain}/Section-H/pageStudent/${params.userprofile_id}/${params.specialty_id}/Fees?success=Successfully Activated-${JSON.stringify(response.schoolfees.userprofile.user.full_name).replaceAll(" ", "-")}`)
+          }
+        } else {
+        //   redirect(`${url}/${params.schoolfees_id}?error=Transaction Failed`)
+        }
+    }
+
     return (
         <div>
+            {searchParams && <NotificationError errorMessage={searchParams} />}
+
             {apiSchoolFees ?
                 apiSchoolFees.length == 1 ?
                     apiSchoolFees[0].platform_paid ?
@@ -167,9 +233,22 @@ const page = async ({
 
                         </div>
                         :
-                        <div className='flex flex-col gap-4 items-center justify-center pt-40 text-[18px] text-black'>
-                            <span>Account Not Active</span>
-                            <Link href={`/${params.domain}/Section-H/pageStudent/${params.userprofile_id}/${params.specialty_id}/Fees/Activate/`} className='bg-bluedark font-medium px-4 py-1 rounded text-white tracking-wider'>Activate</Link>
+                        <div className='flex flex-col gap-10 items-center justify-center pt-40 text-[18px] text-black'>
+                            <span className='font-bold text-xl'>Account Not Active</span>
+                            <FormModal
+                                table="platform_charge"
+                                type="custom"
+                                params={params}
+                                icon={<FaPlus />}
+                                data={apiSchoolFees[0]}
+                                extra_data={{
+                                    url: `${params.domain}/Section-H/pageStudent/${params.userprofile_id}/${params.specialty_id}/Resit`,
+                                    type: "single",
+                                    onActivate: onActivate,
+                                }}
+                                buttonTitle={`${t("pay_now")}`}
+                                customClassName={`flex gap-2 border bg-bluedash px-6 py-2 rounded text-white font-medium capitalize gap-2 cursor-pointer`}
+                            />
                         </div>
                     :
                     <div className='text-black'>No School Fees Information</div>

@@ -3,11 +3,16 @@ import { role } from "@/componentsTwo/lib/data";
 import Table from "@/componentsTwo/Table";
 import TableSearch from "@/componentsTwo/TableSearch";
 import { TableRowClassName } from "@/constants";
+import { SchemaTransactionCreate } from "@/Domain/schemas/schemas";
 import { GetDomainInter } from "@/Domain/Utils-H/appControl/appInter";
+import { TransactionUrl } from "@/Domain/Utils-H/feesControl/feesConfig";
 import { GetSchoolFeesInter } from "@/Domain/Utils-H/feesControl/feesInter";
 import initTranslations from "@/i18n";
+import { collectMoney } from "@/payment";
 import MyPageTitle from "@/section-h/common/MyPageTitle";
+import { ActionCreate } from "@/serverActions/actionGeneral";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import { FaPlus } from "react-icons/fa6";
 
 
@@ -41,7 +46,8 @@ const columns = [
 
 const ListPendingPlatformPage = async ({ params, data }: { params: any, data: GetDomainInter[] | any }) => {
 
-  const { t } = await initTranslations(params.locale, ['common'])
+  const { t } = await initTranslations(params.locale, ['common']);
+
   const renderRow = (item: GetSchoolFeesInter, index: number) => (
     <tr
       key={index + 1}
@@ -54,17 +60,17 @@ const ListPendingPlatformPage = async ({ params, data }: { params: any, data: Ge
       <td>
         <div className="flex gap-2 items-center justify-center">
           <FormModal
-            table="platform_charge"
+            table="platform_charge_utility"
             type="custom"
             params={params}
             icon={<FaPlus />}
-            data={item.id}
-            extra_data={[
-              `/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageUtilities/pagePlatformActivation/`,
-              "single",
-            ]}
-            buttonTitle={`${t("pay")}`}
-            customClassName={` flex gap-2 border bg-bluedash px-4 py-1 rounded text-white font-medium capitalize gap-2 cursor-pointer`}
+            data={[item]}
+            extra_data={{
+              url: `${params.domain}/Section-H/pageAdministration/${params.school_id}/pageUtilities/pagePlatformActivation/`,
+              type: "single",
+            }}
+            buttonTitle={`Pay`}
+            customClassName={`flex gap-2 border bg-bluedash px-6 py-2 rounded text-white font-medium capitalize gap-2 cursor-pointer`}
           />
         </div>
       </td>
@@ -83,19 +89,19 @@ const ListPendingPlatformPage = async ({ params, data }: { params: any, data: Ge
             <TableSearch placeholder="By Name" searchString="userprofile__user__full_name" />
           </div>
           <div>
-            <FormModal
-              table="platform_charge"
-              type="custom"
-              params={params}
-              icon={""}
-              data={data}
-              extra_data={[
-                `/${params.domain}/Section-H/pageAdministration/${params.school_id}/pageUtilities/pagePlatformActivation/`,
-                "all",
-              ]}
-              buttonTitle={`${t("pay All")}`}
-              customClassName={` flex gap-2 rounded-[8px] w-30 flex-row bg-bluedash px-4 py-[5px] text-white font-medium capitalize w-full cursor-pointer`}
-            />
+          <FormModal
+            table="platform_charge_utility"
+            type="custom"
+            params={params}
+            icon={<FaPlus />}
+            data={data}
+            extra_data={{
+              url: `${params.domain}/Section-H/pageAdministration/${params.school_id}/pageUtilities/pagePlatformActivation/`,
+              type: "multiple",
+            }}
+            buttonTitle={`Pay`}
+            customClassName={`flex gap-2 border bg-bluedash px-6 py-2 rounded text-white font-medium capitalize gap-2 cursor-pointer`}
+          />
           </div>
         </div>
       </div>

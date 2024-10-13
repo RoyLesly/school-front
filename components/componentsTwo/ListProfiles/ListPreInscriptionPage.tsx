@@ -47,7 +47,12 @@ const columns = [
   },
 ];
 
-const ListPreInscriptionPage = async ({ params, data, page, title, extra_data }: { params: any, data: GetPreInscriptionInter[] | any, page: number, title: string, extra_data: any }) => {
+const ListPreInscriptionPage = async (
+  { params, data, page, extra_data }
+  : 
+  { params: any, data: GetPreInscriptionInter[] | any, page: number, extra_data: any }
+) => {
+
   const renderRow = (item: GetPreInscriptionInter, index: number) => (
     <tr
       key={item.id}
@@ -58,7 +63,7 @@ const ListPreInscriptionPage = async ({ params, data, page, title, extra_data }:
       <td className="hidden md:table-cell">{item.telephone}</td>
       <td className="hidden md:table-cell">{item.sex}</td>
       <td className="hidden md:table-cell">{item.dob}</td>
-      <td className="hidden md:table-cell">{item.pob}</td>
+      <td className="hidden md:table-cell">{page == 3 ? item.campus : item.pob}</td>
       <td>
         <div className="flex gap-2 items-center justify-center">
           <div>
@@ -87,7 +92,7 @@ const ListPreInscriptionPage = async ({ params, data, page, title, extra_data }:
   return (
     <div className="bg-white flex-1 m-2 mt-1 p-2 rounded-md">
 
-      <TabsPreInscription params={params} page={page} title={title} />
+      <TabsPreInscription params={params} page={page} />
 
 
       {/* TOP */}

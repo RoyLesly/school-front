@@ -4,6 +4,7 @@ import MyLoadingModal from "@/section-h/common/MyButtons/MyLoadingModal";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState } from "react";
+// import UpdateAccountForm from "./formsUtitlity/UpdateAccountForm";
 
 // USE LAZY LOADING
 const UsersForm = dynamic(() => import("./formsProfiles/UsersForm"), { loading: () => <MyLoadingModal />, });
@@ -18,6 +19,7 @@ const MainCourseForm = dynamic(() => import("./formSettings/MainCourseForm"), { 
 const CourseForm = dynamic(() => import("./formSettings/CourseForm"), { loading: () => <MyLoadingModal />});
 const SysCategoryForm = dynamic(() => import("./formsAdmin/SysCategoryForm"), { loading: () => <MyLoadingModal />});
 const SysConstantForm = dynamic(() => import("./formsAdmin/SysConstantForm"), { loading: () => <MyLoadingModal />});
+const UpdateAccountForm = dynamic(() => import("./formsUtitlity/UpdateAccountForm"), { loading: () => <MyLoadingModal />});
 const DepartmentForm = dynamic(() => import("./formsAdmin/DepartmentForm"), { loading: () => <MyLoadingModal />});
 const AccountForm = dynamic(() => import("./formsAdmin/AccountForm"), { loading: () => <MyLoadingModal />});
 const LevelForm = dynamic(() => import("./formSettings/LevelForm"), { loading: () => <MyLoadingModal />});
@@ -48,10 +50,11 @@ const forms: {
   level: (type, params, setOpen, data) => <LevelForm type={type} data={data} params={params} setOpen={setOpen} />,
   program: (type, params, setOpen, data) => <ProgramForm type={type} data={data} params={params} setOpen={setOpen} />,
 
-  sys_category: (type, params, setOpen, data ) => <SysCategoryForm type={type} data={data} params={params} setOpen={setOpen} />,
   admit_student_from_preinscription: (type, params, setOpen, data, extra_data ) => <AdmitStudentFromPreInscriptionForm type={type} data={data} params={params} setOpen={setOpen} extra_data={extra_data} />,
   assign_student_to_specialty: (type, params, setOpen, data, extra_data ) => <AssignStudentToSpecialtyForm type={type} data={data} params={params} setOpen={setOpen} extra_data={extra_data} />,
   sys_constant: (type, params, setOpen, data ) => <SysConstantForm type={type} data={data} params={params} setOpen={setOpen} />,
+  sys_category: (type, params, setOpen, data ) => <SysCategoryForm type={type} data={data} params={params} setOpen={setOpen} />,
+  update_account: (type, params, setOpen, data, extra_data ) => <UpdateAccountForm type={type} data={data} params={params} setOpen={setOpen} extra_data={extra_data} />,
   department: (type, params, setOpen, data ) => <DepartmentForm type={type} data={data} params={params} setOpen={setOpen} />,
   account: (type, params, setOpen, data ) => <AccountForm type={type} data={data} params={params} setOpen={setOpen} />,
   pay_fees: (type, params, setOpen, data, extra_data, ) => <PayFeesForm type={type} params={params} data={data} setOpen={setOpen} extra_data={extra_data} />,
@@ -94,6 +97,7 @@ const FormModal = ({
     | "create_fees_preselect"
     | "create_fees"
     | "platform_charge"
+    | "platform_charge_utility"
     | "parent"
     | "subject"
     | "class"
@@ -108,6 +112,7 @@ const FormModal = ({
     | "account"
     | "sys_category"
     | "sys_constant"
+    | "update_account"
 
     //Timetable Higher
     | "timetable_select_month"
@@ -145,7 +150,7 @@ const FormModal = ({
     <>
     
     <span
-        className={` ${type === "custom" ? customClassName : `${size} ${bgColor} flex rounded-full` } items-center justify-center `}
+        className={` ${type === "custom" ? customClassName : `${size} ${bgColor} rounded-full` } gap-2 flex items-center justify-center `}
         onClick={() => setOpen(true)}
       >
         {buttonTitle} 

@@ -48,7 +48,6 @@ const ClockInOutForm = ({
   const [campus, setCampus] = useState<GetSchoolInfoInter | any>();
   const [accuracy, setAccuracy] = useState<number>();
 
-
   useEffect(() => {
     if (count == 0 && data) {
       setClicked(true)
@@ -61,7 +60,6 @@ const ClockInOutForm = ({
         })
         if (course && course.length) { setCourseData(course[0]) }
         else { setCourseData({}) }
-        console.log(protocol + "api" + params.domain + GetSchoolInfoUrl)
         var campus = await getData(protocol + "api" + params.domain + GetSchoolInfoUrl, {
           nopage: true, id: params.school_id, fieldList: [
             "id", "school_name", "campus__name",
@@ -75,13 +73,9 @@ const ClockInOutForm = ({
       setCount(1);
     }
     if (count == 1 && data && campus) {
-      var myCampusCords = ConfigData[params.domain].higher.campus_geolocations.filter((item: any) => item.name == campus.campus__name)[0].geo
-      console.log(myCampusCords)
-
+      var myCampusCords = ConfigData[params.domain].higher.campus.filter((item: any) => item.name == campus.campus__name)[0].geolocation
       if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(function (position) {
-          console.log("Latitude is :", position.coords.latitude);
-          console.log("Longitude is :", position.coords.longitude);
         });
         navigator.geolocation.getCurrentPosition(({ coords }) => {
           const { latitude, longitude, accuracy } = coords;
@@ -98,7 +92,6 @@ const ClockInOutForm = ({
 
     }
   }, [count, selectedMonthID, selectedWeek, params, thisYear, data, campus])
-  // console.log("acc=>", accuracy, "dis=>", distance)
 
   const onSubmit = handleSubmit((formVals) => {
     setClicked(true);
@@ -109,11 +102,14 @@ const ClockInOutForm = ({
       action: data?.status == "PENDING" ? "IN" : "OUT",
       start: data?.start,
       end: data?.end,
-      start_time: new Date().toISOString(),
+      start_time: data?.status == "PENDING" ? new Date().toISOString() : data?.start_time,
+      end_time: data?.status == "CHECKED-IN" ? new Date().toISOString() : data?.end_time,
+      session: data?.session,
     }
     if (data && data.id && type === "update" && newData.status) {
       const save = async () => {
         var response = await ActionEdit(newData, data.id, SchemaCreateEditTimeSlot, protocol + "api" + params.domain + TimeSlotUrl)
+        console.log(response)
         if (response && response.id) {
           router.push(`/${params.domain}/Section-H/pageLecturer/${params.school_id}/MyTimeTable/${params.lecturer_id}?customsuccess=CLOCKED ${data?.status == "PENDING" ? "IN" : "OUT"} SUCCESS`)
         }
@@ -126,8 +122,10 @@ const ClockInOutForm = ({
   return (
     <form className="bg-slate-300 flex flex-col gap-4 p-4 rounded text-black" onSubmit={onSubmit}>
 
-      <h1 className="flex font-semibold gap-2 justify-between text-xl">{data?.status == "PENDING" ? "Clock In" : "Clock Out"} <span className="text-[14px] text-black text-opacity-20">{distance && distance < 10000 ? `${distance}` + "m" : null}</span></h1>
-      <div className="text-sm">{accuracy && 100 / accuracy < 3 ? `Accuracy Poor ${100 / accuracy}` : ""}</div>
+      <div className="flex font-semibold gap-2 items-center justify-between text-xl">
+        <span>{data?.status == "PENDING" ? "Clock In" : "Clock Out"} </span>
+        <span className="text-[14px] text-black text-opacity-20">{distance && distance < 100 ? `${distance}` + "m" : null}</span>
+      </div>
       {courseData && data ? <div className="border flex flex-col w-full">
         <div className="border flex p-1 w-full"><span className="w-1/4">Course</span><span className="w-3/4">{courseData.main_course__course_name}</span></div>
         <div className="border flex p-1 w-full"><span className="w-1/4">Class</span><span className="w-3/4">{courseData.specialty__main_specialty__specialty_name}</span></div>
@@ -138,25 +136,32 @@ const ClockInOutForm = ({
         </div>
         <div className="border flex p-1 w-full"><span className="w-1/4">Total</span><span className="w-3/4">{courseData.hours} Hours</span></div>
         <div className="border flex p-1 w-full"><span className="w-1/4">Left</span><span className="w-3/4">{courseData.hours_left} Hours</span></div>
+        <div className="border flex p-1 w-full"><span className="w-1/4">Hours</span><span className="w-3/4">{data.hours}</span></div>
         <div className="border flex p-1 w-full"><span className="w-1/4">Status</span><span className="w-3/4">{data.status}</span></div>
       </div> : null}
 
-      {data?.timetableday__date == new Date().toISOString().slice(0, 10) ?
+      {distance && distance < ConfigData[params.domain].higher.campus[params.school_id - 1].radius ?
         courseData ?
           data ?
             data.status == "PENDING" ?
-              distance && distance < 40 ?
+              data?.timetableday__date == new Date().toISOString().slice(0, 10) ?
                 <MyButtonModal type={"Clock In"} clicked={clicked} className="bg-green-700 font-semibold tracking-widest" />
                 :
                 <div className={`p-2 rounded-md text-teal-800 text-lg tracking-widest flex items-center justify-center`}>
                   Not Allowed
                 </div>
               :
-              data.status == "IN" && distance && distance < 40 ?
-                <MyButtonModal type={"Clock Out"} clicked={clicked} className="bg-blue-800 font-semibold tracking-widest" />
+              data.status == "CHECKED-IN" ?
+                data?.timetableday__date == new Date().toISOString().slice(0, 10) ?
+                  <MyButtonModal type={"Clock Out"} clicked={clicked} className="bg-blue-800 font-semibold tracking-widest" />
+                  :
+                  <div className={`p-2 rounded-md text-teal-800 text-lg tracking-widest flex items-center justify-center`}>
+                    Not Allowed
+                  </div>
                 :
                 null
-            : null
+            :
+            null
           :
           <div className={`p-2 rounded-md text-white flex items-center justify-center`}>
             <span className="animate-spin border-6 border-t-transparent flex h-[34px] rounded-full w-[34px]">.</span>

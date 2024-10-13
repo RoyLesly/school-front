@@ -4,7 +4,7 @@ import { Calendar, dateFnsLocalizer, View, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState } from "react";
 import { format, parse, startOfWeek, getDay, Locale } from 'date-fns';
-import enUS from 'date-fns/locale/en-US';
+import { enUS } from 'date-fns/locale/en-US';
 
 
 const locales = { 'en-US': enUS }
@@ -33,7 +33,8 @@ const BigCalendar = ({ data, selectedDate }: { selectedDate: any, data: any }) =
   };
 
   return (
-      <div className="hidden md:flex">
+      // <div className="hidden md:flex">
+      <div className="hidden">
         <Calendar
         localizer={localizer}
         events={data}
